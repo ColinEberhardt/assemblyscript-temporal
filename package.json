@@ -1,0 +1,44 @@
+{
+  "name": "assemblyscript-temporal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "asbuild:untouched": "asc assembly/index.ts --target debug",
+    "asbuild:optimized": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "tsrun": "ts-node ts/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@as-pect/cli": "^6.0.0",
+    "@assemblyscript/loader": "^0.18.11",
+    "@pipobscure/demitasse": "^2.0.4",
+    "@pipobscure/demitasse-pretty": "^1.0.10",
+    "assemblyscript": "^0.18.11",
+    "jest": "^26.6.3",
+    "jest-summary-reporter": "^0.0.2",
+    "text-encoding": "^0.7.0",
+    "ts-node": "^9.1.1"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "jest-summary-reporter",
+        {
+          "failuresOnly": false
+        }
+      ]
+    ],
+    "testMatch": [
+      "**.js"
+    ],
+    "rootDir": "test"
+  },
+  "dependencies": {
+    "assemblyscript-regex": "^1.6.1"
+  }
+}
