@@ -11,26 +11,19 @@ import {
   balanceDuration,
 } from "./es";
 
-function paddedString(number: i32, length: i32 = 2): string {
-  let result = number.toString();
-  while (result.length < length) {
-    result = "0" + result;
-  }
-  return result;
+function toPaddedString(number: i32, length: i32 = 2): string {
+  return number.toString().padStart(length, "0");
 }
 
 export class PlainDate {
-  readonly year: i32;
-  readonly month: i32;
-  readonly day: i32;
   readonly daysInYear: i32;
   readonly inLeapYear: bool;
 
-  constructor(isoYear: i32, isoMonth: i32, isoDay: i32) {
-    this.year = isoYear;
-    this.month = isoMonth;
-    this.day = isoDay;
-  }
+  constructor(
+    readonly year: i32,
+    readonly month: i32,
+    readonly day: i32
+  ) {}
 
   get dayOfWeek(): i32 {
     return dayOfWeek(this.year, this.month, this.day);
@@ -64,9 +57,9 @@ export class PlainDate {
     return (
       this.year.toString() +
       "-" +
-      paddedString(this.month) +
+      toPaddedString(this.month) +
       "-" +
-      paddedString(this.day)
+      toPaddedString(this.day)
     );
   }
 
@@ -103,9 +96,9 @@ export class PlainDate {
     const match = dateRegex.exec(date);
     if (match != null) {
       return new PlainDate(
-        i32(parseInt(match.matches[1])),
-        i32(parseInt(match.matches[2])),
-        i32(parseInt(match.matches[3]))
+        I32.parseInt(match.matches[1]),
+        I32.parseInt(match.matches[2]),
+        I32.parseInt(match.matches[3])
       );
     }
     throw new Error("foo");
