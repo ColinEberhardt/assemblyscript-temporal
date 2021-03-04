@@ -24,6 +24,8 @@ The current AssemnblyScript PlainDate implementation passes 54 of the 241 tests,
 
 *If you have thoughts / ideas on the implementation technique, please open an issue*
 
+This project is still very much in the early exploration phase. I'd like to implement more of the temporal features and uncover more of the underlying challenge (see below) before starting on a more structured implementation roadmap.
+
 ### Current challenges and open questions ...
 
 1. Oveloaded functions
