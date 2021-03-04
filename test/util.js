@@ -87,6 +87,10 @@ class PlainDate {
     return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.add(duration)));
   }
 
+  static compare(a, b) {
+    return WasmPlainDate.compare(a.wasmPlainDate, b.wasmPlainDate);
+  }
+
   static from(date) {
     if (typeof date === "string") {
       try {

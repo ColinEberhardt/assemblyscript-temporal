@@ -88,6 +88,28 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
+  static compare(a: PlainDate, b: PlainDate): i32 {
+    if (a.year < b.year) {
+      return -1;
+    }
+    if (a.year > b.year) {
+      return 1;
+    }
+    if (a.month < b.month) {
+      return -1;
+    }
+    if (a.month > b.month) {
+      return 1;
+    }
+    if (a.day < b.day) {
+      return -1;
+    }
+    if (a.day > b.day) {
+      return 1;
+    }
+    return 0;
+  }
+
   static fromPlainDate(date: PlainDate): PlainDate {
     return new PlainDate(date.year, date.month, date.day);
   }

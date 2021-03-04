@@ -20,7 +20,7 @@ The current approach is as follows:
 4. Don't bother refactoring heavily, being able to map between the polyfill implementation and this codebase will help ensure correctness
 
 
-The current AssemnblyScript PlainDate implementation passes 54 of the 241 tests, which is not a bad start!
+The current AssemnblyScript PlainDate implementation passes 62 of the 241 tests, which is not a bad start!
 
 *If you have thoughts / ideas on the implementation technique, please open an issue*
 
