@@ -246,7 +246,7 @@ function totalDurationNanoseconds(
 }
 
 function nanosecondsToDays(nanoseconds: i64): NanoDays {
-  const dayLengthNs: i64 = 86400000000000; // 86400e9
+  const dayLengthNs: i64 = 24 * 60 * 60 * 1_000_000_000;
   const sign = i32(nanoseconds > 0) - i32(nanoseconds < 0);
   if (sign === 0) return new NanoDays(0, 0, dayLengthNs);
   return new NanoDays(
