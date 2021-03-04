@@ -44,12 +44,10 @@ export const enum TimeComponent {
   nanoseconds,
 }
 
+// modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2157
 export function leapYear(year: i32): bool {
-  const isDiv4 = year % 4 === 0;
-  const isDiv100 = year % 100 === 0;
-  const isDiv400 = year % 400 === 0;
-  return isDiv4 && (!isDiv100 || isDiv400);
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2188
@@ -61,17 +59,18 @@ export function dayOfYear(year: i32, month: i32, day: i32): i32 {
   return days;
 }
 
+// modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 export function daysInMonth(year: i32, month: i32): i32 {
-  const standard: i32[] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  const leapyear: i32[] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  return leapYear(year) ? leapyear[month - 1] : standard[month - 1];
+  return month == 2
+    ? 28 + i32(leapYear(year))
+    : 30 + ((month + i32(month >= 6)) & 1);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const m = month + (month < 3 ? 10 : -2);
-  const Y = year - (month < 3 ? 1 : 0);
+  const Y = year - i32(month < 3);
   const c = Y / 100;
   const y = Y - c * 100;
   const d = day;
@@ -86,10 +85,9 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 function balanceYearMonth(year: i32, month: i32): YM {
   month -= 1;
-  year += month / 12;
+  year  += month / 12;
   month %= 12;
-  if (month < 0) month += 12;
-  month += 1;
+  month += month < 0 ? 13 : 1;
   return new YM(year, month);
 }
 
@@ -97,12 +95,13 @@ function balanceYearMonth(year: i32, month: i32): YM {
 function balanceDate(year: i32, month: i32, day: i32): YMD {
   const _ES$BalanceYearMonth = balanceYearMonth(year, month);
 
-  year = _ES$BalanceYearMonth.year;
+  year  = _ES$BalanceYearMonth.year;
   month = _ES$BalanceYearMonth.month;
+
   let daysInYear = 0;
   let testYear = month > 2 ? year : year - 1;
 
-  while (((daysInYear = leapYear(testYear) ? 366 : 365), day < -daysInYear)) {
+  while (((daysInYear = 365 + i32(leapYear(testYear))), day < -daysInYear)) {
     year -= 1;
     testYear -= 1;
     day += daysInYear;
@@ -110,7 +109,7 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 
   testYear += 1;
 
-  while (((daysInYear = leapYear(testYear) ? 366 : 365), day > daysInYear)) {
+  while (((daysInYear = 365 + i32(leapYear(testYear))), day > daysInYear)) {
     year += 1;
     testYear += 1;
     day -= daysInYear;
@@ -119,40 +118,32 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   while (day < 1) {
     const _ES$BalanceYearMonth2 = balanceYearMonth(year, month - 1);
 
-    year = _ES$BalanceYearMonth2.year;
+    year  = _ES$BalanceYearMonth2.year;
     month = _ES$BalanceYearMonth2.month;
-    day += daysInMonth(year, month);
+    day   += daysInMonth(year, month);
   }
 
-  while (day > daysInMonth(year, month)) {
-    day -= daysInMonth(year, month);
-
+  let monthDays = 0;
+  while (monthDays = daysInMonth(year, month), day > monthDays) {
     const _ES$BalanceYearMonth3 = balanceYearMonth(year, month + 1);
 
-    year = _ES$BalanceYearMonth3.year;
+    year  = _ES$BalanceYearMonth3.year;
     month = _ES$BalanceYearMonth3.month;
+    day   -= monthDays;
   }
 
   return new YMD(year, month, day);
 }
 
-function Mathmax(a: i32, b:i32): i32 {
-  return a > b ? a : b;
-}
-
-function Mathmin(a: i32, b:i32): i32 {
-  return a > b ? b : a;
-}
-
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
-export function constrainToRange(value: i32, min: i32, max: i32): i32 {
-  return Mathmin(max, Mathmax(min, value));
+export function clamp(value: i32, lo: i32, hi: i32): i32 {
+  return min(max(value, lo), hi);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
-  month = constrainToRange(month, 1, 12);
-  day = constrainToRange(day, 1, daysInMonth(year, month));
+  month = clamp(month, 1, 12);
+  day   = clamp(day, 1, daysInMonth(year, month));
   return new YMD(year, month, day);
 }
 
@@ -171,9 +162,9 @@ export function regulateDate(
     case Overflow.Constrain:
       const _ES$ConstrainDate = constrainDate(year, month, day);
 
-      year = _ES$ConstrainDate.year;
+      year  = _ES$ConstrainDate.year;
       month = _ES$ConstrainDate.month;
-      day = _ES$ConstrainDate.day;
+      day   = _ES$ConstrainDate.day;
       break;
   }
 
@@ -191,27 +182,28 @@ export function addDate(
   days: i32,
   overflow: Overflow
 ): YMD {
-  year += years;
+  year  += years;
   month += months;
 
   const _ES$BalanceYearMonth4 = balanceYearMonth(year, month);
 
-  year = _ES$BalanceYearMonth4.year;
+  year  = _ES$BalanceYearMonth4.year;
   month = _ES$BalanceYearMonth4.month;
 
   const _ES$RegulateDate = regulateDate(year, month, day, overflow);
 
-  year = _ES$RegulateDate.year;
+  year  = _ES$RegulateDate.year;
   month = _ES$RegulateDate.month;
-  day = _ES$RegulateDate.day;
+  day   = _ES$RegulateDate.day;
   days += 7 * weeks;
-  day += days;
+  day  += days;
 
   const _ES$BalanceDate3 = balanceDate(year, month, day);
 
-  year = _ES$BalanceDate3.year;
+  year  = _ES$BalanceDate3.year;
   month = _ES$BalanceDate3.month;
-  day = _ES$BalanceDate3.day;
+  day   = _ES$BalanceDate3.day;
+
   return new YMD(year, month, day);
 }
 
@@ -224,14 +216,11 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   const week = (doy - dow + 10) / 7;
 
   if (week < 1) {
-    if (doj === 5 || (doj === 6 && leapYear(year - 1))) {
-      return 53;
-    } else {
-      return 52;
-    }
+    return doj === 5 || (doj === 6 && leapYear(year - 1)) ? 53 : 52;
   }
+
   if (week === 53) {
-    if ((leapYear(year) ? 366 : 365) - doy < 4 - dow) {
+    if (365 + i32(leapYear(year)) - doy < 4 - dow) {
       return 1;
     }
   }
@@ -240,37 +229,31 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
 }
 
 function totalDurationNanoseconds(
-  days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32
+  days: i64,
+  hours: i64,
+  minutes: i64,
+  seconds: i64,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64
 ): i64 {
-  const hours64 = i64(hours) + i64(days) * 24;
-  const minutes64 = i64(minutes) + hours64 * 60;
-  const seconds64 = i64(seconds) + (minutes64 * 60);
-  const milliseconds64 = i64(milliseconds) + seconds64 * 1000;
-  const microseconds64 = i64(microseconds) + milliseconds64 * 1000;
-  return i64(nanoseconds) + microseconds64 * 1000;
-}
-
-
-function Mathabs(x: i32): i32 {
-  return x > 0 ? x : -x;
+  hours += days * 24;
+  minutes += hours * 60;
+  seconds += minutes * 60;
+  milliseconds += seconds * 1000;
+  microseconds += milliseconds * 1000;
+  return nanoseconds + microseconds * 1000;
 }
 
 function nanosecondsToDays(nanoseconds: i64): NanoDays {
+  const dayLengthNs: i64 = 24 * 60 * 60 * 1_000_000_000;
   const sign = i32(nanoseconds > 0) - i32(nanoseconds < 0);
-
-  const dayLengthNs = i64(86400e9);
-
   if (sign === 0) return new NanoDays(0, 0, dayLengthNs);
-
-  const days = i32(nanoseconds / dayLengthNs);
-  const nanosecondsRemainder = i32(nanoseconds % i64(dayLengthNs));
-  return new NanoDays(days, nanosecondsRemainder, sign * dayLengthNs);
+  return new NanoDays(
+    i32(nanoseconds / dayLengthNs),
+    i32(nanoseconds % dayLengthNs),
+    dayLengthNs * sign
+  );
 }
 
 export function balanceDuration(
@@ -283,27 +266,24 @@ export function balanceDuration(
   nanoseconds: i32,
   largestUnit: TimeComponent
 ): Duration {
-  const nanoseconds64 = totalDurationNanoseconds(
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
+  const durationNs = totalDurationNanoseconds(
+    days as i64,
+    hours as i64,
+    minutes as i64,
+    seconds as i64,
+    milliseconds as i64,
+    microseconds as i64,
+    nanoseconds as i64
   );
 
-  log(nanoseconds64.toString());
+  log(durationNs.toString());
 
   if (
-    largestUnit === TimeComponent.years ||
-    largestUnit === TimeComponent.months ||
-    largestUnit === TimeComponent.weeks ||
-    largestUnit === TimeComponent.days
+    largestUnit >= TimeComponent.years &&
+    largestUnit <= TimeComponent.days
   ) {
-    const _ES$NanosecondsToDays = nanosecondsToDays(nanoseconds64);
-    
-    days = _ES$NanosecondsToDays.days;
+    const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
+    days        = _ES$NanosecondsToDays.days;
     nanoseconds = _ES$NanosecondsToDays.nanoseconds;
     log(days.toString());
   } else {
@@ -311,7 +291,7 @@ export function balanceDuration(
   }
 
   const sign = nanoseconds < 0 ? -1 : 1;
-  nanoseconds = Mathabs(nanoseconds);
+  nanoseconds = abs(nanoseconds);
   microseconds = milliseconds = seconds = minutes = hours = 0;
 
   switch (largestUnit) {
@@ -321,29 +301,29 @@ export function balanceDuration(
     case TimeComponent.days:
     case TimeComponent.hours:
       microseconds = nanoseconds / 1000;
-      nanoseconds = nanoseconds % 1000;
+      nanoseconds  = nanoseconds % 1000;
 
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds = i32(milliseconds / 1000);
+      seconds      = milliseconds / 1000;
       milliseconds = milliseconds % 1000;
 
       minutes = seconds / 60;
       seconds = seconds % 60;
 
-      hours = minutes / 60;
+      hours   = minutes / 60;
       minutes = minutes % 60;
       break;
 
     case TimeComponent.minutes:
       microseconds = nanoseconds / 1000;
-      nanoseconds = nanoseconds % 1000;
+      nanoseconds  = nanoseconds % 1000;
 
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds = milliseconds / 1000;
+      seconds      = milliseconds / 1000;
       milliseconds = milliseconds % 1000;
 
       minutes = seconds / 60;
@@ -352,18 +332,18 @@ export function balanceDuration(
 
     case TimeComponent.seconds:
       microseconds = nanoseconds / 1000;
-      nanoseconds = nanoseconds % 1000;
+      nanoseconds  = nanoseconds % 1000;
 
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds = milliseconds / 1000;
+      seconds      = milliseconds / 1000;
       milliseconds = milliseconds % 1000;
       break;
 
     case TimeComponent.milliseconds:
       microseconds = nanoseconds / 1000;
-      nanoseconds = nanoseconds % 1000;
+      nanoseconds  = nanoseconds % 1000;
 
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
@@ -371,30 +351,23 @@ export function balanceDuration(
 
     case TimeComponent.microseconds:
       microseconds = nanoseconds / 1000;
-      nanoseconds = nanoseconds % 1000;
+      nanoseconds  = nanoseconds % 1000;
       break;
 
     case TimeComponent.nanoseconds:
       break;
   }
 
-  hours = hours * sign;
-  minutes = minutes * sign;
-  seconds = seconds * sign;
-  milliseconds = milliseconds * sign;
-  microseconds = microseconds * sign;
-  nanoseconds = nanoseconds * sign;
-  const dur = new Duration(
+  return new Duration(
     0,
     0,
     0,
     days,
-    hours,
-    minutes,
-    seconds
+    hours * sign,
+    minutes * sign,
+    seconds * sign,
+    milliseconds * sign,
+    microseconds * sign,
+    nanoseconds * sign
   );
-  dur.milliseconds = milliseconds;
-  dur.microseconds = microseconds;
-  dur.nanoseconds = nanoseconds;
-  return dur;
 }
