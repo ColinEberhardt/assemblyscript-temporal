@@ -95,12 +95,13 @@ function balanceYearMonth(year: i32, month: i32): YM {
 function balanceDate(year: i32, month: i32, day: i32): YMD {
   const _ES$BalanceYearMonth = balanceYearMonth(year, month);
 
-  year = _ES$BalanceYearMonth.year;
+  year  = _ES$BalanceYearMonth.year;
   month = _ES$BalanceYearMonth.month;
+
   let daysInYear = 0;
   let testYear = month > 2 ? year : year - 1;
 
-  while (((daysInYear = leapYear(testYear) ? 366 : 365), day < -daysInYear)) {
+  while (((daysInYear = 365 + i32(leapYear(testYear))), day < -daysInYear)) {
     year -= 1;
     testYear -= 1;
     day += daysInYear;
@@ -108,7 +109,7 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 
   testYear += 1;
 
-  while (((daysInYear = leapYear(testYear) ? 366 : 365), day > daysInYear)) {
+  while (((daysInYear = 365 + i32(leapYear(testYear))), day > daysInYear)) {
     year += 1;
     testYear += 1;
     day -= daysInYear;
@@ -122,13 +123,13 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
     day   += daysInMonth(year, month);
   }
 
-  while (day > daysInMonth(year, month)) {
-    day -= daysInMonth(year, month);
-
+  let monthDays = 0;
+  while (monthDays = daysInMonth(year, month), day > monthDays) {
     const _ES$BalanceYearMonth3 = balanceYearMonth(year, month + 1);
 
-    year = _ES$BalanceYearMonth3.year;
+    year  = _ES$BalanceYearMonth3.year;
     month = _ES$BalanceYearMonth3.month;
+    day   -= monthDays;
   }
 
   return new YMD(year, month, day);
@@ -265,7 +266,7 @@ export function balanceDuration(
   nanoseconds: i32,
   largestUnit: TimeComponent
 ): Duration {
-  const nanoseconds64 = totalDurationNanoseconds(
+  const durationNs = totalDurationNanoseconds(
     days as i64,
     hours as i64,
     minutes as i64,
@@ -275,17 +276,14 @@ export function balanceDuration(
     nanoseconds as i64
   );
 
-  log(nanoseconds64.toString());
+  log(durationNs.toString());
 
   if (
-    largestUnit === TimeComponent.years ||
-    largestUnit === TimeComponent.months ||
-    largestUnit === TimeComponent.weeks ||
-    largestUnit === TimeComponent.days
+    largestUnit >= TimeComponent.years &&
+    largestUnit <= TimeComponent.days
   ) {
-    const _ES$NanosecondsToDays = nanosecondsToDays(nanoseconds64);
-
-    days = _ES$NanosecondsToDays.days;
+    const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
+    days        = _ES$NanosecondsToDays.days;
     nanoseconds = _ES$NanosecondsToDays.nanoseconds;
     log(days.toString());
   } else {
