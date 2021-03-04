@@ -78,7 +78,7 @@ class PlainDate {
       orZero(addValue.minutes),
       orZero(addValue.seconds),
       orZero(addValue.milliseconds),
-      orZero(addValue.microseconds),
+      orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
     return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.add(duration)));
@@ -86,13 +86,19 @@ class PlainDate {
 
   static from(date) {
     if (typeof date === "string") {
-      const datePtr = __pin(__newString(date));
-      const wasmDate = WasmPlainDate.wrap(WasmPlainDate.from(datePtr));
-      __unpin(datePtr);
-      return new PlainDate(wasmDate);
+      try {
+        const datePtr = __pin(__newString(date));
+        const wasmDate = WasmPlainDate.wrap(WasmPlainDate.fromString(datePtr));
+        __unpin(datePtr);
+        return new PlainDate(wasmDate);
+      } catch (e) {
+        throw new RangeError(e.message);
+      }
     }
     if (date instanceof PlainDate) {
-      return new PlainDate(this.wasmPlainDate);
+      return WasmPlainDate.wrap(
+        WasmPlainDate.fromPlainDate(this.wasmPlainDate)
+      );
     }
   }
 }
