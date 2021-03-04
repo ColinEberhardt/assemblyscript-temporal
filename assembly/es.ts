@@ -135,14 +135,14 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
-export function constrainToRange(value: i32, lo: i32, hi: i32): i32 {
-  return min(hi, max(lo, value));
+export function clamp(value: i32, lo: i32, hi: i32): i32 {
+  return min(max(value, lo), hi);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
-  month = constrainToRange(month, 1, 12);
-  day = constrainToRange(day, 1, daysInMonth(year, month));
+  month = clamp(month, 1, 12);
+  day   = clamp(day, 1, daysInMonth(year, month));
   return new YMD(year, month, day);
 }
 
@@ -161,9 +161,9 @@ export function regulateDate(
     case Overflow.Constrain:
       const _ES$ConstrainDate = constrainDate(year, month, day);
 
-      year = _ES$ConstrainDate.year;
+      year  = _ES$ConstrainDate.year;
       month = _ES$ConstrainDate.month;
-      day = _ES$ConstrainDate.day;
+      day   = _ES$ConstrainDate.day;
       break;
   }
 
@@ -181,27 +181,28 @@ export function addDate(
   days: i32,
   overflow: Overflow
 ): YMD {
-  year += years;
+  year  += years;
   month += months;
 
   const _ES$BalanceYearMonth4 = balanceYearMonth(year, month);
 
-  year = _ES$BalanceYearMonth4.year;
+  year  = _ES$BalanceYearMonth4.year;
   month = _ES$BalanceYearMonth4.month;
 
   const _ES$RegulateDate = regulateDate(year, month, day, overflow);
 
-  year = _ES$RegulateDate.year;
+  year  = _ES$RegulateDate.year;
   month = _ES$RegulateDate.month;
-  day = _ES$RegulateDate.day;
+  day   = _ES$RegulateDate.day;
   days += 7 * weeks;
-  day += days;
+  day  += days;
 
   const _ES$BalanceDate3 = balanceDate(year, month, day);
 
-  year = _ES$BalanceDate3.year;
+  year  = _ES$BalanceDate3.year;
   month = _ES$BalanceDate3.month;
-  day = _ES$BalanceDate3.day;
+  day   = _ES$BalanceDate3.day;
+
   return new YMD(year, month, day);
 }
 
@@ -227,20 +228,20 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
 }
 
 function totalDurationNanoseconds(
-  days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32
+  days: i64,
+  hours: i64,
+  minutes: i64,
+  seconds: i64,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64
 ): i64 {
-  const hours64 = i64(hours) + i64(days) * 24;
-  const minutes64 = i64(minutes) + hours64 * 60;
-  const seconds64 = i64(seconds) + minutes64 * 60;
-  const milliseconds64 = i64(milliseconds) + seconds64 * 1000;
-  const microseconds64 = i64(microseconds) + milliseconds64 * 1000;
-  return i64(nanoseconds) + microseconds64 * 1000;
+  hours += days * 24;
+  minutes += hours * 60;
+  seconds += minutes * 60;
+  milliseconds += seconds * 1000;
+  microseconds += milliseconds * 1000;
+  return nanoseconds + microseconds * 1000;
 }
 
 function nanosecondsToDays(nanoseconds: i64): NanoDays {
@@ -265,13 +266,13 @@ export function balanceDuration(
   largestUnit: TimeComponent
 ): Duration {
   const nanoseconds64 = totalDurationNanoseconds(
-    days,
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
+    days as i64,
+    hours as i64,
+    minutes as i64,
+    seconds as i64,
+    milliseconds as i64,
+    microseconds as i64,
+    nanoseconds as i64
   );
 
   log(nanoseconds64.toString());
