@@ -86,6 +86,21 @@ class PlainDate {
     );
     return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.add(duration)));
   }
+  subtract(addValue) {
+    const duration = new WasmDuration(
+      orZero(addValue.years),
+      orZero(addValue.months),
+      orZero(addValue.weeks),
+      orZero(addValue.days),
+      orZero(addValue.hours),
+      orZero(addValue.minutes),
+      orZero(addValue.seconds),
+      orZero(addValue.milliseconds),
+      orZero(addValue.microseconds)
+      // orZero(addValue.nanoseconds)
+    );
+    return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.subtract(duration)));
+  }
 
   static compare(a, b) {
     return WasmPlainDate.compare(a.wasmPlainDate, b.wasmPlainDate);

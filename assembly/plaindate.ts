@@ -88,6 +88,31 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
+  subtract(duration: Duration): PlainDate {
+    const balancedDuration = balanceDuration(
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      TimeComponent.days
+    );
+
+    const newDate = addDate(
+      this.year,
+      this.month,
+      this.day,
+      -duration.years,
+      -duration.months,
+      -duration.weeks,
+      -balancedDuration.days,
+      Overflow.Constrain
+    );
+    return new PlainDate(newDate.year, newDate.month, newDate.day);
+  }
+
   static compare(a: PlainDate, b: PlainDate): i32 {
     if (a.year < b.year) {
       return -1;
