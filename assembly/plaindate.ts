@@ -59,6 +59,10 @@ export class PlainDate {
     );
   }
 
+  equals(date: PlainDate): bool {
+    return this.toString() == date.toString();
+  }
+
   add(duration: Duration): PlainDate {
     const balancedDuration = balanceDuration(
       duration.days,

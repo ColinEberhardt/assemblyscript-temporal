@@ -65,6 +65,9 @@ class PlainDate {
     return this.wasmPlainDate.daysInWeek;
   }
 
+  equals(date) {
+    return this.wasmPlainDate.equals(date.wasmPlainDate);
+  }
   toString() {
     return __getString(this.wasmPlainDate.toString());
   }
