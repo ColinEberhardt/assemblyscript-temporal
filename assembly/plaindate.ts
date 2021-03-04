@@ -60,7 +60,11 @@ export class PlainDate {
   }
 
   equals(date: PlainDate): bool {
-    return this.toString() == date.toString();
+    return (
+      this.day   == date.day   &&
+      this.month == date.month &&
+      this.year  == date.year
+    );
   }
 
   add(duration: Duration): PlainDate {
