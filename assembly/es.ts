@@ -47,7 +47,7 @@ export const enum TimeComponent {
 // modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2157
 export function leapYear(year: i32): bool {
-  return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2188
@@ -85,10 +85,9 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 function balanceYearMonth(year: i32, month: i32): YM {
   month -= 1;
-  year += month / 12;
+  year  += month / 12;
   month %= 12;
-  if (month < 0) month += 12;
-  month += 1;
+  month += month < 0 ? 13 : 1;
   return new YM(year, month);
 }
 
