@@ -276,14 +276,11 @@ function totalDurationNanoseconds(
   return nanoseconds + microseconds * 1000;
 }
 
-function nanosecondsToDays(nanoseconds: i64): NanoDays {
-  const dayLengthNs: i64 = 24 * 60 * 60 * 1_000_000_000;
-  if (nanoseconds == 0) return new NanoDays(0, 0, dayLengthNs);
-  return new NanoDays(
-    i32(nanoseconds / dayLengthNs),
-    i32(nanoseconds % dayLengthNs),
-    dayLengthNs * sign(nanoseconds)
-  );
+function nanosecondsToDays(ns: i64): NanoDays {
+  const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
+  return ns == 0
+    ? new NanoDays(0, 0, oneDayNs)
+    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(ns));
 }
 
 export function balanceDuration(
