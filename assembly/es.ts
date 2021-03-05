@@ -167,10 +167,8 @@ export function clamp(value: i32, lo: i32, hi: i32): i32 {
 }
 
 // https://github.com/tc39/proposal-temporal/blob/51c6c5138b5b73817f5e0ff2694fe0134f09b0a7/polyfill/lib/ecmascript.mjs#L2704
-export function checkRange(value: i32, lo: i32, hi: i32): void {
-  if (u32(value - lo) > u32(hi - lo)) {
-    throw new RangeError("value out of range");
-  }
+export function checkRange(value: i32, lo: i32, hi: i32): bool {
+  return u32(value - lo) <= u32(hi - lo);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
