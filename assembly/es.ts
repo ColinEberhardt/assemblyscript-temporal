@@ -11,19 +11,20 @@ import { log } from "./env";
 
 // value objects - used in place of object literals
 export class YMD {
-  constructor(public year: i32, public month: i32, public day: i32) {}
+  year: i32;
+  month: i32;
+  day: i32;
 }
 
 export class YM {
-  constructor(public year: i32, public month: i32) {}
+  year: i32;
+  month: i32;
 }
 
 export class NanoDays {
-  constructor(
-    public days: i32,
-    public nanoseconds: i32,
-    public dayLengthNs: i64
-  ) {}
+  days: i32;
+  nanoseconds: i32;
+  dayLengthNs: i64;
 }
 
 export const enum Overflow {
@@ -88,7 +89,7 @@ function balanceYearMonth(year: i32, month: i32): YM {
   year  += i32(Math.floor(f32(month) / 12.0));
   month %= 12;
   month += month < 0 ? 13 : 1;
-  return new YM(year, month);
+  return { year, month };
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2173
@@ -132,7 +133,7 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
     day   -= monthDays;
   }
 
-  return new YMD(year, month, day);
+  return { year, month, day };
 }
 
 export function sign<T extends number>(x: T): T {
@@ -150,7 +151,7 @@ export function clamp(value: i32, lo: i32, hi: i32): i32 {
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
   month = clamp(month, 1, 12);
   day   = clamp(day, 1, daysInMonth(year, month));
-  return new YMD(year, month, day);
+  return { year, month, day };
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
@@ -174,7 +175,7 @@ export function regulateDate(
       break;
   }
 
-  return new YMD(year, month, day);
+  return { year, month, day };
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2984
@@ -210,7 +211,7 @@ export function addDate(
   month = _ES$BalanceDate3.month;
   day   = _ES$BalanceDate3.day;
 
-  return new YMD(year, month, day);
+  return { year, month, day };
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2135
@@ -280,8 +281,12 @@ function totalDurationNanoseconds(
 function nanosecondsToDays(ns: i64): NanoDays {
   const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
   return ns == 0
-    ? new NanoDays(0, 0, oneDayNs)
-    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(ns));
+    ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
+    : {
+        days: i32(ns / oneDayNs),
+        nanoseconds: i32(ns % oneDayNs),
+        dayLengthNs: oneDayNs * sign(ns)
+      };
 }
 
 export function balanceDuration(
