@@ -85,7 +85,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 function balanceYearMonth(year: i32, month: i32): YM {
   month -= 1;
-  year  += month / 12;
+  year  += i32(Math.floor(f32(month) / 12.0));
   month %= 12;
   month += month < 0 ? 13 : 1;
   return new YM(year, month);
@@ -304,8 +304,6 @@ export function balanceDuration(
     nanoseconds as i64
   );
 
-  log(durationNs.toString());
-
   if (
     largestUnit >= TimeComponent.years &&
     largestUnit <= TimeComponent.days
@@ -313,7 +311,6 @@ export function balanceDuration(
     const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
     days        = _ES$NanosecondsToDays.days;
     nanoseconds = _ES$NanosecondsToDays.nanoseconds;
-    log(days.toString());
   } else {
     days = 0;
   }

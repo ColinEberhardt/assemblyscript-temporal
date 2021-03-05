@@ -5,6 +5,6 @@ globalAny.log = console.log;
 
 import { Duration, PlainDate } from "../assembly/index";
 
-let date = PlainDate.from("2019-10-06");
+let date = PlainDate.fromString("2019-10-06");
 let add = date.add(new Duration(0, 0, 0, 0, 24));
 console.log(date, add);
