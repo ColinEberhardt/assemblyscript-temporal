@@ -99,11 +99,12 @@ export class PlainDate {
   }
 
   @inline
-  equals(date: PlainDate): bool {
+  equals(other: PlainDate): bool {
+    if (this === other) return true;
     return (
-      this.day   == date.day   &&
-      this.month == date.month &&
-      this.year  == date.year
+      this.day   == other.day   &&
+      this.month == other.month &&
+      this.year  == other.year
     );
   }
 

@@ -20,6 +20,7 @@ export class PlainTime {
   }
 
   equals(other: PlainTime): bool {
+    if (this === other) return true;
     return (
       this.nanosecond  == other.nanosecond  &&
       this.microsecond == other.microsecond &&
