@@ -77,10 +77,9 @@ export function dayOfYear(year: i32, month: i32, day: i32): i32 {
 // modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 export function daysInMonth(year: i32, month: i32): i32 {
-  month -= 1;
-  return month == 1
+  return month == 2
     ? 28 + i32(leapYear(year))
-    : 31 - ((month + i32(month >= 7)) & 1);
+    : 30 + ((month + i32(month >= 8)) & 1);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
