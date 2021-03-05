@@ -5,7 +5,6 @@ import {
   TimeComponent,
   addDate,
   dayOfWeek,
-  daysInMonth,
   Overflow,
   dayOfYear,
   weekOfYear,
