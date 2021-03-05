@@ -223,7 +223,7 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   let dow = dayOfWeek(year, month, day) || 7;
   let doj = dayOfWeek(year, 1, 1);
 
-  const week = (doy - dow + 10) / 7;
+  const week = floorDiv(doy - dow + 10, 7);
 
   if (week < 1) {
     return doj === 5 || (doj === 6 && leapYear(year - 1)) ? 53 : 52;
