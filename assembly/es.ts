@@ -280,7 +280,7 @@ function nanosecondsToDays(ns: i64): NanoDays {
   const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
   return ns == 0
     ? new NanoDays(0, 0, oneDayNs)
-    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(ns));
+    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(i32(ns)));
 }
 
 export function balanceDuration(
