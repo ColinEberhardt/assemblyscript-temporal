@@ -79,7 +79,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const y = Y - c * 100;
   const d = day;
   const pD = d;
-  const pM = i32(2.6 * f32(m) - 0.2);
+  const pM = (26 * m - 2) / 10;
   const pY = y + y / 4;
   const pC = c / 4 - 2 * c;
   const dow = (pD + pM + pY + pC) % 7;
