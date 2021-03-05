@@ -135,6 +135,12 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   return new YMD(year, month, day);
 }
 
+export function sign<T extends number>(x: T): T {
+  // x < 0 ? -1 : 1   ->   x >> 31 | 1
+  // @ts-ignore
+  return (x >> (sizeof<T>() * 4 - 1)) | 1;
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
 export function clamp(value: i32, lo: i32, hi: i32): i32 {
   return min(max(value, lo), hi);
@@ -228,6 +234,32 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   return week;
 }
 
+// https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/ecmascript.mjs#L2217
+export function durationSign(
+  years: i32,
+  months: i32,
+  weeks: i32,
+  days: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i32,
+  microseconds: i32,
+  nanoseconds: i32
+): i32 {
+  if (years) return sign(years);
+  if (months) return sign(months);
+  if (weeks) return sign(weeks);
+  if (days) return sign(days);
+  if (hours) return sign(hours);
+  if (minutes) return sign(minutes);
+  if (seconds) return sign(seconds);
+  if (milliseconds) return sign(milliseconds);
+  if (microseconds) return sign(microseconds);
+  if (nanoseconds) return sign(nanoseconds);
+  return 0;
+}
+
 function totalDurationNanoseconds(
   days: i64,
   hours: i64,
@@ -245,15 +277,11 @@ function totalDurationNanoseconds(
   return nanoseconds + microseconds * 1000;
 }
 
-function nanosecondsToDays(nanoseconds: i64): NanoDays {
-  const dayLengthNs: i64 = 24 * 60 * 60 * 1_000_000_000;
-  const sign = i32(nanoseconds > 0) - i32(nanoseconds < 0);
-  if (sign === 0) return new NanoDays(0, 0, dayLengthNs);
-  return new NanoDays(
-    i32(nanoseconds / dayLengthNs),
-    i32(nanoseconds % dayLengthNs),
-    dayLengthNs * sign
-  );
+function nanosecondsToDays(ns: i64): NanoDays {
+  const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
+  return ns == 0
+    ? new NanoDays(0, 0, oneDayNs)
+    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(ns));
 }
 
 export function balanceDuration(
@@ -290,7 +318,7 @@ export function balanceDuration(
     days = 0;
   }
 
-  const sign = nanoseconds < 0 ? -1 : 1;
+  const sig = sign(nanoseconds);
   nanoseconds = abs(nanoseconds);
   microseconds = milliseconds = seconds = minutes = hours = 0;
 
@@ -363,11 +391,11 @@ export function balanceDuration(
     0,
     0,
     days,
-    hours * sign,
-    minutes * sign,
-    seconds * sign,
-    milliseconds * sign,
-    microseconds * sign,
-    nanoseconds * sign
+    hours * sig,
+    minutes * sig,
+    seconds * sig,
+    milliseconds * sig,
+    microseconds * sig,
+    nanoseconds * sig
   );
 }
