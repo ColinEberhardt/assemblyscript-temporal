@@ -158,24 +158,15 @@ export class PlainDate {
   }
 
   static compare(a: PlainDate, b: PlainDate): i32 {
-    if (a.year < b.year) {
-      return -1;
-    }
-    if (a.year > b.year) {
-      return 1;
-    }
-    if (a.month < b.month) {
-      return -1;
-    }
-    if (a.month > b.month) {
-      return 1;
-    }
-    if (a.day < b.day) {
-      return -1;
-    }
-    if (a.day > b.day) {
-      return 1;
-    }
+    if (a.year < b.year) return -1;
+    if (a.year > b.year) return  1;
+
+    if (a.month < b.month) return -1;
+    if (a.month > b.month) return  1;
+
+    if (a.day < b.day) return -1;
+    if (a.day > b.day) return  1;
+
     return 0;
   }
 }

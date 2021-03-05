@@ -29,4 +29,26 @@ export class PlainTime {
       this.hour   == other.hour
     );
   }
+
+  static compare(a: PlainTime, b: PlainTime): i32 {
+    if (a.hour < b.hour) return -1;
+    if (a.hour > b.hour) return  1;
+
+    if (a.minute < b.minute) return -1;
+    if (a.minute > b.minute) return  1;
+
+    if (a.second < b.second) return -1;
+    if (a.second > b.second) return  1;
+
+    if (a.millisecond < b.millisecond) return -1;
+    if (a.millisecond > b.millisecond) return  1;
+
+    if (a.microsecond < b.microsecond) return -1;
+    if (a.microsecond > b.microsecond) return  1;
+
+    if (a.nanosecond < b.nanosecond) return -1;
+    if (a.nanosecond > b.nanosecond) return  1;
+
+    return 0;
+  }
 }
