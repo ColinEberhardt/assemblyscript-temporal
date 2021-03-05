@@ -50,6 +50,7 @@ export function leapYear(year: i32): bool {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
+// modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2188
 export function dayOfYear(year: i32, month: i32, day: i32): i32 {
   const sumDaysOfMonths = memory.data<u16>([
