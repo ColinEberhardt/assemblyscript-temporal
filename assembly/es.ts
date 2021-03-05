@@ -89,7 +89,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 function balanceYearMonth(year: i32, month: i32): YM {
   month -= 1;
-  year  += floorDiv(month, 12.0);
+  year  += floorDiv(month, 12);
   month %= 12;
   month += month < 0 ? 13 : 1;
   return new YM(year, month);
