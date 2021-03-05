@@ -49,13 +49,14 @@ export class PlainDate {
     if (isString<T>()) {
       // @ts-ignore: cast
       return this.fromString(<string>date);
-    }
-    if (isReference<T>()) {
-      if (date instanceof PlainDate) {
-        return new PlainDate(date.year, date.month, date.day);
+    } else {
+      if (isReference<T>()) {
+        if (date instanceof PlainDate) {
+          return new PlainDate(date.year, date.month, date.day);
+        }
       }
+      throw new TypeError("invalid date type");
     }
-    throw new TypeError("invalid date type");
   }
 
   constructor(readonly year: i32, readonly month: i32, readonly day: i32) {}
