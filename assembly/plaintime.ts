@@ -1,4 +1,4 @@
-import { checkRange } from "./es";
+import { checkRange } from "./utils";
 
 export class PlainTime {
   constructor(
