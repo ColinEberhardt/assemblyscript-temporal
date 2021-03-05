@@ -45,12 +45,15 @@ export const enum TimeComponent {
   nanoseconds,
 }
 
+@inline
 export function floorDiv(a: i32, b: i32): i32 {
   return (a >= 0 ? a : a - b + 1) / b;
 }
 
 // modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2157
+// @ts-ignore: decorator
+@inline
 export function leapYear(year: i32): bool {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
@@ -155,6 +158,8 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   return { year, month, day };
 }
 
+// @ts-ignore: decorator
+@inline
 export function sign<T extends number>(x: T): T {
   // x < 0 ? -1 : 1   ->   x >> 31 | 1
   // @ts-ignore
@@ -162,6 +167,8 @@ export function sign<T extends number>(x: T): T {
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
+// @ts-ignore: decorator
+@inline
 export function clamp(value: i32, lo: i32, hi: i32): i32 {
   return min(max(value, lo), hi);
 }
@@ -424,4 +431,10 @@ export function balanceDuration(
     microseconds * sig,
     nanoseconds * sig
   );
+}
+
+// @ts-ignore: decorator
+@inline
+export function toPaddedString(number: i32, length: i32 = 2): string {
+  return number.toString().padStart(length, "0");
 }

@@ -26,39 +26,4 @@ The current AssemnblyScript PlainDate implementation passes 62 of the 241 tests,
 
 This project is still very much in the early exploration phase. I'd like to implement more of the temporal features and uncover more of the underlying challenge (see below) before starting on a more structured implementation roadmap.
 
-### Current challenges and open questions ...
-
-1. Oveloaded functions
-
-The temporal API makes extensive use of function overloading, e.g. [PlainDate.From](https://github.com/tc39/proposal-temporal/blob/main/polyfill/index.d.ts#L807):
-
-~~~
-date = Temporal.PlainDate.from('2006-08-24'); 
-date = Temporal.PlainDate.from({year: 2006, month: 8, day: 24}); 
-date = Temporal.PlainDate.from(Temporal.PlainDateTime.from('2006-08-24T15:43:27'));
-~~~
-
-AssemblyScript doesn't support [union types](https://www.assemblyscript.org/basics.html#no-union-types). What is the best way to support this API?
-
-Perhaps ...
-
-~~~
-date = Temporal.PlainDate.fromString('2006-08-24'); 
-date = Temporal.PlainDate.fromDateLike({year: 2006, month: 8, day: 24}); 
-date = Temporal.PlainDate.fromPlainDate(Temporal.PlainDateTime.from('2006-08-24T15:43:27'));
-~~~
-
-2. DateLike / DurationLike
-
-The API makes extensive use of object literals with optional properties, e.g.
-
-~~~
-date.add({ years: 20, months: 4 })
-~~~
-
-As defined by the types such as [DurationLike](https://github.com/tc39/proposal-temporal/blob/main/polyfill/index.d.ts#L460).
-
-AssemblyScript doesn't support object literals. What is the best way to support this API?
-
-
 *If you have thoughts / ideas on the above, please open an issue*
