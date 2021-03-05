@@ -55,13 +55,28 @@ export function leapYear(year: i32): bool {
   return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
 }
 
+// modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2188
 export function dayOfYear(year: i32, month: i32, day: i32): i32 {
-  let days = day;
-  for (let m = month - 1; m > 0; m--) {
-    days += daysInMonth(year, m);
-  }
-  return days;
+  const cumsumMonthDays = memory.data<u16>([
+    0,
+    31, // Jan
+    31 + 28, // Feb
+    31 + 28 + 31, // Mar
+    31 + 28 + 31 + 30, // Apr
+    31 + 28 + 31 + 30 + 31, // May
+    31 + 28 + 31 + 30 + 31 + 30, // Jun
+    31 + 28 + 31 + 30 + 31 + 30 + 31, // Jul
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31, // Aug
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30, // Sep
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31, // Oct
+    31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30, // Nov
+  ]);
+  return (
+    day +
+    i32(load<u16>(cumsumMonthDays + ((month - 1) << 1))) +
+    i32(month >= 3 && leapYear(year))
+  );
 }
 
 // modified of
@@ -69,7 +84,7 @@ export function dayOfYear(year: i32, month: i32, day: i32): i32 {
 export function daysInMonth(year: i32, month: i32): i32 {
   return month == 2
     ? 28 + i32(leapYear(year))
-    : 30 + ((month + i32(month >= 6)) & 1);
+    : 30 + ((month + i32(month >= 8)) & 1);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
