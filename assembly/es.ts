@@ -135,9 +135,10 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   return new YMD(year, month, day);
 }
 
-export function sign(x: i32): i32 {
+export function sign<T extends number>(x: T): T {
   // x < 0 ? -1 : 1   ->   x >> 31 | 1
-  return x >> 31 | 1;
+  // @ts-ignore
+  return (x >> (sizeof<T>() * 4 - 1)) | 1;
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
@@ -280,7 +281,7 @@ function nanosecondsToDays(ns: i64): NanoDays {
   const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
   return ns == 0
     ? new NanoDays(0, 0, oneDayNs)
-    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(i32(ns)));
+    : new NanoDays(i32(ns / oneDayNs), i32(ns % oneDayNs), oneDayNs * sign(ns));
 }
 
 export function balanceDuration(
