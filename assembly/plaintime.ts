@@ -1,4 +1,4 @@
-import { checkRange } from "./utils";
+import { sign, checkRange } from "./utils";
 
 export class PlainTime {
   constructor(
@@ -34,23 +34,23 @@ export class PlainTime {
   static compare(a: PlainTime, b: PlainTime): i32 {
     if (a === b) return 0;
 
-    if (a.hour < b.hour) return -1;
-    if (a.hour > b.hour) return  1;
+    let res = a.hour - b.hour;
+    if (res) return sign(res);
 
-    if (a.minute < b.minute) return -1;
-    if (a.minute > b.minute) return  1;
+    res = a.minute - b.minute;
+    if (res) return sign(res);
 
-    if (a.second < b.second) return -1;
-    if (a.second > b.second) return  1;
+    res = a.second - b.second;
+    if (res) return sign(res);
 
-    if (a.millisecond < b.millisecond) return -1;
-    if (a.millisecond > b.millisecond) return  1;
+    res = a.millisecond - b.millisecond;
+    if (res) return sign(res);
 
-    if (a.microsecond < b.microsecond) return -1;
-    if (a.microsecond > b.microsecond) return  1;
+    res = a.microsecond - b.microsecond;
+    if (res) return sign(res);
 
-    if (a.nanosecond < b.nanosecond) return -1;
-    if (a.nanosecond > b.nanosecond) return  1;
+    res = a.nanosecond - b.nanosecond;
+    if (res) return sign(res);
 
     return 0;
   }

@@ -2,6 +2,7 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration } from "./duration";
 import {
+  sign,
   TimeComponent,
   addDate,
   dayOfWeek,
@@ -161,14 +162,14 @@ export class PlainDate {
   static compare(a: PlainDate, b: PlainDate): i32 {
     if (a === b) return 0;
 
-    if (a.year < b.year) return -1;
-    if (a.year > b.year) return  1;
+    let res = a.year - b.year;
+    if (res) return sign(res);
 
-    if (a.month < b.month) return -1;
-    if (a.month > b.month) return  1;
+    res = a.month - b.month;
+    if (res) return sign(res);
 
-    if (a.day < b.day) return -1;
-    if (a.day > b.day) return  1;
+    res = a.day - b.day;
+    if (res) return sign(res);
 
     return 0;
   }
