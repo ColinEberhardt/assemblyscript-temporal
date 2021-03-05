@@ -16,6 +16,7 @@ export class PlainDate {
   readonly daysInYear: i32;
   readonly inLeapYear: bool;
 
+  @inline
   static fromPlainDate(date: PlainDate): PlainDate {
     return new PlainDate(date.year, date.month, date.day);
   }
