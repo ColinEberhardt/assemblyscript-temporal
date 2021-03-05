@@ -135,6 +135,11 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   return new YMD(year, month, day);
 }
 
+export function sign(x: i32): i32 {
+  // x < 0 ? -1 : 1   ->   x >> 31 | 1
+  return x >> 31 | 1;
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
 export function clamp(value: i32, lo: i32, hi: i32): i32 {
   return min(max(value, lo), hi);
@@ -241,17 +246,16 @@ export function durationSign(
   microseconds: i32,
   nanoseconds: i32
 ): i32 {
-  // x < 0 ? -1 : 1   ->   x >> 31 | 1
-  if (years) return years >> 31 | 1;
-  if (months) return months >> 31 | 1;
-  if (weeks) return weeks >> 31 | 1;
-  if (days) return days >> 31 | 1;
-  if (hours) return hours >> 31 | 1;
-  if (minutes) return minutes >> 31 | 1;
-  if (seconds) return seconds >> 31 | 1;
-  if (milliseconds) return milliseconds >> 31 | 1;
-  if (microseconds) return microseconds >> 31 | 1;
-  if (nanoseconds) return nanoseconds >> 31 | 1;
+  if (years) return sign(years);
+  if (months) return sign(months);
+  if (weeks) return sign(weeks);
+  if (days) return sign(days);
+  if (hours) return sign(hours);
+  if (minutes) return sign(minutes);
+  if (seconds) return sign(seconds);
+  if (milliseconds) return sign(milliseconds);
+  if (microseconds) return sign(microseconds);
+  if (nanoseconds) return sign(nanoseconds);
   return 0;
 }
 
@@ -274,12 +278,11 @@ function totalDurationNanoseconds(
 
 function nanosecondsToDays(nanoseconds: i64): NanoDays {
   const dayLengthNs: i64 = 24 * 60 * 60 * 1_000_000_000;
-  const sign = i32(nanoseconds > 0) - i32(nanoseconds < 0);
-  if (sign === 0) return new NanoDays(0, 0, dayLengthNs);
+  if (nanoseconds == 0) return new NanoDays(0, 0, dayLengthNs);
   return new NanoDays(
     i32(nanoseconds / dayLengthNs),
     i32(nanoseconds % dayLengthNs),
-    dayLengthNs * sign
+    dayLengthNs * sign(nanoseconds)
   );
 }
 
@@ -317,7 +320,7 @@ export function balanceDuration(
     days = 0;
   }
 
-  const sign = nanoseconds < 0 ? -1 : 1;
+  const sig = sign(nanoseconds);
   nanoseconds = abs(nanoseconds);
   microseconds = milliseconds = seconds = minutes = hours = 0;
 
@@ -390,11 +393,11 @@ export function balanceDuration(
     0,
     0,
     days,
-    hours * sign,
-    minutes * sign,
-    seconds * sign,
-    milliseconds * sign,
-    microseconds * sign,
-    nanoseconds * sign
+    hours * sig,
+    minutes * sig,
+    seconds * sig,
+    milliseconds * sig,
+    microseconds * sig,
+    nanoseconds * sig
   );
 }
