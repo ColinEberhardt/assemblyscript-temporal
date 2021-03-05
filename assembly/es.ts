@@ -241,16 +241,17 @@ export function durationSign(
   microseconds: i32,
   nanoseconds: i32
 ): i32 {
-  if (years != 0) return years < 0 ? -1 : 1;
-  if (months != 0) return months < 0 ? -1 : 1;
-  if (weeks != 0) return weeks < 0 ? -1 : 1;
-  if (days != 0) return days < 0 ? -1 : 1;
-  if (hours != 0) return hours < 0 ? -1 : 1;
-  if (minutes != 0) return minutes < 0 ? -1 : 1;
-  if (seconds != 0) return seconds < 0 ? -1 : 1;
-  if (milliseconds != 0) return milliseconds < 0 ? -1 : 1;
-  if (microseconds != 0) return microseconds < 0 ? -1 : 1;
-  if (nanoseconds != 0) return nanoseconds < 0 ? -1 : 1;
+  // x < 0 ? -1 : 1   ->   x >> 31 | 1
+  if (years) return years >> 31 | 1;
+  if (months) return months >> 31 | 1;
+  if (weeks) return weeks >> 31 | 1;
+  if (days) return days >> 31 | 1;
+  if (hours) return hours >> 31 | 1;
+  if (minutes) return minutes >> 31 | 1;
+  if (seconds) return seconds >> 31 | 1;
+  if (milliseconds) return milliseconds >> 31 | 1;
+  if (microseconds) return microseconds >> 31 | 1;
+  if (nanoseconds) return nanoseconds >> 31 | 1;
   return 0;
 }
 
