@@ -166,6 +166,12 @@ export function sign<T extends number>(x: T): T {
   return (x >> (sizeof<T>() * 4 - 1)) | 1;
 }
 
+// @ts-ignore: decorator
+@inline
+export function ord<T extends number>(x: T, y: T): i32 {
+  return i32(x > y) - i32(x < y);
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
 // @ts-ignore: decorator
 @inline

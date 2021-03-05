@@ -2,6 +2,7 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration } from "./duration";
 import {
+  ord,
   sign,
   TimeComponent,
   addDate,
@@ -168,9 +169,6 @@ export class PlainDate {
     res = a.month - b.month;
     if (res) return sign(res);
 
-    res = a.day - b.day;
-    if (res) return sign(res);
-
-    return 0;
+    return ord(a.day, b.day);
   }
 }

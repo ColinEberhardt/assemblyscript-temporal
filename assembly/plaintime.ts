@@ -1,4 +1,4 @@
-import { sign, checkRange } from "./utils";
+import { sign, ord, checkRange } from "./utils";
 
 export class PlainTime {
   constructor(
@@ -49,9 +49,6 @@ export class PlainTime {
     res = a.microsecond - b.microsecond;
     if (res) return sign(res);
 
-    res = a.nanosecond - b.nanosecond;
-    if (res) return sign(res);
-
-    return 0;
+    return ord(a.nanosecond, b.nanosecond);
   }
 }
