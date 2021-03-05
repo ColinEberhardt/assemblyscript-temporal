@@ -9,6 +9,11 @@
 import { Duration } from "./duration";
 import { log } from "./env";
 
+const YEAR_MIN = -271821;
+const YEAR_MAX =  275760;
+
+let __status: i32 = 0;
+
 // value objects - used in place of object literals
 export class YMD {
   year: i32;
@@ -184,6 +189,35 @@ export function clamp(value: i32, lo: i32, hi: i32): i32 {
 @inline
 export function checkRange(value: i32, lo: i32, hi: i32): bool {
   return u32(value - lo) <= u32(hi - lo);
+}
+
+// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2667
+export function checkDateTimeRange(
+  year: i32,
+  month: i32,
+  day: i32,
+  hour: i32 = 0,
+  minute: i32 = 0,
+  second: i32 = 0,
+  millisecond: i32 = 0,
+  microsecond: i32 = 0,
+  nanosecond: i32 = 0
+): bool {
+  if (!checkRange(year, YEAR_MIN, YEAR_MAX)) {
+    return false;
+  }
+  // reject any DateTime 24 hours or more outside the Instant range
+  if ((year == YEAR_MIN && (epochFromParts(
+    year, month, day + 1, hour, minute, second,
+    millisecond, microsecond, nanosecond - 1
+  ), __status == 0))) return false;
+
+  if ((year == YEAR_MAX && (epochFromParts(
+    year, month, day - 1, hour, minute, second,
+    millisecond, microsecond, nanosecond + 1
+  ), __status == 0))) return false;
+
+  return true;
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
@@ -439,6 +473,41 @@ export function balanceDuration(
     microseconds * sig,
     nanoseconds * sig
   );
+}
+
+export function epochFromParts(
+  year: i32,
+  month: i32,
+  day: i32,
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32
+): u64 {
+  // Note: Date.UTC() interprets one and two-digit years as being in the
+  // 20th century, so don't use it
+
+  // TODO: need implementation
+
+  // const legacyDate = new Date();
+  // legacyDate.setUTCHours(hour, minute, second, millisecond);
+  // legacyDate.setUTCFullYear(year, month - 1, day);
+  // const ms = legacyDate.getTime();
+  // if (NumberIsNaN(ms)) return null;
+  // let ns = bigInt(ms).multiply(1e6);
+  // ns = ns.plus(bigInt(microsecond).multiply(1000));
+  // ns = ns.plus(bigInt(nanosecond));
+  // if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) {
+  //   __status = -1;
+  //   return 0;
+  // }
+  // __status = 0;
+  // return ns;
+
+  __status = 0;
+  return 0;
 }
 
 // @ts-ignore: decorator
