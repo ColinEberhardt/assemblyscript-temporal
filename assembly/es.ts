@@ -45,6 +45,10 @@ export const enum TimeComponent {
   nanoseconds,
 }
 
+export function floorDiv(a: i32, b: i32): i32 {
+  return (a >= 0 ? a : a - b + 1) / b;
+}
+
 // modified of
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2157
 export function leapYear(year: i32): bool {
@@ -76,7 +80,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const y = Y - c * 100;
   const d = day;
   const pD = d;
-  const pM = i32(2.6 * f32(m) - 0.2);
+  const pM = (26 * m - 2) / 10;
   const pY = y + y / 4;
   const pC = c / 4 - 2 * c;
   const dow = (pD + pM + pY + pC) % 7;
@@ -86,7 +90,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
 function balanceYearMonth(year: i32, month: i32): YM {
   month -= 1;
-  year  += i32(Math.floor(f32(month) / 12.0));
+  year  += floorDiv(month, 12);
   month %= 12;
   month += month < 0 ? 13 : 1;
   return { year, month };
@@ -220,7 +224,7 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   let dow = dayOfWeek(year, month, day) || 7;
   let doj = dayOfWeek(year, 1, 1);
 
-  const week = (doy - dow + 10) / 7;
+  const week = floorDiv(doy - dow + 10, 7);
 
   if (week < 1) {
     return doj === 5 || (doj === 6 && leapYear(year - 1)) ? 53 : 52;
