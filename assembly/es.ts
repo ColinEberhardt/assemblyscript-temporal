@@ -52,7 +52,7 @@ export function leapYear(year: i32): bool {
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2188
 export function dayOfYear(year: i32, month: i32, day: i32): i32 {
-  const sumDaysForMonth = memory.data<u16>([
+  const sumDaysOfMonths = memory.data<u16>([
     0,
     31, /* Jan */
     31 + 28, /* Feb */
@@ -68,7 +68,7 @@ export function dayOfYear(year: i32, month: i32, day: i32): i32 {
   ]);
   return (
     day +
-    <i32>load<u16>(sumDaysForMonth + ((month - 1) << 1)) +
+    i32(load<u16>(sumDaysOfMonths + ((month - 1) << 1))) +
     i32(month >= 3 && leapYear(year))
   );
 }
