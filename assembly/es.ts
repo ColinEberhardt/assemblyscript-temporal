@@ -228,6 +228,32 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   return week;
 }
 
+// https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/ecmascript.mjs#L2217
+export function durationSign(
+  years: i32,
+  months: i32,
+  weeks: i32,
+  days: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i32,
+  microseconds: i32,
+  nanoseconds: i32
+): i32 {
+  if (years != 0) return years < 0 ? -1 : 1;
+  if (months != 0) return months < 0 ? -1 : 1;
+  if (weeks != 0) return weeks < 0 ? -1 : 1;
+  if (days != 0) return days < 0 ? -1 : 1;
+  if (hours != 0) return hours < 0 ? -1 : 1;
+  if (minutes != 0) return minutes < 0 ? -1 : 1;
+  if (seconds != 0) return seconds < 0 ? -1 : 1;
+  if (milliseconds != 0) return milliseconds < 0 ? -1 : 1;
+  if (microseconds != 0) return microseconds < 0 ? -1 : 1;
+  if (nanoseconds != 0) return nanoseconds < 0 ? -1 : 1;
+  return 0;
+}
+
 function totalDurationNanoseconds(
   days: i64,
   hours: i64,
