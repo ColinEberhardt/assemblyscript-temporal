@@ -158,6 +158,8 @@ export class PlainDate {
   }
 
   static compare(a: PlainDate, b: PlainDate): i32 {
+    if (a === b) return 0;
+
     if (a.year < b.year) return -1;
     if (a.year > b.year) return  1;
 

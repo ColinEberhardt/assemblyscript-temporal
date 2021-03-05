@@ -31,6 +31,8 @@ export class PlainTime {
   }
 
   static compare(a: PlainTime, b: PlainTime): i32 {
+    if (a === b) return 0;
+
     if (a.hour < b.hour) return -1;
     if (a.hour > b.hour) return  1;
 
