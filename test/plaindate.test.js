@@ -928,17 +928,17 @@ describe('Date', () => {
       const actual = PlainDate.from(orig);
       notEqual(actual, orig);
     });
-    it.skip('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
+    it('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
-    it.skip('can be constructed with month and without monthCode', () =>
+    it('can be constructed with month and without monthCode', () =>
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it.skip('can be constructed with monthCode and without month', () =>
       equal(`${PlainDate.from({ year: 1976, monthCode: 'M11', day: 18 })}`, '1976-11-18'));
     it.skip('month and monthCode must agree', () =>
       throws(() => PlainDate.from({ year: 1976, month: 11, monthCode: 'M12', day: 18 }), RangeError));
-    it.skip('Date.from({ year: 2019, day: 15 }) throws', () =>
+    it('Date.from({ year: 2019, day: 15 }) throws', () =>
       throws(() => PlainDate.from({ year: 2019, day: 15 }), TypeError));
-    it.skip('Date.from({ month: 12 }) throws', () => throws(() => PlainDate.from({ month: 12 }), TypeError));
+    it('Date.from({ month: 12 }) throws', () => throws(() => PlainDate.from({ month: 12 }), TypeError));
     it.skip('object must contain at least the required correctly-spelled properties', () => {
       throws(() => PlainDate.from({}), TypeError);
       throws(() => PlainDate.from({ year: 1976, months: 11, day: 18 }), TypeError);

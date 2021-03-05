@@ -17,6 +17,7 @@ const wasmModule = loader.instantiateSync(
 const { __getString, __newString, __pin, __unpin } = wasmModule.exports;
 const WasmPlainDate = wasmModule.exports.PlainDate;
 const WasmDuration = wasmModule.exports.Duration;
+const WasmDateLike = wasmModule.exports.DateLike;
 
 const Temporal = {
   Calendar: {
@@ -99,7 +100,9 @@ class PlainDate {
       orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
-    return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.subtract(duration)));
+    return new PlainDate(
+      WasmPlainDate.wrap(this.wasmPlainDate.subtract(duration))
+    );
   }
 
   static compare(a, b) {
@@ -116,11 +119,22 @@ class PlainDate {
       } catch (e) {
         throw new RangeError(e.message);
       }
-    }
-    if (date instanceof PlainDate) {
-      return WasmPlainDate.wrap(
-        WasmPlainDate.fromPlainDate(this.wasmPlainDate)
+    } else if (date instanceof PlainDate) {
+      return new PlainDate(
+        WasmPlainDate.wrap(WasmPlainDate.fromPlainDate(this.wasmPlainDate))
       );
+    } else {
+      try {
+        const datelike = new WasmDateLike();
+        datelike.year = date.year || -1;
+        datelike.month = date.month || -1;
+        datelike.day = date.day || -1;
+        return new PlainDate(
+          WasmPlainDate.wrap(WasmPlainDate.fromDateLike(datelike))
+        );
+      } catch (e) {
+        throw new TypeError(e.message);
+      }
     }
   }
 }
