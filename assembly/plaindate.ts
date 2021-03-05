@@ -1,6 +1,7 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration } from "./duration";
+import { log } from "./env";
 import {
   ord,
   sign,
@@ -68,9 +69,9 @@ export class PlainDate {
     //   checkRange(day, 1, daysInMonth(year, month))
     // )) throw new RangeError("invalid plain date");
 
-    // if (!checkDateTimeRange(year, month, day, 12)) {
-    //   throw new RangeError('DateTime outside of supported range')
-    // }
+    if (!checkDateTimeRange(year, month, day, 12)) {
+      throw new RangeError('DateTime outside of supported range')
+    }
   }
 
   @inline
