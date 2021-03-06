@@ -1,15 +1,21 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration } from "./duration";
+import { log } from "./env";
 import {
+  ord,
+  sign,
   TimeComponent,
   addDate,
   dayOfWeek,
   Overflow,
   dayOfYear,
   weekOfYear,
+  daysInMonth,
   balanceDuration,
   toPaddedString,
+  checkRange,
+  checkDateTimeRange
 } from "./utils";
 
 export class DateLike {
@@ -61,18 +67,28 @@ export class PlainDate {
     if (isString<T>()) {
       // @ts-ignore: cast
       return this.fromString(<string>date);
-    }
-    if (isReference<T>()) {
-      if (date instanceof PlainDate) {
-        return new PlainDate(date.year, date.month, date.day);
-      } else if (date instanceof DateLike) {
-        return this.fromDateLike(date);
+    } else {
+      if (isReference<T>()) {
+        if (date instanceof PlainDate) {
+          return new PlainDate(date.year, date.month, date.day);
+        } else if (date instanceof DateLike) {
+          return this.fromDateLike(date);
+        }
       }
+      throw new TypeError("invalid date type");
     }
-    throw new TypeError("invalid date type");
   }
 
-  constructor(readonly year: i32, readonly month: i32, readonly day: i32) {}
+  constructor(readonly year: i32, readonly month: i32, readonly day: i32) {
+    // if (!(
+    //   checkRange(month, 1, 12) &&
+    //   checkRange(day, 1, daysInMonth(year, month))
+    // )) throw new RangeError("invalid plain date");
+
+    if (!checkDateTimeRange(year, month, day, 12)) {
+      throw new RangeError('DateTime outside of supported range')
+    }
+  }
 
   @inline
   get dayOfWeek(): i32 {
@@ -115,9 +131,12 @@ export class PlainDate {
   }
 
   @inline
-  equals(date: PlainDate): bool {
+  equals(other: PlainDate): bool {
+    if (this === other) return true;
     return (
-      this.day == date.day && this.month == date.month && this.year == date.year
+      this.day   == other.day   &&
+      this.month == other.month &&
+      this.year  == other.year
     );
   }
 
@@ -179,24 +198,14 @@ export class PlainDate {
   }
 
   static compare(a: PlainDate, b: PlainDate): i32 {
-    if (a.year < b.year) {
-      return -1;
-    }
-    if (a.year > b.year) {
-      return 1;
-    }
-    if (a.month < b.month) {
-      return -1;
-    }
-    if (a.month > b.month) {
-      return 1;
-    }
-    if (a.day < b.day) {
-      return -1;
-    }
-    if (a.day > b.day) {
-      return 1;
-    }
-    return 0;
+    if (a === b) return 0;
+
+    let res = a.year - b.year;
+    if (res) return sign(res);
+
+    res = a.month - b.month;
+    if (res) return sign(res);
+
+    return ord(a.day, b.day);
   }
 }

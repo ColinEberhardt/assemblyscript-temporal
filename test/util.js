@@ -15,25 +15,17 @@ const wasmModule = loader.instantiateSync(
 );
 
 const { __getString, __newString, __pin, __unpin } = wasmModule.exports;
+
+const WasmPlainTime = wasmModule.exports.WasmPlainTime;
 const WasmPlainDate = wasmModule.exports.PlainDate;
-const WasmDuration = wasmModule.exports.Duration;
-const WasmDateLike = wasmModule.exports.DateLike;
-
-const Temporal = {
-  Calendar: {
-    from: () => {},
-  },
-
-  PlainTime: {
-    from: () => {},
-  },
-};
+const WasmDuration  = wasmModule.exports.Duration;
+const WasmDateLike  = wasmModule.exports.DateLike;
 
 const orZero = (val) => (val ? val : 0);
 
 // takes an AS plain date, first wraps it using the AS loader, than wraps it in the
 // PlainDate adapter
-const wrap = (value) => new PlainDate(WasmPlainDate.wrap(value));
+const wrap = (Ctr, value) => new PlainDate(Ctr.wrap(value));
 
 // adapts an AS PlainDate to more closely  match the JS API for the purposes of testing
 class PlainDate {
@@ -90,7 +82,7 @@ class PlainDate {
       orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
-    return wrap(this.wasmPlainDate.add(duration));
+    return wrap(WasmPlainDate, this.wasmPlainDate.add(duration));
   }
   subtract(addValue) {
     const duration = new WasmDuration(
@@ -105,14 +97,14 @@ class PlainDate {
       orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
-    return wrap(this.wasmPlainDate.subtract(duration));
+    return wrap(WasmPlainDate, this.wasmPlainDate.subtract(duration));
   }
   with(date) {
     const datelike = new WasmDateLike();
     datelike.year = date.year || -1;
     datelike.month = date.month || -1;
     datelike.day = date.day || -1;
-    return wrap(this.wasmPlainDate.with(datelike));
+    return wrap(WasmPlainDate, this.wasmPlainDate.with(datelike));
   }
 
   static compare(a, b) {
@@ -123,21 +115,21 @@ class PlainDate {
     if (typeof date === "string") {
       try {
         const datePtr = __pin(__newString(date));
-        const wasmDate = WasmPlainDate.wrap(WasmPlainDate.fromString(datePtr));
+        const wasmDate = wrap(WasmPlainDate, WasmPlainDate.fromString(datePtr));
         __unpin(datePtr);
         return new PlainDate(wasmDate);
       } catch (e) {
         throw new RangeError(e.message);
       }
     } else if (date instanceof PlainDate) {
-      return wrap(WasmPlainDate.fromPlainDate(this.wasmPlainDate));
+      return wrap(WasmPlainDate, WasmPlainDate.fromPlainDate(date.wasmPlainDate));
     } else {
       try {
         const datelike = new WasmDateLike();
         datelike.year = date.year || -1;
         datelike.month = date.month || -1;
         datelike.day = date.day || -1;
-        return wrap(WasmPlainDate.fromDateLike(datelike));
+        return wrap(WasmPlainDate, WasmPlainDate.fromDateLike(datelike));
       } catch (e) {
         throw new TypeError(e.message);
       }
@@ -145,9 +137,57 @@ class PlainDate {
   }
 }
 
+class PlainTime {
+  static from(time) {
+    return wrap(WasmPlainDate, WasmPlainTime.fromPlainTime(time.wasmPlainTime));
+  }
+
+  constructor(...args) {
+    this.wasmPlainTime =
+      args.length == 1 ? args[0] : new WasmPlainTime(...args);
+    __pin(this.wasmPlainTime);
+  }
+
+  get hour() {
+    return this.wasmPlainTime.hour;
+  }
+  get minute() {
+    return this.wasmPlainTime.minute;
+  }
+  get second() {
+    return this.wasmPlainTime.second;
+  }
+  get millisecond() {
+    return this.wasmPlainTime.millisecond;
+  }
+  get microsecond() {
+    return this.wasmPlainTime.microsecond;
+  }
+  get nanosecond() {
+    return this.wasmPlainTime.nanosecond;
+  }
+
+  equals(time) {
+    return this.wasmPlainTime.equals(time.wasmPlainTime);
+  }
+
+  static compare(a, b) {
+    return WasmPlainTime.compare(a.wasmPlainTime, b.wasmPlainTime);
+  }
+}
+
+const Temporal = {
+  PlainTime,
+  PlainDate,
+
+  Calendar: {
+    from: () => {},
+  },
+};
+
 // https://github.com/facebook/jest/issues/7280
 if (global.test) {
   test.skip("skip", () => {});
 }
 
-module.exports = { Temporal, PlainDate };
+module.exports = { Temporal, PlainDate, PlainTime };
