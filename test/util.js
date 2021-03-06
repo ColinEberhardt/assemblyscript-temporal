@@ -31,6 +31,11 @@ const Temporal = {
 
 const orZero = (val) => (val ? val : 0);
 
+// takes an AS plain date, first wraps it using the AS loader, than wraps it in the
+// PlainDate adapter
+const wrap = (value) => new PlainDate(WasmPlainDate.wrap(value));
+
+// adapts an AS PlainDate to more closely  match the JS API for the purposes of testing
 class PlainDate {
   constructor(...args) {
     this.wasmPlainDate =
@@ -85,7 +90,7 @@ class PlainDate {
       orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
-    return new PlainDate(WasmPlainDate.wrap(this.wasmPlainDate.add(duration)));
+    return wrap(this.wasmPlainDate.add(duration));
   }
   subtract(addValue) {
     const duration = new WasmDuration(
@@ -100,9 +105,14 @@ class PlainDate {
       orZero(addValue.microseconds)
       // orZero(addValue.nanoseconds)
     );
-    return new PlainDate(
-      WasmPlainDate.wrap(this.wasmPlainDate.subtract(duration))
-    );
+    return wrap(this.wasmPlainDate.subtract(duration));
+  }
+  with(date) {
+    const datelike = new WasmDateLike();
+    datelike.year = date.year || -1;
+    datelike.month = date.month || -1;
+    datelike.day = date.day || -1;
+    return wrap(this.wasmPlainDate.with(datelike));
   }
 
   static compare(a, b) {
@@ -120,18 +130,14 @@ class PlainDate {
         throw new RangeError(e.message);
       }
     } else if (date instanceof PlainDate) {
-      return new PlainDate(
-        WasmPlainDate.wrap(WasmPlainDate.fromPlainDate(this.wasmPlainDate))
-      );
+      return wrap(WasmPlainDate.fromPlainDate(this.wasmPlainDate));
     } else {
       try {
         const datelike = new WasmDateLike();
         datelike.year = date.year || -1;
         datelike.month = date.month || -1;
         datelike.day = date.day || -1;
-        return new PlainDate(
-          WasmPlainDate.wrap(WasmPlainDate.fromDateLike(datelike))
-        );
+        return wrap(WasmPlainDate.fromDateLike(datelike));
       } catch (e) {
         throw new TypeError(e.message);
       }
