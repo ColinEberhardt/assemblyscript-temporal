@@ -71,8 +71,8 @@ export class PlainDate {
       if (isReference<T>()) {
         if (date instanceof PlainDate) {
           return new PlainDate(date.year, date.month, date.day);
-      } else if (date instanceof DateLike) {
-        return this.fromDateLike(date);
+        } else if (date instanceof DateLike) {
+          return this.fromDateLike(date);
         }
       }
       throw new TypeError("invalid date type");
@@ -134,7 +134,9 @@ export class PlainDate {
   equals(other: PlainDate): bool {
     if (this === other) return true;
     return (
-      this.day == date.day && this.month == date.month && this.year == date.year
+      this.day   == other.day   &&
+      this.month == other.month &&
+      this.year  == other.year
     );
   }
 
