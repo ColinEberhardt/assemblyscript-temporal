@@ -140,6 +140,13 @@ export class PlainDate {
     );
   }
 
+  with(dateLike: DateLike): PlainDate {
+    const year = dateLike.year != -1 ? dateLike.year : this.year;
+    const month = dateLike.month != -1 ? dateLike.month : this.month;
+    const day = dateLike.day != -1 ? dateLike.day : this.day;
+    return new PlainDate(year, month, day);
+  }
+
   add(duration: Duration): PlainDate {
     const balancedDuration = balanceDuration(
       duration.days,

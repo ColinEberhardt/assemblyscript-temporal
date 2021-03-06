@@ -152,30 +152,30 @@ describe('Date', () => {
         throws(() => original.with({ day: 17 }, { overflow }), RangeError)
       );
     });
-    it('options may only be an object or undefined', () => {
+    it.skip('options may only be an object or undefined', () => {
       [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
         throws(() => original.with({ day: 17 }, badOptions), TypeError)
       );
       [{}, () => {}, undefined].forEach((options) => equal(`${original.with({ day: 17 }, options)}`, '1976-11-17'));
     });
-    it('object must contain at least one correctly-spelled property', () => {
+    it.skip('object must contain at least one correctly-spelled property', () => {
       throws(() => original.with({}), TypeError);
       throws(() => original.with({ months: 12 }), TypeError);
     });
-    it('incorrectly-spelled properties are ignored', () => {
+    it.skip('incorrectly-spelled properties are ignored', () => {
       equal(`${original.with({ months: 12, day: 15 })}`, '1976-11-15');
     });
-    it('date.with(string) throws', () => {
+    it.skip('date.with(string) throws', () => {
       throws(() => original.with('2019-05-17'), TypeError);
       throws(() => original.with('2019-05-17T12:34'), TypeError);
       throws(() => original.with('2019-05-17T12:34Z'), TypeError);
       throws(() => original.with('18:05:42.577'), TypeError);
       throws(() => original.with('42'), TypeError);
     });
-    it('throws with calendar property', () => {
+    it.skip('throws with calendar property', () => {
       throws(() => original.with({ year: 2021, calendar: 'iso8601' }), TypeError);
     });
-    it('throws with timeZone property', () => {
+    it.skip('throws with timeZone property', () => {
       throws(() => original.with({ year: 2021, timeZone: 'UTC' }), TypeError);
     });
   });
