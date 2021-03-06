@@ -18,12 +18,26 @@ import {
   checkDateTimeRange
 } from "./utils";
 
+export class DateLike {
+  year: i32 = -1;
+  month: i32 = -1;
+  day: i32 = -1;
+}
+
 export class PlainDate {
   readonly daysInYear: i32;
   readonly inLeapYear: bool;
 
   @inline
   static fromPlainDate(date: PlainDate): PlainDate {
+    return new PlainDate(date.year, date.month, date.day);
+  }
+
+  @inline
+  static fromDateLike(date: DateLike): PlainDate {
+    if (date.year == -1 || date.month == -1 || date.day == -1) {
+      throw new TypeError("missing required property");
+    }
     return new PlainDate(date.year, date.month, date.day);
   }
 
@@ -57,6 +71,8 @@ export class PlainDate {
       if (isReference<T>()) {
         if (date instanceof PlainDate) {
           return new PlainDate(date.year, date.month, date.day);
+      } else if (date instanceof DateLike) {
+        return this.fromDateLike(date);
         }
       }
       throw new TypeError("invalid date type");
@@ -118,9 +134,7 @@ export class PlainDate {
   equals(other: PlainDate): bool {
     if (this === other) return true;
     return (
-      this.day   == other.day   &&
-      this.month == other.month &&
-      this.year  == other.year
+      this.day == date.day && this.month == date.month && this.year == date.year
     );
   }
 
