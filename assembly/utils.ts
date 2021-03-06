@@ -12,7 +12,7 @@ import { log } from "./env";
 const YEAR_MIN = -271821;
 const YEAR_MAX =  275760;
 
-let __status: i32 = 0;
+let __null = false;
 
 // value objects - used in place of object literals
 export class YMD {
@@ -210,12 +210,12 @@ export function checkDateTimeRange(
   if ((year == YEAR_MIN && (epochFromParts(
     year, month, day + 1, hour, minute, second,
     millisecond, microsecond, nanosecond - 1
-  ), __status == 0))) return false;
+  ), __null))) return false;
 
   if ((year == YEAR_MAX && (epochFromParts(
     year, month, day - 1, hour, minute, second,
     millisecond, microsecond, nanosecond + 1
-  ), __status == 0))) return false;
+  ), __null))) return false;
 
   return true;
 }
@@ -500,13 +500,13 @@ export function epochFromParts(
   // ns = ns.plus(bigInt(microsecond).multiply(1000));
   // ns = ns.plus(bigInt(nanosecond));
   // if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) {
-  //   __status = -1;
+  //   __null = true;
   //   return 0;
   // }
-  // __status = 0;
+  // __null = false;
   // return ns;
 
-  __status = 0;
+  __null = false;
   return 0;
 }
 
