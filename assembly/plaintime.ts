@@ -1,6 +1,19 @@
 import { sign, ord, checkRange } from "./utils";
 
 export class PlainTime {
+
+  @inline
+  static fromPlainTime(time: PlainTime): PlainTime {
+    return new PlainTime(
+      time.hour,
+      time.minute,
+      time.second,
+      time.millisecond,
+      time.microsecond,
+      time.nanosecond
+    );
+  }
+
   constructor(
     readonly hour: i32        = 0,
     readonly minute: i32      = 0,

@@ -15,19 +15,10 @@ const wasmModule = loader.instantiateSync(
 );
 
 const { __getString, __newString, __pin, __unpin } = wasmModule.exports;
+const WasmPlainTime = wasmModule.exports.WasmPlainTime;
 const WasmPlainDate = wasmModule.exports.PlainDate;
-const WasmDuration = wasmModule.exports.Duration;
-const WasmDateLike = wasmModule.exports.DateLike;
-
-const Temporal = {
-  Calendar: {
-    from: () => {},
-  },
-
-  PlainTime: {
-    from: () => {},
-  },
-};
+const WasmDuration  = wasmModule.exports.Duration;
+const WasmDateLike  = wasmModule.exports.DateLike;
 
 const orZero = (val) => (val ? val : 0);
 
@@ -121,7 +112,7 @@ class PlainDate {
       }
     } else if (date instanceof PlainDate) {
       return new PlainDate(
-        WasmPlainDate.wrap(WasmPlainDate.fromPlainDate(this.wasmPlainDate))
+        WasmPlainDate.wrap(WasmPlainDate.fromPlainDate(date.wasmPlainDate))
       );
     } else {
       try {
@@ -139,9 +130,59 @@ class PlainDate {
   }
 }
 
+class PlainTime {
+  static from(time) {
+    return new PlainTime(
+      WasmPlainDate.wrap(WasmPlainTime.fromPlainTime(time.wasmPlainTime))
+    );
+  }
+
+  constructor(...args) {
+    this.wasmPlainTime =
+      args.length == 1 ? args[0] : new WasmPlainTime(...args);
+    __pin(this.wasmPlainTime);
+  }
+
+  get hour() {
+    return this.wasmPlainTime.hour;
+  }
+  get minute() {
+    return this.wasmPlainTime.minute;
+  }
+  get second() {
+    return this.wasmPlainTime.second;
+  }
+  get millisecond() {
+    return this.wasmPlainTime.millisecond;
+  }
+  get microsecond() {
+    return this.wasmPlainTime.microsecond;
+  }
+  get nanosecond() {
+    return this.wasmPlainTime.nanosecond;
+  }
+
+  equals(time) {
+    return this.wasmPlainTime.equals(time.wasmPlainTime);
+  }
+
+  static compare(a, b) {
+    return WasmPlainTime.compare(a.wasmPlainTime, b.wasmPlainTime);
+  }
+}
+
+const Temporal = {
+  PlainTime,
+  PlainDate,
+
+  Calendar: {
+    from: () => {},
+  },
+};
+
 // https://github.com/facebook/jest/issues/7280
 if (global.test) {
   test.skip("skip", () => {});
 }
 
-module.exports = { Temporal, PlainDate };
+module.exports = { Temporal, PlainDate, PlainTime };
