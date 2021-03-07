@@ -26,8 +26,6 @@ export class DateLike {
 }
 
 export class PlainDate {
-  private _daysInYear: i32 = 0;
-
   @inline
   static fromPlainDate(date: PlainDate): PlainDate {
     return new PlainDate(date.year, date.month, date.day);
@@ -117,8 +115,7 @@ export class PlainDate {
 
   @inline
   get daysInYear(): i32 {
-    if (this._daysInYear) return this._daysInYear;
-    return (this._daysInYear = 365 + i32(leapYear(this.year)));
+    return 365 + i32(leapYear(this.year));
   }
 
   @inline
