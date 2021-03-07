@@ -95,19 +95,16 @@ export function daysInMonth(year: i32, month: i32): i32 {
     : 30 + ((month + i32(month >= 8)) & 1);
 }
 
-// Disparate variation of https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
+// Original: Disparate variation
+// Modified: TomohikoSakamoto algorithm from https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
-  const m = month + (month < 3 ? 10 : -2);
-  const Y = year - i32(month < 3);
-  const c = Y / 100;
-  const y = Y - c * 100;
-  const pD = day;
-  const pM = floorDiv(26 * m - 2, 10);
-  const pY = y + y / 4;
-  const pC = c / 4 - 2 * c;
-  const dow = (pD + pM + pY + pC) % 7;
-  return dow + (dow <= 0 ? 7 : 0);
+  const r = memory.data<u8>([0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]);
+
+  year -= i32(month < 3);
+  let l = year / 4 - year / 100 + year / 400;
+  let h = (year + l + <i32>load<u8>(r + month - 1) + day) % 7;
+  return (h + 6) % 7 + 1;
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
