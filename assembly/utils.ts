@@ -99,13 +99,13 @@ export function daysInMonth(year: i32, month: i32): i32 {
 // Modified: TomohikoSakamoto algorithm from https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
-  const r = memory.data<u8>([0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]);
+  const tab = memory.data<u8>([0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]);
 
   year -= i32(month < 3);
-  const y = year + year / 4 - year / 100 + year / 400
-  const m = <i32>load<u8>(r + month - 1);
-  const h = (y + m + day) % 7;
-  return h + (h <= 0 ? 7 : 0);
+  year += year / 4 - year / 100 + year / 400;
+  month = <i32>load<u8>(tab + month - 1);
+  const w = (year + month + day) % 7;
+  return w + (w <= 0 ? 7 : 0);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
