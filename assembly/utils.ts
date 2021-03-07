@@ -95,6 +95,7 @@ export function daysInMonth(year: i32, month: i32): i32 {
     : 30 + ((month + i32(month >= 8)) & 1);
 }
 
+// Disparate variation of https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const m = month + (month < 3 ? 10 : -2);
