@@ -9,6 +9,7 @@ import {
   addDate,
   dayOfWeek,
   Overflow,
+  leapYear,
   dayOfYear,
   weekOfYear,
   daysInMonth,
@@ -25,8 +26,7 @@ export class DateLike {
 }
 
 export class PlainDate {
-  readonly daysInYear: i32;
-  readonly inLeapYear: bool;
+  private _daysInYear: i32 = 0;
 
   @inline
   static fromPlainDate(date: PlainDate): PlainDate {
@@ -111,8 +111,24 @@ export class PlainDate {
   }
 
   @inline
+  get daysInMonth(): i32 {
+    return daysInMonth(this.year, this.month);
+  }
+
+  @inline
+  get daysInYear(): i32 {
+    if (this._daysInYear) return this._daysInYear;
+    return (this._daysInYear = 365 + i32(leapYear(this.year)));
+  }
+
+  @inline
   get monthsInYear(): i32 {
     return 12;
+  }
+
+  @inline
+  get isLeapYear(): bool {
+    return leapYear(this.year);
   }
 
   @inline
