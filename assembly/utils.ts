@@ -104,7 +104,7 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   year -= i32(month < 3);
   let l = year / 4 - year / 100 + year / 400;
   let h = (year + l + <i32>load<u8>(r + month - 1) + day) % 7;
-  return (h + 6) % 7 + 1;
+  return h + (h <= 0 ? 7 : 0);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
