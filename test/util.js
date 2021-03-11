@@ -62,6 +62,15 @@ class PlainDate {
   get daysInWeek() {
     return this.wasmPlainDate.daysInWeek;
   }
+  get daysInMonth() {
+    return this.wasmPlainDate.daysInMonth;
+  }
+  get daysInYear() {
+    return this.wasmPlainDate.daysInYear;
+  }
+  get isLeapYear() {
+    return this.wasmPlainDate.isLeapYear;
+  }
 
   equals(date) {
     return this.wasmPlainDate.equals(date.wasmPlainDate);
