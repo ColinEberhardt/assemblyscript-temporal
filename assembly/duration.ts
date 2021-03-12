@@ -14,7 +14,7 @@ export class Duration {
 
   // P1Y1M1DT1H1M1.1S
   toString(): string {
-    const data = (
+    const date = (
       toString(this.years,  "Y") +
       toString(this.months, "M") +
       toString(this.days,   "D") +
@@ -34,7 +34,7 @@ export class Duration {
       )
     );
 
-    return "P" + data + (time.length ? "T" + time : "");
+    return "P" + date + (time.length ? "T" + time : "");
   }
 }
 
