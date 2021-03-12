@@ -515,7 +515,7 @@ export function differenceDate(
       let months = endMonth - startMonth;
 
       if (midSign !== sign) {
-        years -= sign;
+        years  -= sign;
         months += sign * 12;
       }
 
@@ -535,7 +535,7 @@ export function differenceDate(
 
         if (months === -sign) {
           years -= sign;
-          months = 11 * sign;
+          months = sign * 11;
         }
 
         mid = addDate(y1, m1, d1, years, months, 0, 0, Overflow.Constrain);
@@ -582,7 +582,7 @@ export function differenceDate(
       let largerMonth = neg ? m2 : m1;
       let largerDay   = neg ? d2 : d1;
 
-      let sig = neg ? 1 : -1;
+      let sign = neg ? 1 : -1;
 
       let years = largerYear - smallerYear;
 
@@ -602,8 +602,8 @@ export function differenceDate(
         days -= weeks * 7;
       }
 
-      weeks *= sig;
-      days  *= sig;
+      weeks *= sign;
+      days  *= sign;
 
       return new Duration(0, 0, weeks, days);
     }
