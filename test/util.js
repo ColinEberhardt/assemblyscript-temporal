@@ -134,8 +134,8 @@ class PlainDate {
   get daysInYear() {
     return this.wasmPlainDate.daysInYear;
   }
-  get isLeapYear() {
-    return this.wasmPlainDate.isLeapYear;
+  get inLeapYear() {
+    return this.wasmPlainDate.inLeapYear;
   }
 
   equals(date) {
