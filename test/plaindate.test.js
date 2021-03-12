@@ -866,17 +866,17 @@ describe('Date', () => {
       equal(new PlainDate(1914, 2, 23).toString(), '1914-02-23');
     });
     const d = new PlainDate(1976, 11, 18);
-    it.skip('shows only non-ISO calendar if calendarName = auto', () => {
+    it('shows only non-ISO calendar if calendarName = auto', () => {
       equal(d.toString({ calendarName: 'auto' }), '1976-11-18');
       equal(d.withCalendar('gregory').toString({ calendarName: 'auto' }), '1976-11-18[u-ca-gregory]');
     });
-    it.skip('shows ISO calendar if calendarName = always', () => {
+    it('shows ISO calendar if calendarName = always', () => {
       equal(d.toString({ calendarName: 'always' }), '1976-11-18[u-ca-iso8601]');
     });
-    it.skip('omits non-ISO calendar if calendarName = never', () => {
+    it('omits non-ISO calendar if calendarName = never', () => {
       equal(d.withCalendar('gregory').toString({ calendarName: 'never' }), '1976-11-18');
     });
-    it.skip('default is calendar = auto', () => {
+    it('default is calendar = auto', () => {
       equal(d.toString(), '1976-11-18');
       equal(d.withCalendar('gregory').toString(), '1976-11-18[u-ca-gregory]');
     });
@@ -932,9 +932,9 @@ describe('Date', () => {
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
     it('can be constructed with month and without monthCode', () =>
       equal(`${PlainDate.from({ year: 1976, month: 11, day: 18 })}`, '1976-11-18'));
-    it.skip('can be constructed with monthCode and without month', () =>
+    it('can be constructed with monthCode and without month', () =>
       equal(`${PlainDate.from({ year: 1976, monthCode: 'M11', day: 18 })}`, '1976-11-18'));
-    it.skip('month and monthCode must agree', () =>
+    it('month and monthCode must agree', () =>
       throws(() => PlainDate.from({ year: 1976, month: 11, monthCode: 'M12', day: 18 }), RangeError));
     it('Date.from({ year: 2019, day: 15 }) throws', () =>
       throws(() => PlainDate.from({ year: 2019, day: 15 }), TypeError));

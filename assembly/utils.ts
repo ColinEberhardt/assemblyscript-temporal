@@ -473,6 +473,158 @@ export function balanceDuration(
   );
 }
 
+export function compareTemporalDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32, d2: i32): i32 {
+  let res = y1 - y2;
+  if (res) return sign(res);
+
+  res = m1 - m2;
+  if (res) return sign(res);
+
+  return ord(d1, d2);
+}
+
+export function differenceDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32, d2: i32, largestUnit: TimeComponent = TimeComponent.days): Duration {
+  switch (largestUnit) {
+    case TimeComponent.years:
+    case TimeComponent.months:
+      {
+        let sign = -compareTemporalDate(y1, m1, d1, y2, m2, d2);
+        if (sign === 0) return new Duration();
+        let start: YMD = {
+          year: y1,
+          month: m1,
+          day: d1
+        };
+        let end: YMD = {
+          year: y2,
+          month: m2,
+          day: d2
+        };
+        let years = end.year - start.year;
+        let mid = addDate(y1, m1, d1, years, 0, 0, 0, Overflow.Constrain);
+        let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+
+        if (midSign === 0) {
+          return largestUnit === TimeComponent.years ?
+            new Duration(years): new Duration(0, years*12);
+        }
+
+        let months = end.month - start.month;
+
+        if (midSign !== sign) {
+          years -= sign;
+          months += sign * 12;
+        }
+
+        mid = addDate(y1, m1, d1, years, months, 0, 0, Overflow.Constrain);
+        midSign = compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+
+        if (midSign === 0) {
+          return largestUnit === TimeComponent.years ? 
+            new Duration(years, months): new Duration(0, months + years * 12);
+        }
+
+        if (midSign !== sign) {
+          // The end date is later in the month than mid date (or earlier for
+          // negative durations). Back up one month.
+          months -= sign;
+
+          if (months === -sign) {
+            years -= sign;
+            months = 11 * sign;
+          }
+
+          mid = addDate(y1, m1, d1, years, months, 0, 0, Overflow.Constrain);
+          midSign = compareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
+        }
+
+        let days = 0; // If we get here, months and years are correct (no overflow), and `mid`
+        // is within the range from `start` to `end`. To count the days between
+        // `mid` and `end`, there are 3 cases:
+        // 1) same month: use simple subtraction
+        // 2) end is previous month from intermediate (negative duration)
+        // 3) end is next month from intermediate (positive duration)
+
+        if (mid.month === end.month && mid.year === end.year) {
+          // 1) same month: use simple subtraction
+          days = end.day - mid.day;
+        } else if (sign < 0) {
+          // 2) end is previous month from intermediate (negative duration)
+          // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
+          days = -mid.day - (daysInMonth(end.year, end.month) - end.day);
+        } else {
+          // 3) end is next month from intermediate (positive duration)
+          // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
+          days = end.day + (daysInMonth(mid.year, mid.month) - mid.day);
+        }
+
+        if (largestUnit === TimeComponent.months) {
+          months += years * 12;
+          years = 0;
+        }
+
+        return new Duration(years, months, 0, days);
+      }
+
+    case TimeComponent.weeks:
+    case TimeComponent.days:
+      {
+        let larger: YMD, smaller: YMD, _sign: i32;
+
+        if (compareTemporalDate(y1, m1, d1, y2, m2, d2) < 0) {
+          smaller = {
+            year: y1,
+            month: m1,
+            day: d1
+          };
+          larger = {
+            year: y2,
+            month: m2,
+            day: d2
+          };
+          _sign = 1;
+        } else {
+          smaller = {
+            year: y2,
+            month: m2,
+            day: d2
+          };
+          larger = {
+            year: y1,
+            month: m1,
+            day: d1
+          };
+          _sign = -1;
+        }
+
+        let _years = larger.year - smaller.year;
+
+        let _days2 = dayOfYear(larger.year, larger.month, larger.day) - dayOfYear(smaller.year, smaller.month, smaller.day);
+
+        while (_years > 0) {
+          _days2 += leapYear(smaller.year + _years - 1) ? 366 : 365;
+          _years -= 1;
+        }
+
+        let weeks = 0;
+
+        if (largestUnit === TimeComponent.weeks) {
+          // weeks = Math.floor(_days2 / 7);
+          weeks = _days2 / 7;
+          _days2 %= 7;
+        }
+
+        weeks *= _sign;
+        _days2 *= _sign;
+        return new Duration(0, 0, weeks, _days2);
+      }
+
+    default:
+      throw new Error('assert not reached');
+  }
+}
+
+
 export function epochFromParts(
   year: i32,
   month: i32,

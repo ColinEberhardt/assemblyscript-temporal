@@ -115,6 +115,13 @@ class PlainDate {
     datelike.day = date.day || -1;
     return wrap(WasmPlainDate, this.wasmPlainDate.with(datelike));
   }
+  until(date) {
+    const datelike = new WasmDateLike();
+    datelike.year = date.year || -1;
+    datelike.month = date.month || -1;
+    datelike.day = date.day || -1;
+    return WasmDuration.wrap(this.wasmPlainDate.until(datelike));
+  }
 
   static compare(a, b) {
     return WasmPlainDate.compare(a.wasmPlainDate, b.wasmPlainDate);

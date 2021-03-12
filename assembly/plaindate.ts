@@ -3,8 +3,6 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { Duration } from "./duration";
 import { log } from "./env";
 import {
-  ord,
-  sign,
   TimeComponent,
   addDate,
   dayOfWeek,
@@ -15,8 +13,9 @@ import {
   daysInMonth,
   balanceDuration,
   toPaddedString,
-  checkRange,
-  checkDateTimeRange
+  checkDateTimeRange,
+  compareTemporalDate,
+  differenceDate,
 } from "./utils";
 
 export class DateLike {
@@ -84,7 +83,7 @@ export class PlainDate {
     // )) throw new RangeError("invalid plain date");
 
     if (!checkDateTimeRange(year, month, day, 12)) {
-      throw new RangeError('DateTime outside of supported range')
+      throw new RangeError("DateTime outside of supported range");
     }
   }
 
@@ -147,9 +146,20 @@ export class PlainDate {
   equals(other: PlainDate): bool {
     if (this === other) return true;
     return (
-      this.day   == other.day   &&
+      this.day == other.day &&
       this.month == other.month &&
-      this.year  == other.year
+      this.year == other.year
+    );
+  }
+
+  until(dateLike: DateLike): Duration {
+    return differenceDate(
+      this.year,
+      this.month,
+      this.day,
+      dateLike.year,
+      dateLike.month,
+      dateLike.day
     );
   }
 
@@ -213,12 +223,6 @@ export class PlainDate {
   static compare(a: PlainDate, b: PlainDate): i32 {
     if (a === b) return 0;
 
-    let res = a.year - b.year;
-    if (res) return sign(res);
-
-    res = a.month - b.month;
-    if (res) return sign(res);
-
-    return ord(a.day, b.day);
+    return compareTemporalDate(a.year, a.month, a.day, b.year, b.month, b.day);
   }
 }

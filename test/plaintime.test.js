@@ -13,7 +13,7 @@ describe('Date', () => {
       equal(typeof PlainTime.prototype, 'object');
     });
     describe('Time.prototype', () => {
-      xit('Time.prototype has calendar', () => {
+      it('Time.prototype has calendar', () => {
         assert('calendar' in PlainTime.prototype);
       });
       it('Time.prototype has hour', () => {
@@ -34,40 +34,40 @@ describe('Date', () => {
       it('Time.prototype has nanosecond', () => {
         assert('nanosecond' in PlainTime.prototype);
       });
-      xit('Time.prototype.with is a Function', () => {
+      ('Time.prototype.with is a Function', () => {
         equal(typeof PlainTime.prototype.with, 'function');
       });
-      xit('Time.prototype.add is a Function', () => {
+      ('Time.prototype.add is a Function', () => {
         equal(typeof PlainTime.prototype.add, 'function');
       });
-      xit('Time.prototype.subtract is a Function', () => {
+      ('Time.prototype.subtract is a Function', () => {
         equal(typeof PlainTime.prototype.subtract, 'function');
       });
-      xit('Time.prototype.until is a Function', () => {
+      ('Time.prototype.until is a Function', () => {
         equal(typeof PlainTime.prototype.until, 'function');
       });
-      xit('Time.prototype.since is a Function', () => {
+      ('Time.prototype.since is a Function', () => {
         equal(typeof PlainTime.prototype.since, 'function');
       });
-      xit('Time.prototype.round is a Function', () => {
+      ('Time.prototype.round is a Function', () => {
         equal(typeof PlainTime.prototype.round, 'function');
       });
       it('Time.prototype.equals is a Function', () => {
         equal(typeof PlainTime.prototype.equals, 'function');
       });
-      xit('Time.prototype.toPlainDateTime is a Function', () => {
+      ('Time.prototype.toPlainDateTime is a Function', () => {
         equal(typeof PlainTime.prototype.toPlainDateTime, 'function');
       });
-      xit('Time.prototype.toZonedDateTime is a Function', () => {
+      ('Time.prototype.toZonedDateTime is a Function', () => {
         equal(typeof PlainTime.prototype.toZonedDateTime, 'function');
       });
-      xit('Time.prototype.getISOFields is a Function', () => {
+      ('Time.prototype.getISOFields is a Function', () => {
         equal(typeof PlainTime.prototype.getISOFields, 'function');
       });
-      xit('Time.prototype.toString is a Function', () => {
+      ('Time.prototype.toString is a Function', () => {
         equal(typeof PlainTime.prototype.toString, 'function');
       });
-      xit('Time.prototype.toJSON is a Function', () => {
+      ('Time.prototype.toJSON is a Function', () => {
         equal(typeof PlainTime.prototype.toJSON, 'function');
       });
     });
