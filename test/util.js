@@ -35,6 +35,22 @@ const toWasmDateLike = (date) => {
   return datelike;
 };
 
+const toWasmTimeComponents = (options) =>
+  options && options.largestUnit
+    ? [
+        "years",
+        "months",
+        "weeks",
+        "days",
+        "hours",
+        "minutes",
+        "seconds",
+        "milliseconds",
+        "microseconds",
+        "nanoseconds",
+      ].indexOf(options.largestUnit)
+    : 3;
+
 // adapts an AS PlainDate to more closely  match the JS API for the purposes of testing
 class PlainDate {
   constructor(...args) {
@@ -120,13 +136,15 @@ class PlainDate {
     const datelike = toWasmDateLike(date);
     return wrap(WasmPlainDate, this.wasmPlainDate.with(datelike));
   }
-  until(date) {
+  until(date, options) {
     const datelike = toWasmDateLike(date);
-    return WasmDuration.wrap(this.wasmPlainDate.until(datelike));
+    const largestUnitId = toWasmTimeComponents(options);
+    return WasmDuration.wrap(this.wasmPlainDate.until(datelike, largestUnitId));
   }
-  since(date) {
+  since(date, options) {
     const datelike = toWasmDateLike(date);
-    return WasmDuration.wrap(this.wasmPlainDate.since(datelike));
+    const largestUnitId = toWasmTimeComponents(options);
+    return WasmDuration.wrap(this.wasmPlainDate.since(datelike, largestUnitId));
   }
 
   static compare(a, b) {

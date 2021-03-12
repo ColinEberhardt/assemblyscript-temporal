@@ -152,18 +152,25 @@ export class PlainDate {
     );
   }
 
-  until(dateLike: DateLike): Duration {
+  until(
+    dateLike: DateLike,
+    largestUnit: TimeComponent = TimeComponent.days
+  ): Duration {
     return differenceDate(
       this.year,
       this.month,
       this.day,
       dateLike.year,
       dateLike.month,
-      dateLike.day
+      dateLike.day,
+      largestUnit
     );
   }
 
-  since(dateLike: DateLike): Duration {
+  since(
+    dateLike: DateLike,
+    largestUnit: TimeComponent = TimeComponent.days
+  ): Duration {
     return differenceDate(
       dateLike.year,
       dateLike.month,
@@ -171,6 +178,7 @@ export class PlainDate {
       this.year,
       this.month,
       this.day,
+      largestUnit
     );
   }
 
