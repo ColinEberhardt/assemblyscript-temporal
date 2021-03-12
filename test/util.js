@@ -18,14 +18,22 @@ const { __getString, __newString, __pin, __unpin } = wasmModule.exports;
 
 const WasmPlainTime = wasmModule.exports.WasmPlainTime;
 const WasmPlainDate = wasmModule.exports.PlainDate;
-const WasmDuration  = wasmModule.exports.Duration;
-const WasmDateLike  = wasmModule.exports.DateLike;
+const WasmDuration = wasmModule.exports.Duration;
+const WasmDateLike = wasmModule.exports.DateLike;
 
 const orZero = (val) => (val ? val : 0);
 
 // takes an AS plain date, first wraps it using the AS loader, than wraps it in the
 // PlainDate adapter
 const wrap = (Ctr, value) => new PlainDate(Ctr.wrap(value));
+
+const toWasmDateLike = (date) => {
+  const datelike = new WasmDateLike();
+  datelike.year = date.year || -1;
+  datelike.month = date.month || -1;
+  datelike.day = date.day || -1;
+  return datelike;
+};
 
 // adapts an AS PlainDate to more closely  match the JS API for the purposes of testing
 class PlainDate {
@@ -109,18 +117,16 @@ class PlainDate {
     return wrap(WasmPlainDate, this.wasmPlainDate.subtract(duration));
   }
   with(date) {
-    const datelike = new WasmDateLike();
-    datelike.year = date.year || -1;
-    datelike.month = date.month || -1;
-    datelike.day = date.day || -1;
+    const datelike = toWasmDateLike(date);
     return wrap(WasmPlainDate, this.wasmPlainDate.with(datelike));
   }
   until(date) {
-    const datelike = new WasmDateLike();
-    datelike.year = date.year || -1;
-    datelike.month = date.month || -1;
-    datelike.day = date.day || -1;
+    const datelike = toWasmDateLike(date);
     return WasmDuration.wrap(this.wasmPlainDate.until(datelike));
+  }
+  since(date) {
+    const datelike = toWasmDateLike(date);
+    return WasmDuration.wrap(this.wasmPlainDate.since(datelike));
   }
 
   static compare(a, b) {
@@ -138,7 +144,10 @@ class PlainDate {
         throw new RangeError(e.message);
       }
     } else if (date instanceof PlainDate) {
-      return wrap(WasmPlainDate, WasmPlainDate.fromPlainDate(date.wasmPlainDate));
+      return wrap(
+        WasmPlainDate,
+        WasmPlainDate.fromPlainDate(date.wasmPlainDate)
+      );
     } else {
       try {
         const datelike = new WasmDateLike();

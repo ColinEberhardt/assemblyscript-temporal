@@ -163,6 +163,17 @@ export class PlainDate {
     );
   }
 
+  since(dateLike: DateLike): Duration {
+    return differenceDate(
+      dateLike.year,
+      dateLike.month,
+      dateLike.day,
+      this.year,
+      this.month,
+      this.day,
+    );
+  }
+
   with(dateLike: DateLike): PlainDate {
     const year = dateLike.year != -1 ? dateLike.year : this.year;
     const month = dateLike.month != -1 ? dateLike.month : this.month;
