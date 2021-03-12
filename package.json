@@ -39,6 +39,6 @@
     "rootDir": "test"
   },
   "dependencies": {
-    "assemblyscript-regex": "^1.6.1"
+    "assemblyscript-regex": "^1.6.2"
   }
 }

@@ -51,6 +51,48 @@ const toWasmTimeComponents = (options) =>
       ].indexOf(options.largestUnit)
     : 3;
 
+class Duration {
+  constructor(wasmDuration) {
+    this.wasmDuration = wasmDuration;
+  }
+
+  toString() {
+    return __getString(this.wasmDuration.toString());
+  }
+
+  get years() {
+    return this.wasmDuration.years;
+  }
+  get months() {
+    return this.wasmDuration.months;
+  }
+  get weeks() {
+    return this.wasmDuration.weeks;
+  }
+  get days() {
+    return this.wasmDuration.days;
+  }
+  get hours() {
+    return this.wasmDuration.hours;
+  }
+  get minutes() {
+    return this.wasmDuration.minutes;
+  }
+  get seconds() {
+    return this.wasmDuration.seconds;
+  }
+  get milliseconds() {
+    return this.wasmDuration.milliseconds;
+  }
+  get microseconds() {
+    return this.wasmDuration.microseconds;
+  }
+  get nanoseconds() {
+    return this.wasmDuration.nanoseconds;
+  }
+}
+
+
 // adapts an AS PlainDate to more closely  match the JS API for the purposes of testing
 class PlainDate {
   constructor(...args) {
@@ -139,12 +181,15 @@ class PlainDate {
   until(date, options) {
     const datelike = toWasmDateLike(date);
     const largestUnitId = toWasmTimeComponents(options);
-    return WasmDuration.wrap(this.wasmPlainDate.until(datelike, largestUnitId));
+    const res = this.wasmPlainDate.until(datelike, largestUnitId);
+    const wasd = WasmDuration.wrap(res);
+    const dur = new Duration(wasd);
+    return dur;
   }
   since(date, options) {
     const datelike = toWasmDateLike(date);
     const largestUnitId = toWasmTimeComponents(options);
-    return WasmDuration.wrap(this.wasmPlainDate.since(datelike, largestUnitId));
+    return new Duration(WasmDuration.wrap(this.wasmPlainDate.since(datelike, largestUnitId)));
   }
 
   static compare(a, b) {
@@ -157,7 +202,7 @@ class PlainDate {
         const datePtr = __pin(__newString(date));
         const wasmDate = wrap(WasmPlainDate, WasmPlainDate.fromString(datePtr));
         __unpin(datePtr);
-        return new PlainDate(wasmDate);
+        return wasmDate;
       } catch (e) {
         throw new RangeError(e.message);
       }
