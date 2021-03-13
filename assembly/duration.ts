@@ -1,3 +1,5 @@
+import { durationSign } from "./utils";
+
 export class Duration {
   constructor(
     public years: i32 = 0,
@@ -11,6 +13,21 @@ export class Duration {
     public microseconds: i32 = 0,
     public nanoseconds: i32 = 0
   ) {}
+
+  get sign(): i32 {
+    return durationSign(
+      this.years,
+      this.months,
+      this.weeks,
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds
+    );
+  }
 
   // P1Y1M1DT1H1M1.1S
   toString(): string {
@@ -34,7 +51,8 @@ export class Duration {
       )
     );
 
-    return "P" + date + (time.length ? "T" + time : "");
+    if (!date.length && !time.length) return "PT0S";
+    return (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "");
   }
 }
 
