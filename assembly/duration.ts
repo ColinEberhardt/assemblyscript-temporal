@@ -1,10 +1,4 @@
-function componentString(value: i32, suffix: string): string {
-  return value != 0 ? value.toString() + suffix : "";
-}
-
-function fcomponentString(value: f32, suffix: string): string {
-  return value != 0 ? value.toString() + suffix : "";
-}
+import { durationSign } from "./utils";
 
 export class Duration {
   constructor(
@@ -20,26 +14,48 @@ export class Duration {
     public nanoseconds: i32 = 0
   ) {}
 
-  // P1Y1M1DT1H1M1.1S
-  toString(): string {
-    const dayComponent =
-      componentString(this.years, "Y") +
-      componentString(this.months, "M") +
-      componentString(this.days, "D") +
-      componentString(this.weeks, "W");
-    const timeComponent =
-      componentString(this.hours, "H") +
-      componentString(this.minutes, "M") +
-      fcomponentString(
-        f32(this.seconds) +
-          f32(this.milliseconds) / 1000.0 +
-          f32(this.microseconds) / 1000000.0 +
-          f32(this.nanoseconds) / 1000000000.0,
-        "S"
-      );
-
-    return (
-      "P" + dayComponent + (timeComponent != "" ? "T" + timeComponent : "")
+  get sign(): i32 {
+    return durationSign(
+      this.years,
+      this.months,
+      this.weeks,
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds
     );
   }
+
+  // P1Y1M1DT1H1M1.1S
+  toString(): string {
+    const date = (
+      toString(this.years,  "Y") +
+      toString(this.months, "M") +
+      toString(this.days,   "D") +
+      toString(this.weeks,  "W")
+    );
+
+    const time = (
+      toString(this.hours,   "H") +
+      toString(this.minutes, "M") +
+      toString(
+        // sort in ascending order for better sum precision
+        f64(this.nanoseconds)  / 1000000000.0 +
+        f64(this.microseconds) / 1000000.0 +
+        f64(this.milliseconds) / 1000.0 +
+        f64(this.seconds),
+        "S"
+      )
+    );
+
+    if (!date.length && !time.length) return "PT0S";
+    return (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "");
+  }
+}
+
+function toString<T extends number>(value: T, suffix: string): string {
+  return value ? value.toString() + suffix : "";
 }
