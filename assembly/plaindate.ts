@@ -123,7 +123,7 @@ export class PlainDate {
   }
 
   @inline
-  get isLeapYear(): bool {
+  get inLeapYear(): bool {
     return leapYear(this.year);
   }
 
