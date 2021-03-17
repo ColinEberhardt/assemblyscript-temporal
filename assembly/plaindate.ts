@@ -2,7 +2,6 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
-import { log } from "./env";
 import {
   addDate,
   dayOfWeek,
@@ -15,6 +14,7 @@ import {
   checkDateTimeRange,
   compareTemporalDate,
   differenceDate,
+  coalesce,
 } from "./utils";
 
 export class DateLike {
@@ -182,18 +182,19 @@ export class PlainDate {
   }
 
   with(dateLike: DateLike): PlainDate {
-    const year = dateLike.year != -1 ? dateLike.year : this.year;
-    const month = dateLike.month != -1 ? dateLike.month : this.month;
-    const day = dateLike.day != -1 ? dateLike.day : this.day;
-    return new PlainDate(year, month, day);
+    return new PlainDate(
+      coalesce(dateLike.year, this.year),
+      coalesce(dateLike.month, this.month),
+      coalesce(dateLike.day, this.day)
+    );
   }
 
   add<T>(durationToAdd: T): PlainDate {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -220,10 +221,10 @@ export class PlainDate {
 
   subtract<T>(durationToSubtract: T): PlainDate {
     const duration =
-    durationToSubtract instanceof DurationLike
+      durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        // @ts-ignore TS2352
-        : durationToSubtract as Duration;
+        : // @ts-ignore TS2352
+          (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,

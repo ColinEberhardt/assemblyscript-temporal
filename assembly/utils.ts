@@ -637,3 +637,9 @@ export function epochFromParts(
 export function toPaddedString(number: i32, length: i32 = 2): string {
   return number.toString().padStart(length, "0");
 }
+
+// @ts-ignore: decorator
+@inline
+export function coalesce(a: i32, b:i32, nill:i32 = -1):i32 {
+  return a == nill ? b : a;
+}
