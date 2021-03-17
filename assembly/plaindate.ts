@@ -1,6 +1,6 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
-import { Duration } from "./duration";
+import { Duration, DurationLike } from "./duration";
 import { log } from "./env";
 import {
   TimeComponent,
@@ -153,28 +153,28 @@ export class PlainDate {
   }
 
   until(
-    dateLike: DateLike,
+    date: PlainDate,
     largestUnit: TimeComponent = TimeComponent.days
   ): Duration {
     return differenceDate(
       this.year,
       this.month,
       this.day,
-      dateLike.year,
-      dateLike.month,
-      dateLike.day,
+      date.year,
+      date.month,
+      date.day,
       largestUnit
     );
   }
 
   since(
-    dateLike: DateLike,
+    date: PlainDate,
     largestUnit: TimeComponent = TimeComponent.days
   ): Duration {
     return differenceDate(
-      dateLike.year,
-      dateLike.month,
-      dateLike.day,
+      date.year,
+      date.month,
+      date.day,
       this.year,
       this.month,
       this.day,
@@ -189,7 +189,7 @@ export class PlainDate {
     return new PlainDate(year, month, day);
   }
 
-  add(duration: Duration): PlainDate {
+  add(duration: DurationLike): PlainDate {
     const balancedDuration = balanceDuration(
       duration.days,
       duration.hours,
@@ -214,7 +214,7 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
-  subtract(duration: Duration): PlainDate {
+  subtract(duration: DurationLike): PlainDate {
     const balancedDuration = balanceDuration(
       duration.days,
       duration.hours,
@@ -236,6 +236,7 @@ export class PlainDate {
       -balancedDuration.days,
       Overflow.Constrain
     );
+
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 

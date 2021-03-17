@@ -1,5 +1,18 @@
 import { durationSign } from "./utils";
 
+export class DurationLike {
+  years: i32 =0;
+   months: i32 =0;
+   weeks: i32 =0;
+   days: i32 =0;
+   hours: i32 =0;
+   minutes: i32 =0;
+   seconds: i32 =0;
+   milliseconds: i32 =0;
+   microseconds: i32 =0;
+   nanoseconds: i32 =0;
+}
+
 export class Duration {
   constructor(
     public years: i32 = 0,
@@ -34,8 +47,8 @@ export class Duration {
     const date = (
       toString(this.years,  "Y") +
       toString(this.months, "M") +
-      toString(this.days,   "D") +
-      toString(this.weeks,  "W")
+      toString(this.weeks,  "W") +
+      toString(this.days,   "D") 
     );
 
     const time = (
