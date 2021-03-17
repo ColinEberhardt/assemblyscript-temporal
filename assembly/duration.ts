@@ -1,16 +1,31 @@
 import { durationSign } from "./utils";
 
 export class DurationLike {
-  years: i32 =0;
-   months: i32 =0;
-   weeks: i32 =0;
-   days: i32 =0;
-   hours: i32 =0;
-   minutes: i32 =0;
-   seconds: i32 =0;
-   milliseconds: i32 =0;
-   microseconds: i32 =0;
-   nanoseconds: i32 =0;
+  years: i32 = 0;
+  months: i32 = 0;
+  weeks: i32 = 0;
+  days: i32 = 0;
+  hours: i32 = 0;
+  minutes: i32 = 0;
+  seconds: i32 = 0;
+  milliseconds: i32 = 0;
+  microseconds: i32 = 0;
+  nanoseconds: i32 = 0;
+
+  toDuration(): Duration {
+    return new Duration(
+      this.years,
+      this.months,
+      this.weeks,
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds
+    );
+  }
 }
 
 export class Duration {
@@ -44,28 +59,28 @@ export class Duration {
 
   // P1Y1M1DT1H1M1.1S
   toString(): string {
-    const date = (
-      toString(this.years,  "Y") +
+    const date =
+      toString(this.years, "Y") +
       toString(this.months, "M") +
-      toString(this.weeks,  "W") +
-      toString(this.days,   "D") 
-    );
+      toString(this.weeks, "W") +
+      toString(this.days, "D");
 
-    const time = (
-      toString(this.hours,   "H") +
+    const time =
+      toString(this.hours, "H") +
       toString(this.minutes, "M") +
       toString(
         // sort in ascending order for better sum precision
-        f64(this.nanoseconds)  / 1000000000.0 +
-        f64(this.microseconds) / 1000000.0 +
-        f64(this.milliseconds) / 1000.0 +
-        f64(this.seconds),
+        f64(this.nanoseconds) / 1000000000.0 +
+          f64(this.microseconds) / 1000000.0 +
+          f64(this.milliseconds) / 1000.0 +
+          f64(this.seconds),
         "S"
-      )
-    );
+      );
 
     if (!date.length && !time.length) return "PT0S";
-    return (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "");
+    return (
+      (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "")
+    );
   }
 }
 

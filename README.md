@@ -22,13 +22,13 @@ The current approach is as follows:
 
 ### Implementation progress
 
-## PlainDate
+#### PlainDate
 
 PlainDate is currently being implemented based on the ISO 8601 calendar.
 
 Constructor
   - [x] new Temporal.PlainDate
-  
+
 Static methods
   - [x] from
   - [ ] compare
@@ -67,3 +67,45 @@ Methods
   - [ ] toPlainYearMonth
   - [ ] toPlainMonthDay
   - [ ] getISOFields
+
+General features
+  - [ ] overflow modes (current implementation defaults to constrain)
+
+#### Duration
+
+Constructor
+  - [x] new Duration
+  
+static methods
+  - [ ] from
+  - [ ] compare
+  
+Properties
+  - [x] years
+  - [x] months
+  - [x] weeks
+  - [x] days
+  - [x] hours
+  - [x] minutes
+  - [x] seconds
+  - [x] milliseconds
+  - [x] microseconds
+  - [x] nanoseconds
+  - [ ] sign
+  - [ ] blank
+  
+Methods
+  - [ ] with
+  - [ ] add
+  - [ ] subtract
+  - [ ] negated
+  - [ ] abs
+  - [ ] round
+  - [ ] total
+  - [ ] toString
+  - [ ] toJSON
+  - [ ] toLocaleString
+  - [ ] valueOf
+
+General features
+  - [ ] precision - need to determine what type to use for the properties

@@ -189,7 +189,13 @@ export class PlainDate {
     return new PlainDate(year, month, day);
   }
 
-  add(duration: DurationLike): PlainDate {
+  add<T>(durationToAdd: T): PlainDate {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        // @ts-ignore TS2352
+        : durationToAdd as Duration;
+
     const balancedDuration = balanceDuration(
       duration.days,
       duration.hours,
@@ -200,7 +206,6 @@ export class PlainDate {
       duration.nanoseconds,
       TimeComponent.days
     );
-
     const newDate = addDate(
       this.year,
       this.month,
@@ -214,7 +219,13 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
-  subtract(duration: DurationLike): PlainDate {
+  subtract<T>(durationToSubtract: T): PlainDate {
+    const duration =
+    durationToSubtract instanceof DurationLike
+        ? durationToSubtract.toDuration()
+        // @ts-ignore TS2352
+        : durationToSubtract as Duration;
+
     const balancedDuration = balanceDuration(
       duration.days,
       duration.hours,
