@@ -1,12 +1,11 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
+import { Overflow, TimeComponent } from "./enums";
 import { log } from "./env";
 import {
-  TimeComponent,
   addDate,
   dayOfWeek,
-  Overflow,
   leapYear,
   dayOfYear,
   weekOfYear,

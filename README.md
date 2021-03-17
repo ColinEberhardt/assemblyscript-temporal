@@ -39,8 +39,8 @@ Properties
   - [ ] monthCode
   - [x] day
   - [x] calendar
-  - [x] era
-  - [x] eraYear
+  - [ ] era
+  - [ ] eraYear
   - [x] dayOfWeek
   - [x] dayOfYear
   - [x] weekOfYear
@@ -102,7 +102,7 @@ Methods
   - [ ] abs
   - [ ] round
   - [ ] total
-  - [ ] toString
+  - [x] toString
   - [ ] toJSON
   - [ ] toLocaleString
   - [ ] valueOf

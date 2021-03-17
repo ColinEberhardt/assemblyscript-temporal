@@ -1,7 +1,7 @@
 import { PlainDate } from "..";
 import { Duration, DurationLike } from "../duration";
+import { TimeComponent } from "../enums";
 import { DateLike } from "../plaindate";
-import { TimeComponent } from "../utils";
 
 let date: PlainDate;
 

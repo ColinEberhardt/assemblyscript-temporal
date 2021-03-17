@@ -7,6 +7,7 @@
 // to ensure correctess
 
 import { Duration } from "./duration";
+import { Overflow, TimeComponent } from "./enums";
 import { log } from "./env";
 
 const YEAR_MIN = -271821;
@@ -30,24 +31,6 @@ export class NanoDays {
   days: i32;
   nanoseconds: i32;
   dayLengthNs: i64;
-}
-
-export const enum Overflow {
-  Reject,
-  Constrain,
-}
-
-export const enum TimeComponent {
-  years,
-  months,
-  weeks,
-  days,
-  hours,
-  minutes,
-  seconds,
-  milliseconds,
-  microseconds,
-  nanoseconds,
 }
 
 @inline
