@@ -20,10 +20,50 @@ The current approach is as follows:
 4. Don't bother refactoring heavily, being able to map between the polyfill implementation and this codebase will help ensure correctness
 
 
-The current AssemblyScript PlainDate implementation passes 77 of the 241 tests, which is not a bad start!
+### Implementation progress
 
-*If you have thoughts / ideas on the implementation technique, please open an issue*
+## PlainDate
 
-This project is still very much in the early exploration phase. I'd like to implement more of the temporal features and uncover more of the underlying challenge (see below) before starting on a more structured implementation roadmap.
+PlainDate is currently being implemented based on the ISO 8601 calendar.
 
-*If you have thoughts / ideas on the above, please open an issue*
+Constructor
+  - [x] new Temporal.PlainDate
+  
+Static methods
+  - [x] from
+  - [ ] compare
+
+Properties
+  - [x] year
+  - [x] month
+  - [ ] monthCode
+  - [x] day
+  - [x] calendar
+  - [x] era
+  - [x] eraYear
+  - [x] dayOfWeek
+  - [x] dayOfYear
+  - [x] weekOfYear
+  - [x] daysInWeek
+  - [x] daysInMonth
+  - [x] daysInYear
+  - [x] monthsInYear
+  - [x] inLeapYear
+
+Methods
+  - [x] with
+  - [ ] withCalendar
+  - [x] add
+  - [x] subtract
+  - [x] until
+  - [x] since
+  - [x] equals
+  - [x] toString
+  - [ ] toLocaleString
+  - [ ] toJSON
+  - [ ] valueOf
+  - [ ] toZonedDateTime
+  - [ ] toPlainDateTime
+  - [ ] toPlainYearMonth
+  - [ ] toPlainMonthDay
+  - [ ] getISOFields
