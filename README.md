@@ -73,8 +73,64 @@ Methods
 - [ ] getISOFields
 
 General features
+  - [ ] overflow modes (current implementation defaults to constrain)
+  - [ ] non ISO 8601 calendars
 
-- [ ] overflow modes (current implementation defaults to constrain)
+#### PlainDateTime
+
+PlainDateTime is currently being implemented based on the ISO 8601 calendar.
+
+Constructor
+  - [x] new Temporal.PlainDateTime
+
+Static methods
+  - [ ] from
+  - [ ] compare
+
+Properties
+  - [x] year
+  - [x] month
+  - [ ] monthCode
+  - [x] day
+  - [x] hour
+  - [x] minute
+  - [x] second
+  - [x] millisecond
+  - [x] microsecond
+  - [x] nanosecond
+  - [ ] calendar
+  - [ ] era
+  - [ ] eraYear
+  - [x] dayOfWeek
+  - [x] dayOfYear
+  - [x] weekOfYear
+  - [x] daysInWeek
+  - [x] daysInMonth
+  - [x] daysInYear
+  - [x] monthsInYear
+  - [x] inLeapYear
+
+Methods
+  - [ ] with
+  - [ ] withCalendar
+  - [ ] add
+  - [ ] subtract
+  - [ ] until
+  - [ ] since
+  - [ ] equals
+  - [x] toString
+  - [ ] toLocaleString
+  - [ ] toJSON
+  - [ ] valueOf
+  - [ ] toZonedDateTime
+  - [ ] toPlainDateTime
+  - [ ] toPlainYearMonth
+  - [ ] toPlainMonthDay
+  - [ ] getISOFields
+
+General features
+  - [ ] overflow modes (current implementation defaults to constrain)
+  - [ ] non ISO 8601 calendars
 
 #### Duration
 
