@@ -55,9 +55,17 @@ export class BalancedTime {
   nanosecond: i32;
 }
 
+// @ts-ignore: decorator
 @inline
 export function floorDiv(a: i32, b: i32): i32 {
   return (a >= 0 ? a : a - b + 1) / b;
+}
+
+// @ts-ignore: decorator
+@inline
+export function nonNegativeModulo(x: i32, y: i32): i32 {
+  x %= y;
+  return x < 0 ? x + y : x;
 }
 
 // modified of
@@ -162,16 +170,6 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   }
 
   return { year, month, day };
-}
-
-// @ts-ignore: decorator
-@inline
-export function nonNegativeModulo(x: i32, value: i32): i32 {
-  x = x % value;
-  if (x<0) {
-    x += value;
-  }
-  return x;
 }
 
 // @ts-ignore: decorator
@@ -497,7 +495,7 @@ export function compareTemporalDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32,
 
 export function compareTemporalDateTime(y1: i32, m1: i32, d1: i32, h1: i32, min1: i32, s1: i32, mill1: i32, mic1: i32, nan1: i32,
   y2: i32, m2: i32, d2: i32, h2: i32, min2: i32, s2: i32, mill2: i32, mic2: i32, nan2: i32): i32 {
-  
+
   let res = y1 - y2;
   if (res) return sign(res);
 
@@ -697,15 +695,34 @@ export function epochFromParts(
   return 0;
 }
 
-export function addDateTime(year :i32, month :i32, day :i32,
-  hour :i32, minute :i32, second :i32,
-  millisecond :i32, microsecond :i32, nanosecond :i32,
-  years :i32, months :i32, weeks :i32, days :i32, hours :i32, minutes :i32, seconds :i32,
-  milliseconds :i32, microseconds :i32, nanoseconds :i32, overflow: Overflow): DT {
-
+export function addDateTime(
+  year: i32,
+  month: i32,
+  day: i32,
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  years: i32,
+  months: i32,
+  weeks: i32,
+  days: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i32,
+  microseconds: i32,
+  nanoseconds: i32,
+  overflow: Overflow
+): DT {
   // Add the time part
   let deltaDays = 0;
-  const addedTime = addTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  const addedTime = addTime(
+    hour, minute, second, millisecond, microsecond, nanosecond,
+    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
+  );
 
   deltaDays = addedTime.deltaDays;
   hour = addedTime.hour;
@@ -731,9 +748,20 @@ export function addDateTime(year :i32, month :i32, day :i32,
   };
 }
 
-function addTime(hour :i32, minute :i32, second :i32, millisecond :i32, microsecond :i32,
-  nanosecond :i32, hours :i32, minutes :i32, seconds :i32, milliseconds :i32,
-  microseconds :i32, nanoseconds: i32): BalancedTime {
+function addTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i32,
+  microseconds: i32,
+  nanoseconds: i32
+): BalancedTime {
 
   hour += hours;
   minute += minutes;
@@ -745,32 +773,48 @@ function addTime(hour :i32, minute :i32, second :i32, millisecond :i32, microsec
   return balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
-function balanceTime(hour :i32, minute :i32, second :i32, millisecond :i32, 
-  microsecond: i32, nanosecond: i32): BalancedTime {
-  
-  microsecond += floorDiv(nanosecond, 1000);
-  nanosecond = nonNegativeModulo(nanosecond, 1000);
-  millisecond += floorDiv(microsecond, 1000);
-  microsecond = nonNegativeModulo(microsecond, 1000);
-  second += floorDiv(millisecond, 1000);
-  millisecond = nonNegativeModulo(millisecond, 1000);
-  minute += floorDiv(second, 60);
-  second = nonNegativeModulo(second, 60);
-  hour += floorDiv(minute, 60);
-  minute = nonNegativeModulo(minute, 60);
-  var deltaDays = floorDiv(hour, 24);
-  hour = nonNegativeModulo(hour, 24);
+function balanceTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32
+): BalancedTime {
+
+  let quotient = floorDiv(nanosecond, 1000);
+  microsecond += quotient;
+  nanosecond  -= quotient * 1000;
+
+  quotient = floorDiv(microsecond, 1000);
+  millisecond += quotient;
+  microsecond -= quotient * 1000;
+
+  quotient = floorDiv(millisecond, 1000);
+  second      += quotient;
+  millisecond -= quotient * 1000;
+
+  quotient = floorDiv(second, 60);
+  minute += quotient;
+  second -= quotient * 60;
+
+  quotient = floorDiv(minute, 60);
+  hour   += quotient;
+  minute -= quotient * 60;
+
+  let deltaDays = floorDiv(hour, 24);
+  hour -= deltaDays * 24;
+
   return {
-    deltaDays: deltaDays,
-    hour: hour,
-    minute: minute,
-    second: second,
-    millisecond: millisecond,
-    microsecond: microsecond,
-    nanosecond: nanosecond
+    deltaDays,
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond
   };
 }
-
 
 // @ts-ignore: decorator
 @inline
@@ -780,6 +824,6 @@ export function toPaddedString(number: i32, length: i32 = 2): string {
 
 // @ts-ignore: decorator
 @inline
-export function coalesce(a: i32, b:i32, nill:i32 = -1):i32 {
+export function coalesce(a: i32, b: i32, nill: i32 = -1):i32 {
   return a == nill ? b : a;
 }
