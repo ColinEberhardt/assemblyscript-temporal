@@ -27,142 +27,157 @@ The current approach is as follows:
 PlainDate is currently being implemented based on the ISO 8601 calendar.
 
 Constructor
-  - [x] new Temporal.PlainDate
+
+- [x] new Temporal.PlainDate
 
 Static methods
-  - [x] from
-  - [ ] compare
+
+- [x] from
+- [x] compare
 
 Properties
-  - [x] year
-  - [x] month
-  - [ ] monthCode
-  - [x] day
-  - [ ] calendar
-  - [ ] era
-  - [ ] eraYear
-  - [x] dayOfWeek
-  - [x] dayOfYear
-  - [x] weekOfYear
-  - [x] daysInWeek
-  - [x] daysInMonth
-  - [x] daysInYear
-  - [x] monthsInYear
-  - [x] inLeapYear
+
+- [x] year
+- [x] month
+- [x] monthCode
+- [x] day
+- [ ] calendar
+- [ ] era
+- [ ] eraYear
+- [x] dayOfWeek
+- [x] dayOfYear
+- [x] weekOfYear
+- [x] daysInWeek
+- [x] daysInMonth
+- [x] daysInYear
+- [x] monthsInYear
+- [x] inLeapYear
 
 Methods
-  - [x] with
-  - [ ] withCalendar
-  - [x] add
-  - [x] subtract
-  - [x] until
-  - [x] since
-  - [x] equals
-  - [x] toString
-  - [ ] toLocaleString
-  - [ ] toJSON
-  - [ ] valueOf
-  - [ ] toZonedDateTime
-  - [ ] toPlainDateTime
-  - [ ] toPlainYearMonth
-  - [ ] toPlainMonthDay
-  - [ ] getISOFields
+
+- [x] with
+- [ ] withCalendar
+- [x] add
+- [x] subtract
+- [x] until
+- [x] since
+- [x] equals
+- [x] toString
+- [ ] toLocaleString
+- [ ] toJSON
+- [ ] valueOf
+- [ ] toZonedDateTime
+- [ ] toPlainDateTime
+- [ ] toPlainYearMonth
+- [ ] toPlainMonthDay
+- [ ] getISOFields
 
 General features
-  - [ ] overflow modes (current implementation defaults to constrain)
-  - [ ] non ISO 8601 calendars
+
+- [ ] overflow modes (current implementation defaults to constrain)
+- [ ] non ISO 8601 calendars
 
 #### PlainDateTime
 
 PlainDateTime is currently being implemented based on the ISO 8601 calendar.
 
 Constructor
-  - [x] new Temporal.PlainDateTime
+
+- [x] new Temporal.PlainDateTime
 
 Static methods
-  - [ ] from
-  - [ ] compare
+
+- [ ] from
+- [ ] compare
 
 Properties
-  - [x] year
-  - [x] month
-  - [ ] monthCode
-  - [x] day
-  - [x] hour
-  - [x] minute
-  - [x] second
-  - [x] millisecond
-  - [x] microsecond
-  - [x] nanosecond
-  - [ ] calendar
-  - [ ] era
-  - [ ] eraYear
-  - [x] dayOfWeek
-  - [x] dayOfYear
-  - [x] weekOfYear
-  - [x] daysInWeek
-  - [x] daysInMonth
-  - [x] daysInYear
-  - [x] monthsInYear
-  - [x] inLeapYear
+
+- [x] year
+- [x] month
+- [ ] monthCode
+- [x] day
+- [x] hour
+- [x] minute
+- [x] second
+- [x] millisecond
+- [x] microsecond
+- [x] nanosecond
+- [ ] calendar
+- [ ] era
+- [ ] eraYear
+- [x] dayOfWeek
+- [x] dayOfYear
+- [x] weekOfYear
+- [x] daysInWeek
+- [x] daysInMonth
+- [x] daysInYear
+- [x] monthsInYear
+- [x] inLeapYear
 
 Methods
-  - [ ] with
-  - [ ] withCalendar
-  - [ ] add
-  - [ ] subtract
-  - [ ] until
-  - [ ] since
-  - [ ] equals
-  - [x] toString
-  - [ ] toLocaleString
-  - [ ] toJSON
-  - [ ] valueOf
-  - [ ] toZonedDateTime
-  - [ ] toPlainDateTime
-  - [ ] toPlainYearMonth
-  - [ ] toPlainMonthDay
-  - [ ] getISOFields
+
+- [ ] with
+- [ ] withCalendar
+- [ ] add
+- [ ] subtract
+- [ ] until
+- [ ] since
+- [ ] equals
+- [x] toString
+- [ ] toLocaleString
+- [ ] toJSON
+- [ ] valueOf
+- [ ] toZonedDateTime
+- [ ] toPlainDateTime
+- [ ] toPlainYearMonth
+- [ ] toPlainMonthDay
+- [ ] getISOFields
 
 General features
-  - [ ] overflow modes (current implementation defaults to constrain)
-  - [ ] non ISO 8601 calendars
+
+- [ ] overflow modes (current implementation defaults to constrain)
+- [ ] non ISO 8601 calendars
 
 #### Duration
 
 Constructor
-  - [x] new Duration
-  
+
+- [x] new Duration
+
 static methods
-  - [ ] from
-  - [ ] compare
-  
+
+- [ ] from
+- [ ] compare
+
 Properties
-  - [x] years
-  - [x] months
-  - [x] weeks
-  - [x] days
-  - [x] hours
-  - [x] minutes
-  - [x] seconds
-  - [x] milliseconds
-  - [x] microseconds
-  - [x] nanoseconds
-  - [ ] sign
-  - [ ] blank
-  
+
+- [x] years
+- [x] months
+- [x] weeks
+- [x] days
+- [x] hours
+- [x] minutes
+- [x] seconds
+- [x] milliseconds
+- [x] microseconds
+- [x] nanoseconds
+- [x] sign
+- [ ] blank
+
 Methods
-  - [ ] with
-  - [ ] add
-  - [ ] subtract
-  - [ ] negated
-  - [ ] abs
-  - [ ] round
-  - [ ] total
-  - [x] toString
-  - [ ] toJSON
-  - [ ] toLocaleString
-  - [ ] valueOf
+
+- [ ] with
+- [ ] add
+- [ ] subtract
+- [ ] negated
+- [ ] abs
+- [ ] round
+- [ ] total
+- [x] toString
+- [ ] toJSON
+- [ ] toLocaleString
+- [ ] valueOf
 
 General features
-  - [ ] precision - need to determine what type to use for the properties
+
+- [ ] precision - need to determine what type to use for the properties
