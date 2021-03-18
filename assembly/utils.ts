@@ -463,6 +463,39 @@ export function compareTemporalDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32,
   return ord(d1, d2);
 }
 
+export function compareTemporalDateTime(y1: i32, m1: i32, d1: i32, h1: i32, min1: i32, s1: i32, mill1: i32, mic1: i32, nan1: i32,
+  y2: i32, m2: i32, d2: i32, h2: i32, min2: i32, s2: i32, mill2: i32, mic2: i32, nan2: i32): i32 {
+  
+  let res = y1 - y2;
+  if (res) return sign(res);
+
+  res = m1 - m2;
+  if (res) return sign(res);
+
+  res = d1 - d2;
+  if (res) return sign(res);
+
+  res = h1 - h2;
+  if (res) return sign(res);
+
+  res = min1 - min2;
+  if (res) return sign(res);
+
+  res = s1 - s2;
+  if (res) return sign(res);
+
+  res = mill1 - mill2;
+  if (res) return sign(res);
+
+  res = mic1 - mic2;
+  if (res) return sign(res);
+
+  res = nan1 - nan2;
+  if (res) return sign(res);
+
+  return ord(d1, d2);
+}
+
 export function differenceDate(
   y1: i32,
   m1: i32,

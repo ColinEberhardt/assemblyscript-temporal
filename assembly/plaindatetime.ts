@@ -7,6 +7,8 @@ import {
   daysInMonth,
   toPaddedString,
   coalesce,
+  compareTemporalDate,
+  compareTemporalDateTime,
 } from "./utils";
 
 export class DateTimeLike {
@@ -183,6 +185,31 @@ export class PlainDateTime {
             .toString()
             .substr(1)
         : "")
+    );
+  }
+
+  static compare(a: PlainDateTime, b: PlainDateTime): i32 {
+    if (a === b) return 0;
+
+    return compareTemporalDateTime(
+      a.year,
+      a.month,
+      a.day,
+      a.hour,
+      a.minute,
+      a.second,
+      a.millisecond,
+      a.microsecond,
+      a.nanosecond,
+      b.year,
+      b.month,
+      b.day,
+      b.hour,
+      b.minute,
+      b.second,
+      b.millisecond,
+      b.microsecond,
+      b.nanosecond
     );
   }
 }

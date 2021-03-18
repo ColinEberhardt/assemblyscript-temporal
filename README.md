@@ -88,7 +88,7 @@ Constructor
 Static methods
 
 - [x] from
-- [ ] compare
+- [x] compare
 
 Properties
 

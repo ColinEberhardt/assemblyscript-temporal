@@ -1,5 +1,6 @@
 /// <reference types="@as-pect/assembly/types/as-pect" />
 
+import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 
 let datetime: PlainDateTime;
@@ -236,24 +237,32 @@ describe("DateTime.fromString() works", () => {
   });
 });
 
+let dt1: PlainDateTime, dt2: PlainDateTime;
+
 describe("DateTime.compare() works", () => {
-  const dt1 = PlainDateTime.fromString("1976-11-18T15:23:30.123456789");
-  const dt2 = PlainDateTime.fromString("2019-10-29T10:46:38.271986102");
-  //  it('equal', () => expect(PlainDateTime.compare(dt1, dt1)).toBe(0));
-  //  it('smaller/larger', () => expect(PlainDateTime.compare(dt1, dt2)).toBe(-1));
-  //  it('larger/smaller', () => expect(PlainDateTime.compare(dt2, dt1)).toBe(1));
-  //  it('casts first argument', () => {
-  //    expect(PlainDateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2)).toBe(-1);
-  //    expect(PlainDateTime.compare('1976-11-18T15:23:30.123456789', dt2)).toBe(-1);
-  //  });
-  //  it('casts second argument', () => {
-  //    expect(PlainDateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 })).toBe(-1);
-  //    expect(PlainDateTime.compare(dt1, '2019-10-29T10:46:38.271986102')).toBe(-1);
-  //  });
-  //  it('object must contain at least the required properties', () => {
-  //    throws(() => PlainDateTime.compare({ year: 1976 }, dt2), TypeError);
-  //    throws(() => PlainDateTime.compare(dt1, { year: 2019 }), TypeError);
-  //  });
+  dt1 = PlainDateTime.fromString("1976-11-18T15:23:30.123456789");
+  dt2 = PlainDateTime.fromString("2019-10-29T10:46:38.271986102");
+  it("equal", () => {
+    expect(PlainDateTime.compare(dt1, dt1)).toBe(0);
+  });
+  it("smaller/larger", () => {
+    expect(PlainDateTime.compare(dt1, dt2)).toBe(-1);
+  });
+  it("larger/smaller", () => {
+    expect(PlainDateTime.compare(dt2, dt1)).toBe(1);
+  });
+  xit("casts first argument", () => {
+    //    expect(PlainDateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2)).toBe(-1);
+    //    expect(PlainDateTime.compare('1976-11-18T15:23:30.123456789', dt2)).toBe(-1);
+  });
+  xit("casts second argument", () => {
+    //    expect(PlainDateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 })).toBe(-1);
+    //    expect(PlainDateTime.compare(dt1, '2019-10-29T10:46:38.271986102')).toBe(-1);
+  });
+  xit("object must contain at least the required properties", () => {
+    //  throws(() => PlainDateTime.compare({ year: 1976 }, dt2), TypeError);
+    //  throws(() => PlainDateTime.compare(dt1, { year: 2019 }), TypeError);
+  });
 });
 
 //    describe('DateTime.equals() works', () => {
