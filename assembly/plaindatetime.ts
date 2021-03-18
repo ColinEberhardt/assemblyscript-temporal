@@ -212,4 +212,20 @@ export class PlainDateTime {
       b.nanosecond
     );
   }
+
+  @inline
+  equals(other: PlainDateTime): bool {
+    if (this === other) return true;
+    return (
+      this.day == other.day &&
+      this.month == other.month &&
+      this.year == other.year &&
+      this.hour == other.hour &&
+      this.minute == other.minute &&
+      this.second == other.second &&
+      this.millisecond == other.millisecond &&
+      this.microsecond == other.microsecond &&
+      this.nanosecond == other.nanosecond
+    );
+  }
 }

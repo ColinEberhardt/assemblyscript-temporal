@@ -265,19 +265,24 @@ describe("DateTime.compare() works", () => {
   });
 });
 
-//    describe('DateTime.equals() works', () => {
-//      const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-//      const dt2 = PlainDateTime.from('2019-10-29T10:46:38.271986102');
-//      it('equal', () => assert(dt1.equals(dt1)));
-//      it('unequal', () => assert(!dt1.equals(dt2)));
-//      it('casts argument', () => {
-//        assert(!dt2.equals({ year: 1976, month: 11, day: 18, hour: 15 }));
-//        assert(!dt2.equals('1976-11-18T15:23:30.123456789'));
-//      });
-//      it('object must contain at least the required properties', () => {
-//        throws(() => dt2.equals({ year: 1976 }), TypeError);
-//      });
-//    });
+describe("DateTime.equals() works", () => {
+  const dt1 = PlainDateTime.from("1976-11-18T15:23:30.123456789");
+  const dt2 = PlainDateTime.from("2019-10-29T10:46:38.271986102");
+  it("equal", () => {
+    assert(dt1.equals(dt1));
+  });
+  it("unequal", () => {
+    assert(!dt1.equals(dt2));
+  });
+  xit("casts argument", () => {
+    // assert(!dt2.equals({ year: 1976, month: 11, day: 18, hour: 15 }));
+    // assert(!dt2.equals("1976-11-18T15:23:30.123456789"));
+  });
+  xit("object must contain at least the required properties", () => {
+    // throws(() => dt2.equals({ year: 1976 }), TypeError);
+  });
+});
+
 //    describe("Comparison operators don't work", () => {
 //      const dt1 = PlainDateTime.from('1963-02-13T09:36:29.123456789');
 //      const dt1again = PlainDateTime.from('1963-02-13T09:36:29.123456789');

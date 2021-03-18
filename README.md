@@ -115,7 +115,6 @@ Properties
 - [x] inLeapYear
 
 Methods
-<<<<<<< HEAD
 
 - [ ] with
 - [ ] withCalendar
@@ -123,7 +122,7 @@ Methods
 - [ ] subtract
 - [ ] until
 - [ ] since
-- [ ] equals
+- [x] equals
 - [x] toString
 - [ ] toLocaleString
 - [ ] toJSON
@@ -133,24 +132,6 @@ Methods
 - [ ] toPlainYearMonth
 - [ ] toPlainMonthDay
 - [ ] getISOFields
-=======
-  - [x] with
-  - [ ] withCalendar
-  - [ ] add
-  - [ ] subtract
-  - [ ] until
-  - [ ] since
-  - [ ] equals
-  - [x] toString
-  - [ ] toLocaleString
-  - [ ] toJSON
-  - [ ] valueOf
-  - [ ] toZonedDateTime
-  - [ ] toPlainDateTime
-  - [ ] toPlainYearMonth
-  - [ ] toPlainMonthDay
-  - [ ] getISOFields
->>>>>>> 13234ce... implemented PlainDateTime.from
 
 General features
 
