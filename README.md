@@ -87,7 +87,7 @@ Constructor
 
 Static methods
 
-- [ ] from
+- [x] from
 - [ ] compare
 
 Properties
@@ -115,6 +115,7 @@ Properties
 - [x] inLeapYear
 
 Methods
+<<<<<<< HEAD
 
 - [ ] with
 - [ ] withCalendar
@@ -132,6 +133,24 @@ Methods
 - [ ] toPlainYearMonth
 - [ ] toPlainMonthDay
 - [ ] getISOFields
+=======
+  - [x] with
+  - [ ] withCalendar
+  - [ ] add
+  - [ ] subtract
+  - [ ] until
+  - [ ] since
+  - [ ] equals
+  - [x] toString
+  - [ ] toLocaleString
+  - [ ] toJSON
+  - [ ] valueOf
+  - [ ] toZonedDateTime
+  - [ ] toPlainDateTime
+  - [ ] toPlainYearMonth
+  - [ ] toPlainMonthDay
+  - [ ] getISOFields
+>>>>>>> 13234ce... implemented PlainDateTime.from
 
 General features
 

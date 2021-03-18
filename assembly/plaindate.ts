@@ -66,7 +66,7 @@ export class PlainDate {
     } else {
       if (isReference<T>()) {
         if (date instanceof PlainDate) {
-          return new PlainDate(date.year, date.month, date.day);
+          return this.fromPlainDate(date);
         } else if (date instanceof DateLike) {
           return this.fromDateLike(date);
         }

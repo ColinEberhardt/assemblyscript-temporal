@@ -22,6 +22,39 @@ export class DateTimeLike {
 }
 
 export class PlainDateTime {
+  @inline
+  static fromPlainDateTime(date: PlainDateTime): PlainDateTime {
+    return new PlainDateTime(
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      date.minute,
+      date.second,
+      date.millisecond,
+      date.microsecond,
+      date.nanosecond
+    );
+  }
+
+  @inline
+  static fromDateTimeLike(date: DateTimeLike): PlainDateTime {
+    if (date.year == -1 || date.month == -1 || date.day == -1) {
+      throw new TypeError("missing required property");
+    }
+    return new PlainDateTime(
+      date.year,
+      date.month,
+      date.day,
+      date.hour,
+      date.minute,
+      date.second,
+      date.millisecond,
+      date.microsecond,
+      date.nanosecond
+    );
+  }
+
   static fromString(date: string): PlainDateTime {
     const dateRegex = new RegExp(
       "^((?:[+-]\\d{6}|\\d{4}))(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))(?:(?:T|\\s+)(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?)?(?:([zZ])|(?:([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|_[-A-Za-z._]{0,13}|[a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,12})?|[a-zA-Z]-(?:[-._][-A-Za-z._]{0,11})?|[a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,10})?|[a-zA-Z]-[a-zA-Z][a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,9})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-(?:[-._][-A-Za-z._]{0,8})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,7})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z](?:[-._][-A-Za-z._]{0,6})?)(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?(?:\\[u-ca-((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
@@ -43,10 +76,27 @@ export class PlainDateTime {
         I32.parseInt(match.matches[6]),
         I32.parseInt(match.matches[7].substr(0, 3)),
         I32.parseInt(match.matches[7].substr(3, 3)),
-        I32.parseInt(match.matches[7].substr(6, 3)),
+        I32.parseInt(match.matches[7].substr(6, 3))
       );
     }
     throw new RangeError("invalid ISO 8601 string: " + date);
+  }
+
+  @inline
+  static from<T>(date: T): PlainDateTime {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>date);
+    } else {
+      if (isReference<T>()) {
+        if (date instanceof PlainDateTime) {
+          return this.fromPlainDateTime(date);
+        } else if (date instanceof DateTimeLike) {
+          return this.fromDateTimeLike(date);
+        }
+      }
+      throw new TypeError("invalid date type");
+    }
   }
 
   constructor(
