@@ -116,7 +116,7 @@ Properties
 
 Methods
 
-- [ ] with
+- [x] with
 - [ ] withCalendar
 - [x] add
 - [ ] subtract
