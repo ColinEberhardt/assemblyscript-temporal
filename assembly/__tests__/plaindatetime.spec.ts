@@ -1,5 +1,6 @@
 /// <reference types="@as-pect/assembly/types/as-pect" />
 
+import { Duration, DurationLike } from "../duration";
 import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 
@@ -283,17 +284,6 @@ describe("DateTime.equals() works", () => {
   });
 });
 
-//    describe("Comparison operators don't work", () => {
-//      const dt1 = PlainDateTime.from('1963-02-13T09:36:29.123456789');
-//      const dt1again = PlainDateTime.from('1963-02-13T09:36:29.123456789');
-//      const dt2 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-//      it('=== is object equality', () => expect(dt1).toBe(dt1));
-//      it('!== is object equality', () => notexpect(dt1).toBe(dt1again));
-//      it('<', () => throws(() => dt1 < dt2));
-//      it('>', () => throws(() => dt1 > dt2));
-//      it('<=', () => throws(() => dt1 <= dt2));
-//      it('>=', () => throws(() => dt1 >= dt2));
-//    });
 //    describe('date/time maths', () => {
 //      const earlier = PlainDateTime.from('1976-11-18T15:23:30.123456789');
 //      const later = PlainDateTime.from('2019-10-29T10:46:38.271986102');
@@ -311,6 +301,7 @@ describe("DateTime.equals() works", () => {
 //        });
 //      });
 //    });
+
 //    describe('date/time maths: hours overflow', () => {
 //      it('subtract result', () => {
 //        const later = PlainDateTime.from('2019-10-29T10:46:38.271986102');
@@ -333,49 +324,52 @@ describe("DateTime.equals() works", () => {
 //        );
 //      });
 //    });
-//    describe('DateTime.add() works', () => {
-//      const jan31 = PlainDateTime.from('2020-01-31T15:00');
-//      it('constrain when ambiguous result', () => {
-//        expect(`${jan31.add({ months: 1 })}`).toBe('2020-02-29T15:00:00');
-//        expect(`${jan31.add({ months: 1 }, { overflow: 'constrain' })}`).toBe('2020-02-29T15:00:00');
-//      });
-//      it('symmetrical with regard to negative durations in the time part', () => {
-//        expect(`${jan31.add({ minutes: -30 })}`).toBe('2020-01-31T14:30:00');
-//        expect(`${jan31.add({ seconds: -30 })}`).toBe('2020-01-31T14:59:30');
-//      });
-//      it('throw when ambiguous result with reject', () => {
-//        throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
-//      });
-//      it('invalid overflow', () => {
-//        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-//          throws(() => PlainDateTime.from('2019-11-18T15:00').add({ months: 1 }, { overflow }), RangeError)
-//        );
-//      });
-//      it('mixed positive and negative values always throw', () => {
-//        ['constrain', 'reject'].forEach((overflow) =>
-//          throws(() => jan31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-//        );
-//      });
-//      it('options may only be an object or undefined', () => {
-//        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-//          throws(() => jan31.add({ years: 1 }, badOptions), TypeError)
-//        );
-//        [{}, () => {}, undefined].forEach((options) =>
-//          expect(`${jan31.add({ years: 1 }, options)}`).toBe('2021-01-31T15:00:00')
-//        );
-//      });
-//      it('object must contain at least one correctly-spelled property', () => {
-//        throws(() => jan31.add({}), TypeError);
-//        throws(() => jan31.add({ month: 12 }), TypeError);
-//      });
-//      it('incorrectly-spelled properties are ignored', () => {
-//        expect(`${jan31.add({ month: 1, days: 1 })}`).toBe('2020-02-01T15:00:00');
-//      });
-//      it('casts argument', () => {
-//        expect(`${jan31.add(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T15:00:01');
-//        expect(`${jan31.add('P1MT1S')}`).toBe('2020-02-29T15:00:01');
-//      });
-//    });
+
+let jan31: PlainDateTime;
+
+describe("DateTime.add() works", () => {
+  jan31 = PlainDateTime.from("2020-01-31T15:00");
+  it("constrain when ambiguous result", () => {
+    expect(
+      jan31
+        // @ts-ignore
+        .add<DurationLike>({ months: 1 })
+        .toString()
+    ).toBe("2020-02-29T15:00:00");
+  });
+  it("symmetrical with regard to negative durations in the time part", () => {
+    expect(
+      jan31
+        // @ts-ignore
+        .add<DurationLike>({ minutes: -30 })
+        .toString()
+    ).toBe("2020-01-31T14:30:00");
+    expect(
+      jan31
+        // @ts-ignore
+        .add<DurationLike>({ seconds: -30 })
+        .toString()
+    ).toBe("2020-01-31T14:59:30");
+  });
+  xit("throw when ambiguous result with reject", () => {
+    //        throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
+  });
+  xit("invalid overflow", () => {
+    //        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+    //          throws(() => PlainDateTime.from('2019-11-18T15:00').add({ months: 1 }, { overflow }), RangeError)
+    //        );
+  });
+  xit("mixed positive and negative values always throw", () => {
+    //        ['constrain', 'reject'].forEach((overflow) =>
+    //          throws(() => jan31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+    //        );
+  });
+  xit("casts argument", () => {
+    //        expect(`${jan31.add(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T15:00:01');
+    //        expect(`${jan31.add('P1MT1S')}`).toBe('2020-02-29T15:00:01');
+  });
+});
+
 //    describe('date.subtract() works', () => {
 //      const mar31 = PlainDateTime.from('2020-03-31T15:00');
 //      it('constrain when ambiguous result', () => {

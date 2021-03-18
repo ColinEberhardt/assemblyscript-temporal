@@ -1,4 +1,7 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+
+import { Duration, DurationLike } from "./duration";
+import { Overflow, TimeComponent } from "./enums";
 import {
   dayOfWeek,
   dayOfYear,
@@ -7,8 +10,8 @@ import {
   daysInMonth,
   toPaddedString,
   coalesce,
-  compareTemporalDate,
   compareTemporalDateTime,
+  addDateTime,
 } from "./utils";
 
 export class DateTimeLike {
@@ -226,6 +229,48 @@ export class PlainDateTime {
       this.millisecond == other.millisecond &&
       this.microsecond == other.microsecond &&
       this.nanosecond == other.nanosecond
+    );
+  }
+
+  add<T>(durationToAdd: T): PlainDateTime {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
+
+    const newDate = addDateTime(
+      this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond,
+      duration.years,
+      duration.months,
+      duration.weeks,
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      Overflow.Constrain
+    );
+    return new PlainDateTime(
+      newDate.year,
+      newDate.month,
+      newDate.day,
+      newDate.hour,
+      newDate.minute,
+      newDate.second,
+      newDate.millisecond,
+      newDate.microsecond,
+      newDate.nanosecond
     );
   }
 }

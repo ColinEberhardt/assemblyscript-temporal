@@ -27,10 +27,32 @@ export class YM {
   month: i32;
 }
 
+export class DT {
+  year: i32;
+  month: i32;
+  day: i32;
+  hour: i32;
+  minute: i32;
+  second: i32;
+  millisecond: i32;
+  microsecond: i32;
+  nanosecond: i32;
+}
+
 export class NanoDays {
   days: i32;
   nanoseconds: i32;
   dayLengthNs: i64;
+}
+
+export class BalancedTime {
+  deltaDays: i32;
+  hour: i32;
+  minute: i32;
+  second: i32;
+  millisecond: i32;
+  microsecond: i32;
+  nanosecond: i32;
 }
 
 @inline
@@ -140,6 +162,16 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   }
 
   return { year, month, day };
+}
+
+// @ts-ignore: decorator
+@inline
+export function nonNegativeModulo(x: i32, value: i32): i32 {
+  x = x % value;
+  if (x<0) {
+    x += value;
+  }
+  return x;
 }
 
 // @ts-ignore: decorator
@@ -664,6 +696,81 @@ export function epochFromParts(
   __null = false;
   return 0;
 }
+
+export function addDateTime(year :i32, month :i32, day :i32,
+  hour :i32, minute :i32, second :i32,
+  millisecond :i32, microsecond :i32, nanosecond :i32,
+  years :i32, months :i32, weeks :i32, days :i32, hours :i32, minutes :i32, seconds :i32,
+  milliseconds :i32, microseconds :i32, nanoseconds :i32, overflow: Overflow): DT {
+
+  // Add the time part
+  let deltaDays = 0;
+  const addedTime = addTime(hour, minute, second, millisecond, microsecond, nanosecond, hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+  deltaDays = addedTime.deltaDays;
+  hour = addedTime.hour;
+  minute = addedTime.minute;
+  second = addedTime.second;
+  millisecond = addedTime.millisecond;
+  microsecond = addedTime.microsecond;
+  nanosecond = addedTime.nanosecond;
+  days += deltaDays; // Delegate the date part addition to the calendar
+
+  const addedDate = addDate(year, month, day, years, months, weeks, days,overflow);
+
+  return {
+    year: addedDate.year,
+    month: addedDate.month,
+    day: addedDate.day,
+    hour: hour,
+    minute: minute,
+    second: second,
+    millisecond: millisecond,
+    microsecond: microsecond,
+    nanosecond: nanosecond
+  };
+}
+
+function addTime(hour :i32, minute :i32, second :i32, millisecond :i32, microsecond :i32,
+  nanosecond :i32, hours :i32, minutes :i32, seconds :i32, milliseconds :i32,
+  microseconds :i32, nanoseconds: i32): BalancedTime {
+
+  hour += hours;
+  minute += minutes;
+  second += seconds;
+  millisecond += milliseconds;
+  microsecond += microseconds;
+  nanosecond += nanoseconds;
+
+  return balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+}
+
+function balanceTime(hour :i32, minute :i32, second :i32, millisecond :i32, 
+  microsecond: i32, nanosecond: i32): BalancedTime {
+  
+  microsecond += floorDiv(nanosecond, 1000);
+  nanosecond = nonNegativeModulo(nanosecond, 1000);
+  millisecond += floorDiv(microsecond, 1000);
+  microsecond = nonNegativeModulo(microsecond, 1000);
+  second += floorDiv(millisecond, 1000);
+  millisecond = nonNegativeModulo(millisecond, 1000);
+  minute += floorDiv(second, 60);
+  second = nonNegativeModulo(second, 60);
+  hour += floorDiv(minute, 60);
+  minute = nonNegativeModulo(minute, 60);
+  var deltaDays = floorDiv(hour, 24);
+  hour = nonNegativeModulo(hour, 24);
+  return {
+    deltaDays: deltaDays,
+    hour: hour,
+    minute: minute,
+    second: second,
+    millisecond: millisecond,
+    microsecond: microsecond,
+    nanosecond: nanosecond
+  };
+}
+
 
 // @ts-ignore: decorator
 @inline

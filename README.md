@@ -118,7 +118,7 @@ Methods
 
 - [ ] with
 - [ ] withCalendar
-- [ ] add
+- [x] add
 - [ ] subtract
 - [ ] until
 - [ ] since
