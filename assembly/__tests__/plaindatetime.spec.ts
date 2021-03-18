@@ -155,78 +155,6 @@ describe(".with manipulation", () => {
   });
 });
 
-//    describe('.with manipulation', () => {
-//      const datetime = new PlainDateTime(1976, 11, 18, 15, 23, 30, 123, 456, 789);
-//      it('datetime.with({ year: 2019 } works', () => {
-//        expect(`${datetime.with({ year: 2019 })}`).toBe('2019-11-18T15:23:30.123456789');
-//      });
-//      it('datetime.with({ month: 5 } works', () => {
-//        expect(`${datetime.with({ month: 5 })}`).toBe('1976-05-18T15:23:30.123456789');
-//      });
-//      it('datetime.with({ monthCode: "M05" } works', () => {
-//        expect(`${datetime.with({ monthCode: 'M05' })}`).toBe('1976-05-18T15:23:30.123456789');
-//      });
-//      it('month and monthCode must agree', () => {
-//        throws(() => datetime.with({ month: 5, monthCode: 'M06' }), RangeError);
-//      });
-//      it('datetime.with({ day: 5 } works', () => {
-//        expect(`${datetime.with({ day: 5 })}`).toBe('1976-11-05T15:23:30.123456789');
-//      });
-//      it('datetime.with({ hour: 5 } works', () => {
-//        expect(`${datetime.with({ hour: 5 })}`).toBe('1976-11-18T05:23:30.123456789');
-//      });
-//      it('datetime.with({ minute: 5 } works', () => {
-//        expect(`${datetime.with({ minute: 5 })}`).toBe('1976-11-18T15:05:30.123456789');
-//      });
-//      it('datetime.with({ second: 5 } works', () => {
-//        expect(`${datetime.with({ second: 5 })}`).toBe('1976-11-18T15:23:05.123456789');
-//      });
-//      it('datetime.with({ millisecond: 5 } works', () => {
-//        expect(`${datetime.with({ millisecond: 5 })}`).toBe('1976-11-18T15:23:30.005456789');
-//      });
-//      it('datetime.with({ microsecond: 5 } works', () => {
-//        expect(`${datetime.with({ microsecond: 5 })}`).toBe('1976-11-18T15:23:30.123005789');
-//      });
-//      it('datetime.with({ nanosecond: 5 } works', () => {
-//        expect(`${datetime.with({ nanosecond: 5 })}`).toBe('1976-11-18T15:23:30.123456005');
-//      });
-//      it('datetime.with({ month: 5, second: 15 } works', () => {
-//        expect(`${datetime.with({ month: 5, second: 15 })}`).toBe('1976-05-18T15:23:15.123456789');
-//      });
-//      it('invalid overflow', () => {
-//        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-//          throws(() => datetime.with({ day: 5 }, { overflow }), RangeError)
-//        );
-//      });
-//      it('options may only be an object or undefined', () => {
-//        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-//          throws(() => datetime.with({ day: 5 }, badOptions), TypeError)
-//        );
-//        [{}, () => {}, undefined].forEach((options) =>
-//          expect(`${datetime.with({ day: 5 }, options)}`).toBe('1976-11-05T15:23:30.123456789')
-//        );
-//      });
-//      it('object must contain at least one correctly-spelled property', () => {
-//        throws(() => datetime.with({}), TypeError);
-//        throws(() => datetime.with({ months: 12 }), TypeError);
-//      });
-//      it('incorrectly-spelled properties are ignored', () => {
-//        expect(`${datetime.with({ month: 12, days: 15 })}`).toBe('1976-12-18T15:23:30.123456789');
-//      });
-//      it('datetime.with(string) throws', () => {
-//        throws(() => datetime.with('12:00'), TypeError);
-//        throws(() => datetime.with('1995-04-07'), TypeError);
-//        throws(() => datetime.with('2019-05-17T12:34:56.007007007'), TypeError);
-//        throws(() => datetime.with('2019-05-17T12:34:56.007007007Z'), TypeError);
-//        throws(() => datetime.with('42'), TypeError);
-//      });
-//      it('throws with calendar property', () => {
-//        throws(() => datetime.with({ year: 2021, calendar: 'iso8601' }), TypeError);
-//      });
-//      it('throws with timeZone property', () => {
-//        throws(() => datetime.with({ year: 2021, timeZone: 'UTC' }), TypeError);
-//      });
-//    });
 //    describe('.withPlainTime manipulation', () => {
 //      const dt = Temporal.PlainDateTime.from('2015-12-07T03:24:30.000003500');
 //      it('datetime.withPlainTime({ hour: 10 }) works', () => {
@@ -279,25 +207,55 @@ describe(".with manipulation", () => {
 //        expect(`${dt.withPlainDate({ year: 2000, month: 6, day: 1, months: 123 })}`).toBe('2000-06-01T03:24:30');
 //      });
 //    });
-//    describe('DateTime.compare() works', () => {
-//      const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-//      const dt2 = PlainDateTime.from('2019-10-29T10:46:38.271986102');
-//      it('equal', () => expect(PlainDateTime.compare(dt1, dt1)).toBe(0));
-//      it('smaller/larger', () => expect(PlainDateTime.compare(dt1, dt2)).toBe(-1));
-//      it('larger/smaller', () => expect(PlainDateTime.compare(dt2, dt1)).toBe(1));
-//      it('casts first argument', () => {
-//        expect(PlainDateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2)).toBe(-1);
-//        expect(PlainDateTime.compare('1976-11-18T15:23:30.123456789', dt2)).toBe(-1);
-//      });
-//      it('casts second argument', () => {
-//        expect(PlainDateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 })).toBe(-1);
-//        expect(PlainDateTime.compare(dt1, '2019-10-29T10:46:38.271986102')).toBe(-1);
-//      });
-//      it('object must contain at least the required properties', () => {
-//        throws(() => PlainDateTime.compare({ year: 1976 }, dt2), TypeError);
-//        throws(() => PlainDateTime.compare(dt1, { year: 2019 }), TypeError);
-//      });
-//    });
+
+describe("DateTime.fromString() works", () => {
+  it("date components only", () => {
+    expect(PlainDateTime.fromString("1976-11-18T00:00:00").toString()).toBe(
+      "1976-11-18T00:00:00"
+    );
+  });
+  it("date components without dash separator", () => {
+    expect(PlainDateTime.fromString("19761118T00:00:00").toString()).toBe(
+      "1976-11-18T00:00:00"
+    );
+  });
+  it("date and time components only", () => {
+    expect(PlainDateTime.fromString("1976-11-18T12:34:56").toString()).toBe(
+      "1976-11-18T12:34:56"
+    );
+  });
+  it("with milliseconds", () => {
+    expect(
+      PlainDateTime.fromString("1976-11-18T12:34:56.123456789").toString()
+    ).toBe("1976-11-18T12:34:56.123456789");
+  });
+  it("throws on invalid string", () => {
+    expect(() => {
+      PlainDateTime.fromString("fish");
+    }).toThrow();
+  });
+});
+
+describe("DateTime.compare() works", () => {
+  const dt1 = PlainDateTime.fromString("1976-11-18T15:23:30.123456789");
+  const dt2 = PlainDateTime.fromString("2019-10-29T10:46:38.271986102");
+  //  it('equal', () => expect(PlainDateTime.compare(dt1, dt1)).toBe(0));
+  //  it('smaller/larger', () => expect(PlainDateTime.compare(dt1, dt2)).toBe(-1));
+  //  it('larger/smaller', () => expect(PlainDateTime.compare(dt2, dt1)).toBe(1));
+  //  it('casts first argument', () => {
+  //    expect(PlainDateTime.compare({ year: 1976, month: 11, day: 18, hour: 15 }, dt2)).toBe(-1);
+  //    expect(PlainDateTime.compare('1976-11-18T15:23:30.123456789', dt2)).toBe(-1);
+  //  });
+  //  it('casts second argument', () => {
+  //    expect(PlainDateTime.compare(dt1, { year: 2019, month: 10, day: 29, hour: 10 })).toBe(-1);
+  //    expect(PlainDateTime.compare(dt1, '2019-10-29T10:46:38.271986102')).toBe(-1);
+  //  });
+  //  it('object must contain at least the required properties', () => {
+  //    throws(() => PlainDateTime.compare({ year: 1976 }, dt2), TypeError);
+  //    throws(() => PlainDateTime.compare(dt1, { year: 2019 }), TypeError);
+  //  });
+});
+
 //    describe('DateTime.equals() works', () => {
 //      const dt1 = PlainDateTime.from('1976-11-18T15:23:30.123456789');
 //      const dt2 = PlainDateTime.from('2019-10-29T10:46:38.271986102');
