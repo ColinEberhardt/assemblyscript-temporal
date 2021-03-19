@@ -79,9 +79,9 @@ export class PlainDateTime {
         I32.parseInt(match.matches[4]),
         I32.parseInt(match.matches[5]),
         I32.parseInt(match.matches[6]),
-        I32.parseInt(match.matches[7].substr(0, 3)),
-        I32.parseInt(match.matches[7].substr(3, 3)),
-        I32.parseInt(match.matches[7].substr(6, 3))
+        I32.parseInt(match.matches[7].substring(0, 3)),
+        I32.parseInt(match.matches[7].substring(3, 6)),
+        I32.parseInt(match.matches[7].substring(6, 9))
       );
     }
     throw new RangeError("invalid ISO 8601 string: " + date);
@@ -179,15 +179,16 @@ export class PlainDateTime {
       toPaddedString(this.minute) +
       ":" +
       toPaddedString(this.second) +
-      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
+      (this.nanosecond  != 0 ||
+       this.microsecond != 0 ||
+       this.millisecond != 0
         ? (
-            f64(this.nanosecond) / 1_000_000_000.0 +
+            f64(this.nanosecond)  / 1_000_000_000.0 +
             f64(this.microsecond) / 1_000_000.0 +
             f64(this.millisecond) / 1_000.0
-          )
-            .toString()
-            .substr(1)
-        : "")
+          ).toString().substring(1)
+        : ""
+      )
     );
   }
 
@@ -220,15 +221,15 @@ export class PlainDateTime {
   equals(other: PlainDateTime): bool {
     if (this === other) return true;
     return (
+      this.nanosecond == other.nanosecond &&
+      this.microsecond == other.microsecond &&
+      this.millisecond == other.millisecond &&
+      this.second == other.second &&
+      this.minute == other.minute &&
+      this.hour == other.hour &&
       this.day == other.day &&
       this.month == other.month &&
-      this.year == other.year &&
-      this.hour == other.hour &&
-      this.minute == other.minute &&
-      this.second == other.second &&
-      this.millisecond == other.millisecond &&
-      this.microsecond == other.microsecond &&
-      this.nanosecond == other.nanosecond
+      this.year == other.year
     );
   }
 
