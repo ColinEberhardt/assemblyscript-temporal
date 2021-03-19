@@ -230,10 +230,10 @@ export function checkDateTimeRange(
 }
 
 export function rejectDate(year: i32, month: i32, day: i32): void {
-  if (checkRange(month, 1, 12)) {
+  if (!checkRange(month, 1, 12)) {
     throw new RangeError("month out of range");
   }
-  if (checkRange(day, 1, daysInMonth(year, month))) {
+  if (!checkRange(day, 1, daysInMonth(year, month))) {
     throw new RangeError("day out of range");
   }
 }
