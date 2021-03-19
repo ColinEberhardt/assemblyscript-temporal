@@ -273,4 +273,46 @@ export class PlainDateTime {
       newDate.nanosecond
     );
   }
+
+  subtract<T>(durationToSubtract: T): PlainDateTime {
+    const duration =
+      durationToSubtract instanceof DurationLike
+        ? durationToSubtract.toDuration()
+        : // @ts-ignore TS2352
+          (durationToSubtract as Duration);
+
+    const newDate = addDateTime(
+      this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond,
+      -duration.years,
+      -duration.months,
+      -duration.weeks,
+      -duration.days,
+      -duration.hours,
+      -duration.minutes,
+      -duration.seconds,
+      -duration.milliseconds,
+      -duration.microseconds,
+      -duration.nanoseconds,
+      Overflow.Constrain
+    );
+    return new PlainDateTime(
+      newDate.year,
+      newDate.month,
+      newDate.day,
+      newDate.hour,
+      newDate.minute,
+      newDate.second,
+      newDate.millisecond,
+      newDate.microsecond,
+      newDate.nanosecond
+    );
+  }
 }

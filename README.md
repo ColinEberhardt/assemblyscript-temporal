@@ -119,7 +119,7 @@ Methods
 - [x] with
 - [ ] withCalendar
 - [x] add
-- [ ] subtract
+- [x] subtract
 - [ ] until
 - [ ] since
 - [x] equals

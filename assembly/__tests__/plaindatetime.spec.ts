@@ -370,49 +370,51 @@ describe("DateTime.add() works", () => {
   });
 });
 
-//    describe('date.subtract() works', () => {
-//      const mar31 = PlainDateTime.from('2020-03-31T15:00');
-//      it('constrain when ambiguous result', () => {
-//        expect(`${mar31.subtract({ months: 1 })}`).toBe('2020-02-29T15:00:00');
-//        expect(`${mar31.subtract({ months: 1 }, { overflow: 'constrain' })}`).toBe('2020-02-29T15:00:00');
-//      });
-//      it('symmetrical with regard to negative durations in the time part', () => {
-//        expect(`${mar31.subtract({ minutes: -30 })}`).toBe('2020-03-31T15:30:00');
-//        expect(`${mar31.subtract({ seconds: -30 })}`).toBe('2020-03-31T15:00:30');
-//      });
-//      it('throw when ambiguous result with reject', () => {
-//        throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
-//      });
-//      it('invalid overflow', () => {
-//        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-//          throws(() => PlainDateTime.from('2019-11-18T15:00').subtract({ months: 1 }, { overflow }), RangeError)
-//        );
-//      });
-//      it('mixed positive and negative values always throw', () => {
-//        ['constrain', 'reject'].forEach((overflow) =>
-//          throws(() => mar31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
-//        );
-//      });
-//      it('options may only be an object or undefined', () => {
-//        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-//          throws(() => mar31.subtract({ years: 1 }, badOptions), TypeError)
-//        );
-//        [{}, () => {}, undefined].forEach((options) =>
-//          expect(`${mar31.subtract({ years: 1 }, options)}`).toBe('2019-03-31T15:00:00')
-//        );
-//      });
-//      it('object must contain at least one correctly-spelled property', () => {
-//        throws(() => mar31.subtract({}), TypeError);
-//        throws(() => mar31.subtract({ month: 12 }), TypeError);
-//      });
-//      it('incorrectly-spelled properties are ignored', () => {
-//        expect(`${mar31.subtract({ month: 1, days: 1 })}`).toBe('2020-03-30T15:00:00');
-//      });
-//      it('casts argument', () => {
-//        expect(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T14:59:59');
-//        expect(`${mar31.subtract('P1MT1S')}`).toBe('2020-02-29T14:59:59');
-//      });
-//    });
+let mar31: PlainDateTime;
+
+describe("date.subtract() works", () => {
+  mar31 = PlainDateTime.from("2020-03-31T15:00");
+  it("constrain when ambiguous result", () => {
+    expect(
+      mar31
+        // @ts-ignore
+        .subtract<DurationLike>({ months: 1 })
+        .toString()
+    ).toBe("2020-02-29T15:00:00");
+  });
+  it("symmetrical with regard to negative durations in the time part", () => {
+    expect(
+      mar31
+        // @ts-ignore
+        .subtract<DurationLike>({ minutes: -30 })
+        .toString()
+    ).toBe("2020-03-31T15:30:00");
+    expect(
+      mar31
+        // @ts-ignore
+        .subtract<DurationLike>({ seconds: -30 })
+        .toString()
+    ).toBe("2020-03-31T15:00:30");
+  });
+  xit("throw when ambiguous result with reject", () => {
+    // throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
+  });
+  xit("invalid overflow", () => {
+    // ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
+    //   throws(() => PlainDateTime.from('2019-11-18T15:00').subtract({ months: 1 }, { overflow }), RangeError)
+    // );
+  });
+  xit("mixed positive and negative values always throw", () => {
+    // ['constrain', 'reject'].forEach((overflow) =>
+    //   throws(() => mar31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
+    // );
+  });
+  xit("casts argument", () => {
+    // expect(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T14:59:59');
+    // expect(`${mar31.subtract('P1MT1S')}`).toBe('2020-02-29T14:59:59');
+  });
+});
+
 //    describe('DateTime.until()', () => {
 //      const dt = PlainDateTime.from('1976-11-18T15:23:30.123456789');
 //      it('dt.until(later) === later.since(dt)', () => {
