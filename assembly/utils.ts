@@ -229,6 +229,15 @@ export function checkDateTimeRange(
   return true;
 }
 
+export function rejectDate(year: i32, month: i32, day: i32): void {
+  if (checkRange(month, 1, 12)) {
+    throw new RangeError("month out of range");
+  }
+  if (checkRange(day, 1, daysInMonth(year, month))) {
+    throw new RangeError("day out of range");
+  }
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
   month = clamp(month, 1, 12);
@@ -245,7 +254,7 @@ export function regulateDate(
 ): YMD {
   switch (overflow) {
     case Overflow.Reject:
-      // rejectDate(year, month, day);
+      rejectDate(year, month, day);
       break;
 
     case Overflow.Constrain:
