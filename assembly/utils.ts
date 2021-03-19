@@ -741,12 +741,12 @@ export function addDateTime(
     year: addedDate.year,
     month: addedDate.month,
     day: addedDate.day,
-    hour: hour,
-    minute: minute,
-    second: second,
-    millisecond: millisecond,
-    microsecond: microsecond,
-    nanosecond: nanosecond
+    hour,
+    minute,
+    second,
+    millisecond,
+    microsecond,
+    nanosecond
   };
 }
 
