@@ -990,3 +990,19 @@ export function isoYearString(year: i32): string {
   }
   return yearString;
 }
+
+// https://github.com/tc39/proposal-temporal/blob/3fe5d062f58e2aa01e016b14c34bf0881ba2fb31/polyfill/lib/ecmascript.mjs#L3266
+// @ts-ignore: decorator
+@inline
+export function addInstant(epochNanoSeconds: i32, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): i32 {
+  let sum = i32(totalDurationNanoseconds(0, h, min, s, ms, µs, ns));
+
+  // sum += ns;
+  // sum += µs * 1e3;
+  // sum += ms * 1e6;
+  // sum += s * 1e9;
+  // sum += min * 60 * 1e9;
+  // sum += h * 60 * 60 * 1e9;
+
+  return epochNanoSeconds + sum;
+}
