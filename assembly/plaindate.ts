@@ -11,6 +11,7 @@ import {
   daysInMonth,
   balanceDuration,
   toPaddedString,
+  rejectDate,
   checkDateTimeRange,
   compareTemporalDate,
   differenceDate,
@@ -76,10 +77,7 @@ export class PlainDate {
   }
 
   constructor(readonly year: i32, readonly month: i32, readonly day: i32) {
-    // if (!(
-    //   checkRange(month, 1, 12) &&
-    //   checkRange(day, 1, daysInMonth(year, month))
-    // )) throw new RangeError("invalid plain date");
+    rejectDate(year, month, day);
 
     if (!checkDateTimeRange(year, month, day, 12)) {
       throw new RangeError("DateTime outside of supported range");
