@@ -6,7 +6,7 @@ A **very** experimental implementation of temporal within AssemblyScript.
 
 AssemblyScript has minimal `Date` support, however, the JS Date API itself is terrible and people tend not to use it that often. As a result libraries like moment / luxon have become staple replacements.
 
-However, there is now a [relatively mature TC39 proposal](https://github.com/tc39/proposal-temporal) that adds greatly improved date support to JS. This projects explores the the feasibility of porting this library.
+However, there is now a [relatively mature TC39 proposal](https://github.com/tc39/proposal-temporal) that adds greatly improved date support to JS. This projects explores the feasibility of porting this library.
 
 Note, that string parsing is an important feature of any date library, and as a result, this project relies on the [assemblyscript-regex](https://github.com/ColinEberhardt/assemblyscript-regex) library.
 
