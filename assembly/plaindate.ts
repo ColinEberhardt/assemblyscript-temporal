@@ -189,7 +189,7 @@ export class PlainDate {
     );
   }
 
-  add<T>(durationToAdd: T): PlainDate {
+  add<T>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDate {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -214,7 +214,7 @@ export class PlainDate {
       duration.months,
       duration.weeks,
       balancedDuration.days,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }

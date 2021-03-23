@@ -1,6 +1,6 @@
 import { PlainDate } from "..";
 import { Duration, DurationLike } from "../duration";
-import { TimeComponent } from "../enums";
+import { TimeComponent, Overflow } from "../enums";
 import { DateLike } from "../plaindate";
 
 let date: PlainDate;
@@ -633,9 +633,11 @@ describe("date.add() works", () => {
     //   expect(jan31.add<DurationLike>({ months: 1 }).toString()).toBe('2020-02-29');
     //   expect(jan31.add<DurationLike>({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
   });
-  xit("throw when overflowing result with reject", () => {
-    // const jan31 = PlainDate.from('2020-01-31');
-    // throws(() => jan31.add<DurationLike>({ months: 1 }, { overflow: 'reject' }), RangeError);
+  it("throw when overflowing result with reject", () => {
+    throws("TypeError", () => {
+      new PlainDate(2020, 1, 31)
+        .add<DurationLike>({ months: 1 }, Overflow.Reject)
+    });
   });
   it("symmetrical with regard to negative durations", () => {
     // @ts-ignore
