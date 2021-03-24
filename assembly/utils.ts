@@ -9,7 +9,7 @@
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
-import { log } from "./env";
+import { JsDate } from "./date";
 
 const YEAR_MIN = -271821;
 const YEAR_MAX =  275760;
@@ -71,6 +71,10 @@ export function floorDiv(a: i32, b: i32): i32 {
   return (a >= 0 ? a : a - b + 1) / b;
 }
 
+export function floorDivI64(a: i64, b: i64): i64 {
+  return (a >= 0 ? a : a - b + 1) / b;
+}
+
 // @ts-ignore: decorator
 @inline
 export function nonNegativeModulo(x: i32, y: i32): i32 {
@@ -127,6 +131,7 @@ export function daysInYear(year: i32): i32 {
 // Original: Disparate variation
 // Modified: TomohikoSakamoto algorithm from https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
+// returns day of week in range [1,7], where 7 = Sunday
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const tab = memory.data<u8>([0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]);
 
@@ -186,6 +191,29 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   }
 
   return { year, month, day };
+}
+
+export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i64): DT {
+
+  const balancedTime = balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedDate = balanceDate(year, month, day + balancedTime.deltaDays);
+
+  return {
+    year: balancedDate.year,
+    month: balancedDate.month,
+    day: balancedDate.day,
+    hour: balancedTime.hour,
+    minute: balancedTime.minute,
+    second: balancedTime.second,
+    millisecond: balancedTime.millisecond,
+    microsecond: balancedTime.microsecond,
+    nanosecond: balancedTime.nanosecond
+  };
 }
 
 // @ts-ignore: decorator
@@ -925,46 +953,70 @@ export function addTime(
 }
 
 function balanceTime(
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32
+  hour: i64,
+  minute: i64,
+  second: i64,
+  millisecond: i64,
+  microsecond: i64,
+  nanosecond: i64
 ): BalancedTime {
 
-  let quotient = floorDiv(nanosecond, 1000);
+  let quotient = floorDivI64(nanosecond, 1000);
   microsecond += quotient;
   nanosecond  -= quotient * 1000;
 
-  quotient = floorDiv(microsecond, 1000);
+  quotient = floorDivI64(microsecond, 1000);
   millisecond += quotient;
   microsecond -= quotient * 1000;
 
-  quotient = floorDiv(millisecond, 1000);
+  quotient = floorDivI64(millisecond, 1000);
   second      += quotient;
   millisecond -= quotient * 1000;
 
-  quotient = floorDiv(second, 60);
+  quotient = floorDivI64(second, 60);
   minute += quotient;
   second -= quotient * 60;
 
-  quotient = floorDiv(minute, 60);
+  quotient = floorDivI64(minute, 60);
   hour   += quotient;
   minute -= quotient * 60;
 
-  let deltaDays = floorDiv(hour, 24);
+  let deltaDays = floorDivI64(hour, 24);
   hour -= deltaDays * 24;
 
   return {
-    deltaDays,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
+    deltaDays: i32(deltaDays),
+    hour : i32(hour),
+    minute : i32(minute),
+    second: i32(second),
+    millisecond : i32(millisecond),
+    microsecond: i32(microsecond),
+    nanosecond: i32(nanosecond)
   };
+}
+
+export function getPartsFromEpoch(epochNanoseconds: i64): DT {
+  const quotient = epochNanoseconds / 1_000_000;
+  const remainder = epochNanoseconds % 1_000_000;
+  let epochMilliseconds = +quotient;
+  let nanos = +remainder;
+  if (nanos < 0) {
+    nanos += 1_000_000;
+    epochMilliseconds -= 1;
+  }
+  const microsecond = i32((nanos / 1_000) % 1_000);
+  const nanosecond = i32(nanos % 1_000);
+
+  const item = new JsDate(epochMilliseconds);
+  const year = item.getUTCFullYear();
+  const month = item.getUTCMonth() + 1;
+  const day = item.getUTCDate();
+  const hour = item.getUTCHours();
+  const minute = item.getUTCMinutes();
+  const second = item.getUTCSeconds();
+  const millisecond = item.getUTCMilliseconds();
+
+  return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
 // @ts-ignore: decorator
@@ -989,4 +1041,12 @@ export function isoYearString(year: i32): string {
     yearString = year.toString();
   }
   return yearString;
+}
+
+export function formatTimeZoneOffsetString(offsetNanoseconds: i64): string {
+  const sign = offsetNanoseconds < 0 ? '-' : '+';
+  offsetNanoseconds = abs(offsetNanoseconds);
+  const balanced = balanceTime(0, 0, 0, 0, 0, offsetNanoseconds);
+  return sign + toPaddedString(balanced.hour) + ":" +
+    toPaddedString(balanced.minute);
 }

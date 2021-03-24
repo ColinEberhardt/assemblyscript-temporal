@@ -1,5 +1,5 @@
 import { PlainDateTime } from "./plaindatetime";
-import { Date as JsDate } from "./date";
+import { JsDate } from "./date";
 import { PlainDate } from "./plaindate";
 
 export class now {
