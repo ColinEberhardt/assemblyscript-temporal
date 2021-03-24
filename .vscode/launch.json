@@ -5,19 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "runtimeArgs": ["-r", "ts-node/register"],
-      "args": ["${workspaceFolder}/ts/index.ts"],
-      "env": { "TS_NODE_PROJECT": "${workspaceFolder}/ts/tsconfig.json" }
-    },
-    {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Launch Test",
+      "name": "Launch TZDB Generation",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/test.js",
+      "program": "${workspaceFolder}/tzdb/index.mjs",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       // "runtimeExecutable": "/Users/colineberhardt/.nvm/versions/node/v10.16.3/bin/node"
     }

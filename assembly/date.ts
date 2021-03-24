@@ -4,14 +4,14 @@
 import { YMD } from "./utils";
 import { MILLIS_PER_DAY, MILLIS_PER_HOUR, MILLIS_PER_MINUTE, MILLIS_PER_SECOND } from "./constants";
 
-export class Date {
+export class JsDate {
   epochMilliseconds: i64;
 
   constructor(epochMilliseconds: i64) {
     this.epochMilliseconds = epochMilliseconds;
   }
 
-  static fromString(dateTimeString: string): Date {
+  static fromString(dateTimeString: string): JsDate {
     let hour: i32 = 0,
       minute: i32 = 0,
       second: i32 = 0,
@@ -42,7 +42,7 @@ export class Date {
     const month = I32.parseInt(parts[1]);
     const day = I32.parseInt(parts[2]);
 
-    return new Date(
+    return new JsDate(
       i64(days_from_civil(year, month, day)) * MILLIS_PER_DAY +
         hour * MILLIS_PER_HOUR +
         minute * MILLIS_PER_MINUTE +
