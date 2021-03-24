@@ -1,43 +1,43 @@
-import { Date } from "../date";
+import { JsDate } from "../date";
 
-let date: Date;
+let date: JsDate;
 
 describe("construction from millis", () => {
   it("supports millis from epoch", () => {
-    date = new Date(7677635557323226);
+    date = new JsDate(7677635557323226);
     expect(date.getTime()).toBe(7677635557323226);
   });
 });
 
 describe("construction from ISO date string", () => {
   it("supports year / month / day", () => {
-    date = Date.fromString("1976-02-02");
+    date = JsDate.fromString("1976-02-02");
     expect(date.getTime()).toBe(192067200000);
-    date = Date.fromString("1976-2-2");
+    date = JsDate.fromString("1976-2-2");
     expect(date.getTime()).toBe(192067200000);
-    date = Date.fromString("2345-11-04");
+    date = JsDate.fromString("2345-11-04");
     expect(date.getTime()).toBe(11860387200000);
   });
 
   it("supports two digit years", () => {
-    expect(Date.fromString("1976-04-02").getTime()).toBe(
-      Date.fromString("76-04-02").getTime()
+    expect(JsDate.fromString("1976-04-02").getTime()).toBe(
+      JsDate.fromString("76-04-02").getTime()
     );
   });
 
   it("supports year / month / day / hour / minute / second", () => {
-    date = Date.fromString("1976-02-02T12:34:56");
+    date = JsDate.fromString("1976-02-02T12:34:56");
     expect(date.getTime()).toBe(192112496000);
   });
   it("supports milliseconds", () => {
-    date = Date.fromString("1976-02-02T12:34:56.456");
+    date = JsDate.fromString("1976-02-02T12:34:56.456");
     expect(date.getTime()).toBe(192112496456);
   });
 });
 
 describe("date component getter functions", () => {
   it("from +126687-01-19T04:05:45.198Z", () => {
-    date = new Date(3935689963545198);
+    date = new JsDate(3935689963545198);
     expect(date.getUTCFullYear()).toBe(126687);
     expect(date.getUTCMonth()).toBe(0);
     expect(date.getUTCDate()).toBe(19);
@@ -48,7 +48,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +148425-05-18T08:33:26.350Z", () => {
-    date = new Date(4621685330006350);
+    date = new JsDate(4621685330006350);
     expect(date.getUTCFullYear()).toBe(148425);
     expect(date.getUTCMonth()).toBe(4);
     expect(date.getUTCDate()).toBe(18);
@@ -59,7 +59,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +029119-10-01T07:51:02.758Z", () => {
-    date = new Date(856763250662758);
+    date = new JsDate(856763250662758);
     expect(date.getUTCFullYear()).toBe(29119);
     expect(date.getUTCMonth()).toBe(9);
     expect(date.getUTCDate()).toBe(1);
@@ -70,7 +70,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +220765-08-19T13:42:38.020Z", () => {
-    date = new Date(6904523252558020);
+    date = new JsDate(6904523252558020);
     expect(date.getUTCFullYear()).toBe(220765);
     expect(date.getUTCMonth()).toBe(7);
     expect(date.getUTCDate()).toBe(19);
@@ -81,7 +81,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +264399-01-03T02:23:58.670Z", () => {
-    date = new Date(8281459535038670);
+    date = new JsDate(8281459535038670);
     expect(date.getUTCFullYear()).toBe(264399);
     expect(date.getUTCMonth()).toBe(0);
     expect(date.getUTCDate()).toBe(3);
@@ -92,7 +92,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +040150-04-25T10:58:13.072Z", () => {
-    date = new Date(1204854346693072);
+    date = new JsDate(1204854346693072);
     expect(date.getUTCFullYear()).toBe(40150);
     expect(date.getUTCMonth()).toBe(3);
     expect(date.getUTCDate()).toBe(25);
@@ -103,7 +103,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +147357-02-15T13:49:06.454Z", () => {
-    date = new Date(4587974574546454);
+    date = new JsDate(4587974574546454);
     expect(date.getUTCFullYear()).toBe(147357);
     expect(date.getUTCMonth()).toBe(1);
     expect(date.getUTCDate()).toBe(15);
@@ -114,7 +114,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +248424-10-24T10:31:15.870Z", () => {
-    date = new Date(7777362738675870);
+    date = new JsDate(7777362738675870);
     expect(date.getUTCFullYear()).toBe(248424);
     expect(date.getUTCMonth()).toBe(9);
     expect(date.getUTCDate()).toBe(24);
@@ -125,7 +125,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +014628-07-11T23:46:03.984Z", () => {
-    date = new Date(399464523963984);
+    date = new JsDate(399464523963984);
     expect(date.getUTCFullYear()).toBe(14628);
     expect(date.getUTCMonth()).toBe(6);
     expect(date.getUTCDate()).toBe(11);
@@ -136,7 +136,7 @@ describe("date component getter functions", () => {
   });
 
   it("from +039615-11-03T04:05:23.748Z", () => {
-    date = new Date(1187987918723748);
+    date = new JsDate(1187987918723748);
     expect(date.getUTCFullYear()).toBe(39615);
     expect(date.getUTCMonth()).toBe(10);
     expect(date.getUTCDate()).toBe(3);
@@ -149,7 +149,7 @@ describe("date component getter functions", () => {
 
 describe("setter functions", () => {
   it("setUTCSeconds", () => {
-    date = new Date(399464523963984);
+    date = new JsDate(399464523963984);
     expect(date.getUTCMilliseconds()).toBe(984);
     date.setUTCMilliseconds(12);
     expect(date.getUTCMilliseconds()).toBe(12);
@@ -158,7 +158,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCSeconds", () => {
-    date = new Date(372027318331986);
+    date = new JsDate(372027318331986);
     expect(date.getUTCSeconds()).toBe(31);
     date.setUTCSeconds(12);
     expect(date.getUTCSeconds()).toBe(12);
@@ -167,7 +167,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCMinutes", () => {
-    date = new Date(372027318331986);
+    date = new JsDate(372027318331986);
     expect(date.getUTCMinutes()).toBe(45);
     date.setUTCMinutes(12);
     expect(date.getUTCMinutes()).toBe(12);
@@ -176,7 +176,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCHours", () => {
-    date = new Date(372027318331986);
+    date = new JsDate(372027318331986);
     expect(date.getUTCHours()).toBe(17);
     date.setUTCHours(12);
     expect(date.getUTCHours()).toBe(12);
@@ -185,7 +185,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCDate", () => {
-    date = new Date(372027318331986);
+    date = new JsDate(372027318331986);
     expect(date.getUTCDate()).toBe(28);
     date.setUTCDate(12);
     expect(date.getUTCDate()).toBe(12);
@@ -194,7 +194,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCMonth", () => {
-    date = new Date(7899943856218720);
+    date = new JsDate(7899943856218720);
     expect(date.getUTCMonth()).toBe(3);
     date.setUTCMonth(10);
     expect(date.getUTCMonth()).toBe(10);
@@ -203,7 +203,7 @@ describe("setter functions", () => {
   });
 
   it("setUTCYear", () => {
-    date = new Date(7941202527925698);
+    date = new JsDate(7941202527925698);
     expect(date.getUTCFullYear()).toBe(253616);
     date.setUTCFullYear(1976);
     expect(date.getUTCFullYear()).toBe(1976);
@@ -214,7 +214,7 @@ describe("setter functions", () => {
 
 describe("toString", () => {
   it("toISOString", () => {
-    date = new Date(1231231231020);
+    date = new JsDate(1231231231020);
     expect(date.toISOString()).toBe("2009-01-06T08:40:31.020Z");
   });
 });

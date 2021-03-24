@@ -10,6 +10,7 @@ import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { log } from "./env";
+import { JsDate } from "./date";
 
 const YEAR_MIN = -271821;
 const YEAR_MAX =  275760;
@@ -952,6 +953,30 @@ function balanceTime(
     microsecond,
     nanosecond
   };
+}
+
+export function getPartsFromEpoch(epochNanoseconds: i64): DT {
+  const quotient = epochNanoseconds / 1_000_000;
+  const remainder = epochNanoseconds % 1_000_000;
+  let epochMilliseconds = +quotient;
+  let nanos = +remainder;
+  if (nanos < 0) {
+    nanos += 1_000_000;
+    epochMilliseconds -= 1;
+  }
+  const microsecond = i32((nanos / 1_000) % 1_000);
+  const nanosecond = i32(nanos % 1_000);
+
+  const item = new JsDate(epochMilliseconds);
+  const year = item.getUTCFullYear();
+  const month = item.getUTCMonth() + 1;
+  const day = item.getUTCDate();
+  const hour = item.getUTCHours();
+  const minute = item.getUTCMinutes();
+  const second = item.getUTCSeconds();
+  const millisecond = item.getUTCMilliseconds();
+
+  return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
 // @ts-ignore: decorator
