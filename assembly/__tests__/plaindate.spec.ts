@@ -623,7 +623,7 @@ describe("date.add() works", () => {
     ).toBe("2019-02-28");
   });
   xit("date.add(durationObj)", () => {
-    expect(date.add<Duration>(new Duration(43)).toString()).toBe("2019-11-18");
+    expect(date.add(new Duration(43)).toString()).toBe("2019-11-18");
   });
   xit("casts argument", () => {
     // expect(date.add('P43Y').toString()).toBe('2019-11-18');
@@ -792,7 +792,7 @@ describe("date.subtract() works", () => {
     ).toBe("2019-01-28");
   });
   xit("Date.subtract<DurationLike>(durationObj)", () => {
-    expect(date.subtract<Duration>(new Duration(43)).toString()).toBe(
+    expect(date.subtract(new Duration(43)).toString()).toBe(
       "1976-11-18"
     );
   });
