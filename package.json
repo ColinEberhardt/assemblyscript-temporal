@@ -1,8 +1,9 @@
 {
   "name": "assemblyscript-temporal",
   "version": "1.0.0",
-  "description": "",
+  "description": "An implementation of temporal within AssemblyScript, with an initial focus on non-timezone-aware classes and functionality.",
   "main": "index.js",
+  "ascMain": "assembly/index.ts",
   "scripts": {
     "test": "asp --verbose --nologo",
     "test:ci": "asp --summary",
@@ -10,8 +11,8 @@
     "asbuild:optimized": "asc assembly/index.ts --target release",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "colin.eberhardt@gmail.com",
+  "license": "MIT",
   "devDependencies": {
     "@as-pect/cli": "^6.0.0",
     "@assemblyscript/loader": "^0.18.11",
