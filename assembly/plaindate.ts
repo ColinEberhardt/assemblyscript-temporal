@@ -60,7 +60,7 @@ export class PlainDate {
   }
 
   @inline
-  static from<T>(date: T): PlainDate {
+  static from<T = DateLike>(date: T): PlainDate {
     if (isString<T>()) {
       // @ts-ignore: cast
       return this.fromString(<string>date);
@@ -187,12 +187,12 @@ export class PlainDate {
     );
   }
 
-  add<T>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDate {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDate {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -217,12 +217,12 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
-  subtract<T>(durationToSubtract: T): PlainDate {
+  subtract<T = DurationLike>(durationToSubtract: T): PlainDate {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        : // @ts-ignore TS2352
-          (durationToSubtract as Duration);
+        // @ts-ignore TS2352
+        : (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
