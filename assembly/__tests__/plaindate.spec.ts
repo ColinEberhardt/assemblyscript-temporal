@@ -133,7 +133,7 @@ describe("date.until() works", () => {
   date = new PlainDate(1969, 7, 24);
   it("date.until({ year: 1969, month: 7, day: 24 })", () => {
     const duration = date.until(
-      PlainDate.from<DateLike>({ year: 1969, month: 10, day: 5 })
+      PlainDate.from({ year: 1969, month: 10, day: 5 })
     );
 
     expect(duration.years).toBe(0);
@@ -148,12 +148,12 @@ describe("date.until() works", () => {
     expect(duration.nanoseconds).toBe(0);
   });
   it("date.until(later) === later.since(date)", () => {
-    const later = PlainDate.from<DateLike>({ year: 1996, month: 3, day: 3 });
+    const later = PlainDate.from({ year: 1996, month: 3, day: 3 });
     expect(date.until(later).toString()).toBe(later.since(date).toString());
   });
 
   it('date.until({ year: 2019, month: 7, day: 24 }, { largestUnit: "years" })', () => {
-    const later = PlainDate.from<DateLike>({ year: 2019, month: 7, day: 24 });
+    const later = PlainDate.from({ year: 2019, month: 7, day: 24 });
     const duration = date.until(later, TimeComponent.years);
     expect(duration.years).toBe(50);
     expect(duration.months).toBe(0);
@@ -223,7 +223,7 @@ describe("date.until() works", () => {
   });
   it("weeks and months are mutually exclusive", () => {
     // @ts-ignore
-    laterDate = date.add<DurationLike>({ days: 42 });
+    laterDate = date.add({ days: 42 });
     weeksDifference = date.until(laterDate, TimeComponent.weeks);
     expect(weeksDifference.weeks).not.toBe(0);
     expect(weeksDifference.months).toBe(0);
@@ -365,7 +365,7 @@ describe("date.since() works", () => {
   date = new PlainDate(1976, 11, 18);
   it("date.since({ year: 1976, month: 10, day: 5 })", () => {
     const duration = date.since(
-      PlainDate.from<DateLike>({ year: 1976, month: 10, day: 5 })
+      PlainDate.from({ year: 1976, month: 10, day: 5 })
     );
     expect(duration.years).toBe(0);
     expect(duration.months).toBe(0);
@@ -379,11 +379,11 @@ describe("date.since() works", () => {
     expect(duration.nanoseconds).toBe(0);
   });
   it("date.since(earlier) === earlier.until(date)", () => {
-    earlier = PlainDate.from<DateLike>({ year: 1966, month: 3, day: 3 });
+    earlier = PlainDate.from({ year: 1966, month: 3, day: 3 });
     expect(date.since(earlier).toString()).toBe(earlier.until(date).toString());
   });
   it('date.since({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
-    const later = PlainDate.from<DateLike>({ year: 2019, month: 11, day: 18 });
+    const later = PlainDate.from({ year: 2019, month: 11, day: 18 });
     const duration = later.since(date, TimeComponent.years);
     expect(duration.years).toBe(43);
     expect(duration.months).toBe(0);
@@ -452,7 +452,7 @@ describe("date.since() works", () => {
   });
   xit("weeks and months are mutually exclusive", () => {
     //@ts-ignore
-    const laterDate = date.add<DurationLike>({ days: 42 });
+    const laterDate = date.add({ days: 42 });
     const weeksDifference = laterDate.since(date, TimeComponent.weeks);
     expect(weeksDifference.weeks).not.toBe(0);
     expect(weeksDifference.months).toBe(0);
@@ -594,7 +594,7 @@ describe("date.add() works", () => {
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ years: 43 })
+        .add({ years: 43 })
         .toString()
     ).toBe("2019-11-18");
   });
@@ -602,7 +602,7 @@ describe("date.add() works", () => {
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ months: 3 })
+        .add({ months: 3 })
         .toString()
     ).toBe("1977-02-18");
   });
@@ -610,15 +610,15 @@ describe("date.add() works", () => {
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ days: 20 })
+        .add({ days: 20 })
         .toString()
     ).toBe("1976-12-08");
   });
-  it("new Date(2019, 1, 31).add<DurationLike>({ months: 1 })", () => {
+  it("new Date(2019, 1, 31).add({ months: 1 })", () => {
     // @ts-ignore
     expect(
       new PlainDate(2019, 1, 31)
-        .add<DurationLike>({ months: 1 })
+        .add({ months: 1 })
         .toString()
     ).toBe("2019-02-28");
   });
@@ -630,36 +630,36 @@ describe("date.add() works", () => {
   });
   xit("constrain when overflowing result", () => {
     //   const jan31 = PlainDate.from('2020-01-31');
-    //   expect(jan31.add<DurationLike>({ months: 1 }).toString()).toBe('2020-02-29');
-    //   expect(jan31.add<DurationLike>({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
+    //   expect(jan31.add({ months: 1 }).toString()).toBe('2020-02-29');
+    //   expect(jan31.add({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
   });
   xit("throw when overflowing result with reject", () => {
     // const jan31 = PlainDate.from('2020-01-31');
-    // throws(() => jan31.add<DurationLike>({ months: 1 }, { overflow: 'reject' }), RangeError);
+    // throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
   });
   it("symmetrical with regard to negative durations", () => {
     // @ts-ignore
     expect(
       PlainDate.from("2019-11-18")
-        .add<DurationLike>({ years: -43 })
+        .add({ years: -43 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       PlainDate.from("1977-02-18")
-        .add<DurationLike>({ months: -3 })
+        .add({ months: -3 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       PlainDate.from("1976-12-08")
-        .add<DurationLike>({ days: -20 })
+        .add({ days: -20 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       PlainDate.from("2019-02-28")
-        .add<DurationLike>({ months: -1 })
+        .add({ months: -1 })
         .toString()
     ).toBe("2019-01-28");
   });
@@ -667,37 +667,37 @@ describe("date.add() works", () => {
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ hours: 1 })
+        .add({ hours: 1 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ minutes: 1 })
+        .add({ minutes: 1 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ seconds: 1 })
+        .add({ seconds: 1 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ milliseconds: 1 })
+        .add({ milliseconds: 1 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ microseconds: 1 })
+        .add({ microseconds: 1 })
         .toString()
     ).toBe("1976-11-18");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ nanoseconds: 1 })
+        .add({ nanoseconds: 1 })
         .toString()
     ).toBe("1976-11-18");
   });
@@ -705,54 +705,54 @@ describe("date.add() works", () => {
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ hours: 24 })
+        .add({ hours: 24 })
         .toString()
     ).toBe("1976-11-19");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ hours: 36 })
+        .add({ hours: 36 })
         .toString()
     ).toBe("1976-11-19");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ hours: 48 })
+        .add({ hours: 48 })
         .toString()
     ).toBe("1976-11-20");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ minutes: 1440 })
+        .add({ minutes: 1440 })
         .toString()
     ).toBe("1976-11-19");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ seconds: 86400 })
+        .add({ seconds: 86400 })
         .toString()
     ).toBe("1976-11-19");
     // @ts-ignore
     expect(
       date
-        .add<DurationLike>({ milliseconds: 86400000 })
+        .add({ milliseconds: 86400000 })
         .toString()
     ).toBe("1976-11-19");
-    // expect(date.add<DurationLike>({ microseconds: 86400000000 }).toString()).toBe('1976-11-19');
-    // expect(date.add<DurationLike>({ nanoseconds: 86400000000000 }).toString()).toBe('1976-11-19');
+    // expect(date.add({ microseconds: 86400000000 }).toString()).toBe('1976-11-19');
+    // expect(date.add({ nanoseconds: 86400000000000 }).toString()).toBe('1976-11-19');
   });
   xit("adds lower units that balance up to a day or more - 64 bit ints", () => {
-    // expect(date.add<DurationLike>({ microseconds: 86400000000 }).toString()).toBe('1976-11-19');
-    // expect(date.add<DurationLike>({ nanoseconds: 86400000000000 }).toString()).toBe('1976-11-19');
+    // expect(date.add({ microseconds: 86400000000 }).toString()).toBe('1976-11-19');
+    // expect(date.add({ nanoseconds: 86400000000000 }).toString()).toBe('1976-11-19');
   });
   xit("invalid overflow", () => {
     //   ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-    //     throws(() => date.add<DurationLike>({ months: 1 }, { overflow }), RangeError)
+    //     throws(() => date.add({ months: 1 }, { overflow }), RangeError)
     //   );
   });
   xit("mixed positive and negative values always throw", () => {
     //   ['constrain', 'reject'].forEach((overflow) =>
-    //     throws(() => date.add<DurationLike>({ months: 1, days: -30 }, { overflow }), RangeError)
+    //     throws(() => date.add({ months: 1, days: -30 }, { overflow }), RangeError)
     //   );
   });
 });
@@ -763,74 +763,74 @@ describe("date.subtract() works", () => {
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ years: 43 })
+        .subtract({ years: 43 })
         .toString()
     ).toBe("1976-11-18");
   });
-  it("date.subtract<DurationLike>({ months: 11 })", () => {
+  it("date.subtract({ months: 11 })", () => {
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ months: 11 })
+        .subtract({ months: 11 })
         .toString()
     ).toBe("2018-12-18");
   });
-  it("date.subtract<DurationLike>({ days: 20 })", () => {
+  it("date.subtract({ days: 20 })", () => {
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ days: 20 })
+        .subtract({ days: 20 })
         .toString()
     ).toBe("2019-10-29");
   });
-  it('Date.from("2019-02-28").subtract<DurationLike>({ months: 1 })', () => {
+  it('Date.from("2019-02-28").subtract({ months: 1 })', () => {
     expect(
       // @ts-ignore
       PlainDate.from("2019-02-28")
-        .subtract<DurationLike>({ months: 1 })
+        .subtract({ months: 1 })
         .toString()
     ).toBe("2019-01-28");
   });
-  xit("Date.subtract<DurationLike>(durationObj)", () => {
+  xit("Date.subtract(durationObj)", () => {
     expect(date.subtract(new Duration(43)).toString()).toBe(
       "1976-11-18"
     );
   });
   xit("casts argument", () => {
-    //     expect(date.subtract<DurationLike>('P43Y').toString()).toBe('1976-11-18');
+    //     expect(date.subtract('P43Y').toString()).toBe('1976-11-18');
   });
   xit("constrain when overflowing result", () => {
     //     const mar31 = PlainDate.from('2020-03-31');
-    //     expect(mar31.subtract<DurationLike>({ months: 1 }).toString()).toBe('2020-02-29');
-    //     expect(mar31.subtract<DurationLike>({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
+    //     expect(mar31.subtract({ months: 1 }).toString()).toBe('2020-02-29');
+    //     expect(mar31.subtract({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
   });
   xit("throw when overflowing result with reject", () => {
     //     const mar31 = PlainDate.from('2020-03-31');
-    //     throws(() => mar31.subtract<DurationLike>({ months: 1 }, { overflow: 'reject' }), RangeError);
+    //     throws(() => mar31.subtract({ months: 1 }, { overflow: 'reject' }), RangeError);
   });
   it("symmetrical with regard to negative durations", () => {
     expect(
       // @ts-ignore
       PlainDate.from("1976-11-18")
-        .subtract<DurationLike>({ years: -43 })
+        .subtract({ years: -43 })
         .toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
       PlainDate.from("2018-12-18")
-        .subtract<DurationLike>({ months: -11 })
+        .subtract({ months: -11 })
         .toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
       PlainDate.from("2019-10-29")
-        .subtract<DurationLike>({ days: -20 })
+        .subtract({ days: -20 })
         .toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
       PlainDate.from("2019-01-28")
-        .subtract<DurationLike>({ months: -1 })
+        .subtract({ months: -1 })
         .toString()
     ).toBe("2019-02-28");
   });
@@ -838,73 +838,73 @@ describe("date.subtract() works", () => {
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ hours: 1 })
+        .subtract({ hours: 1 })
         .toString()
     ).toBe("2019-11-18");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ minutes: 1 })
+        .subtract({ minutes: 1 })
         .toString()
     ).toBe("2019-11-18");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ seconds: 1 })
+        .subtract({ seconds: 1 })
         .toString()
     ).toBe("2019-11-18");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ milliseconds: 1 })
+        .subtract({ milliseconds: 1 })
         .toString()
     ).toBe("2019-11-18");
-    // expect(date.subtract<DurationLike>({ microseconds: 1 }).toString()).toBe('2019-11-18');
-    // expect(date.subtract<DurationLike>({ nanoseconds: 1 }).toString()).toBe('2019-11-18');
+    // expect(date.subtract({ microseconds: 1 }).toString()).toBe('2019-11-18');
+    // expect(date.subtract({ nanoseconds: 1 }).toString()).toBe('2019-11-18');
   });
   it("subtracts lower units that balance up to a day or more", () => {
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ hours: 24 })
+        .subtract({ hours: 24 })
         .toString()
     ).toBe("2019-11-17");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ hours: 36 })
+        .subtract({ hours: 36 })
         .toString()
     ).toBe("2019-11-17");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ hours: 48 })
+        .subtract({ hours: 48 })
         .toString()
     ).toBe("2019-11-16");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ minutes: 1440 })
+        .subtract({ minutes: 1440 })
         .toString()
     ).toBe("2019-11-17");
     // @ts-ignore
     expect(
       date
-        .subtract<DurationLike>({ seconds: 86400 })
+        .subtract({ seconds: 86400 })
         .toString()
     ).toBe("2019-11-17");
-    // expect(date.subtract<DurationLike>({ milliseconds: 86400_000 }).toString()).toBe('2019-11-17');
-    // expect(date.subtract<DurationLike>({ microseconds: 86400_000_000 }).toString()).toBe('2019-11-17');
-    // expect(date.subtract<DurationLike>({ nanoseconds: 86400_000_000_000 }).toString()).toBe('2019-11-17');
+    // expect(date.subtract({ milliseconds: 86400_000 }).toString()).toBe('2019-11-17');
+    // expect(date.subtract({ microseconds: 86400_000_000 }).toString()).toBe('2019-11-17');
+    // expect(date.subtract({ nanoseconds: 86400_000_000_000 }).toString()).toBe('2019-11-17');
   });
   // it('invalid overflow', () => {
   //   ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-  //     throws(() => date.subtract<DurationLike>({ months: 1 }, { overflow }), RangeError)
+  //     throws(() => date.subtract({ months: 1 }, { overflow }), RangeError)
   //   );
   // });
   // it('mixed positive and negative values always throw', () => {
   //   ['constrain', 'reject'].forEach((overflow) =>
-  //     throws(() => date.subtract<DurationLike>({ months: 1, days: -30 }, { overflow }), RangeError)
+  //     throws(() => date.subtract({ months: 1, days: -30 }, { overflow }), RangeError)
   //   );
   // });
 });
@@ -977,7 +977,7 @@ describe("Date.from() works", () => {
   });
 
   // xit('Date.from({ year: 1976, month: 11, day: 18 }) == 1976-11-18', () =>
-  //   expect(PlainDate.from<DateLike>({ year: 1976, month: 11, day: 18 }).toString()).toBe('1976-11-18'));
+  //   expect(PlainDate.from({ year: 1976, month: 11, day: 18 }).toString()).toBe('1976-11-18'));
 
   // it('can be constructed with month and without monthCode', () =>
   //   expect(PlainDate.from({ year: 1976, month: 11, day: 18 }).toString()).toBe('1976-11-18'));
@@ -1167,8 +1167,8 @@ describe("Date.equal works", () => {
 //     const min = PlainDate.from('-271821-04-19');
 //     const max = PlainDate.from('+275760-09-13');
 //     ['reject', 'constrain'].forEach((overflow) => {
-//       throws(() => min.subtract<DurationLike>({ days: 1 }, { overflow }), RangeError);
-//       throws(() => max.add<DurationLike>({ days: 1 }, { overflow }), RangeError);
+//       throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
+//       throws(() => max.add({ days: 1 }, { overflow }), RangeError);
 //     });
 //   });
 // });

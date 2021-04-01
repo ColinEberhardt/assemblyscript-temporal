@@ -14,8 +14,8 @@
   "license": "ISC",
   "devDependencies": {
     "@as-pect/cli": "^6.0.0",
-    "@assemblyscript/loader": "^0.18.18",
-    "assemblyscript": "^0.18.18"
+    "@assemblyscript/loader": "^0.18.20",
+    "assemblyscript": "^0.18.20"
   },
   "dependencies": {
     "assemblyscript-regex": "^1.6.2"
