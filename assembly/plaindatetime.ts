@@ -88,7 +88,7 @@ export class PlainDateTime {
   }
 
   @inline
-  static from<T>(date: T): PlainDateTime {
+  static from<T = DateTimeLike>(date: T): PlainDateTime {
     if (isString<T>()) {
       // @ts-ignore: cast
       return this.fromString(<string>date);
@@ -233,12 +233,12 @@ export class PlainDateTime {
     );
   }
 
-  add<T>(durationToAdd: T): PlainDateTime {
+  add<T = DurationLike>(durationToAdd: T): PlainDateTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const newDate = addDateTime(
       this.year,
@@ -275,12 +275,12 @@ export class PlainDateTime {
     );
   }
 
-  subtract<T>(durationToSubtract: T): PlainDateTime {
+  subtract<T = DurationLike>(durationToSubtract: T): PlainDateTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        : // @ts-ignore TS2352
-          (durationToSubtract as Duration);
+        // @ts-ignore TS2352
+        : (durationToSubtract as Duration);
 
     const newDate = addDateTime(
       this.year,

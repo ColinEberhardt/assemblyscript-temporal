@@ -15,8 +15,8 @@
   "license": "MIT",
   "devDependencies": {
     "@as-pect/cli": "^6.0.0",
-    "@assemblyscript/loader": "^0.18.11",
-    "assemblyscript": "^0.18.11"
+    "@assemblyscript/loader": "^0.18.20",
+    "assemblyscript": "^0.18.20"
   },
   "dependencies": {
     "assemblyscript-regex": "^1.6.2"
