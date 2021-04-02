@@ -8,6 +8,7 @@
 
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { log } from "./env";
 
 const YEAR_MIN = -271821;
@@ -350,13 +351,13 @@ function totalDurationNanoseconds(
   hours += days * 24;
   minutes += hours * 60;
   seconds += minutes * 60;
-  milliseconds += seconds * 1000;
+  milliseconds += seconds * MILLIS_PER_SECOND;
   microseconds += milliseconds * 1000;
   return nanoseconds + microseconds * 1000;
 }
 
 function nanosecondsToDays(ns: i64): NanoDays {
-  const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
+  const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
   return ns == 0
     ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
     : {
@@ -417,7 +418,7 @@ export function balanceDuration(
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds      = milliseconds / 1000;
+      seconds      = milliseconds / MILLIS_PER_SECOND;
       milliseconds = milliseconds % 1000;
 
       minutes = seconds / 60;
@@ -434,7 +435,7 @@ export function balanceDuration(
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds      = milliseconds / 1000;
+      seconds      = milliseconds / MILLIS_PER_SECOND;
       milliseconds = milliseconds % 1000;
 
       minutes = seconds / 60;
@@ -448,7 +449,7 @@ export function balanceDuration(
       milliseconds = microseconds / 1000;
       microseconds = microseconds % 1000;
 
-      seconds      = milliseconds / 1000;
+      seconds      = milliseconds / MILLIS_PER_SECOND;
       milliseconds = milliseconds % 1000;
       break;
 
