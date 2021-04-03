@@ -2,6 +2,7 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { PlainTime } from "./plaintime";
 import {
   dayOfWeek,
   dayOfYear,
@@ -190,6 +191,17 @@ export class PlainDateTime {
           ).toString().substring(1)
         : ""
       )
+    );
+  }
+
+  toPlainTime(): PlainTime {
+    return new PlainTime(
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond
     );
   }
 
