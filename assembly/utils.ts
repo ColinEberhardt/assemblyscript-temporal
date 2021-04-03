@@ -750,7 +750,7 @@ export function addDateTime(
   };
 }
 
-function addTime(
+export function addTime(
   hour: i32,
   minute: i32,
   second: i32,
