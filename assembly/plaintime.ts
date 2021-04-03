@@ -1,8 +1,15 @@
-import { sign, ord, checkRange, balanceDuration, addTime } from "./utils";
-import { DurationLike } from "./duration"
+import {
+  sign,
+  ord,
+  checkRange,
+  balanceDuration,
+  addTime,
+  toPaddedString,
+} from "./utils";
+import { DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
-
-
+import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+import { PlainDateTime } from "./plaindatetime";
 export class TimeLike {
   hour: i32 = 0;
   minute: i32 = 0;
@@ -13,7 +20,6 @@ export class TimeLike {
 }
 
 export class PlainTime {
-
   @inline
   static fromPlainTime(time: PlainTime): PlainTime {
     return new PlainTime(
@@ -23,6 +29,18 @@ export class PlainTime {
       time.millisecond,
       time.microsecond,
       time.nanosecond
+    );
+  }
+
+  @inline
+  static fromPlainDateTime(date: PlainDateTime): PlainTime {
+    return new PlainTime(
+      date.hour,
+      date.minute,
+      date.second,
+      date.millisecond,
+      date.microsecond,
+      date.nanosecond
     );
   }
 
@@ -38,33 +56,137 @@ export class PlainTime {
     );
   }
 
+  static fromString(time: string): PlainTime {
+    const timeRegex = new RegExp(
+      "^(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?(?:(?:([zZ])|(?:([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13})(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?)?(?:\\[u-ca=((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
+      "i"
+    );
+    const match = timeRegex.exec(time);
+    let hour: i32,
+      minute: i32,
+      second: i32,
+      millisecond: i32,
+      microsecond: i32,
+      nanosecond: i32;
+    if (match != null) {
+      hour = I32.parseInt(match.matches[1]);
+      // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
+      minute = I32.parseInt(
+        match.matches[2] != ""
+          ? match.matches[2]
+          : match.matches[5] != ""
+          ? match.matches[5]
+          : match.matches[13]
+      );
+      second = I32.parseInt(
+        match.matches[3] != ""
+          ? match.matches[3]
+          : match.matches[6] != ""
+          ? match.matches[6]
+          : match.matches[14]
+      );
+
+      if (second === 60) second = 59;
+      const fraction =
+        (match.matches[4] != ""
+          ? match.matches[4]
+          : match.matches[7] != ""
+          ? match.matches[7]
+          : match.matches[15]) +
+        "000000000";
+      millisecond = I32.parseInt(fraction.substring(0, 3));
+      microsecond = I32.parseInt(fraction.substring(3, 6));
+      nanosecond = I32.parseInt(fraction.substring(6, 9));
+      return new PlainTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      );
+    } else {
+      const dateTime = PlainDateTime.fromString(time);
+      return new PlainTime(
+        dateTime.hour,
+        dateTime.minute,
+        dateTime.second,
+        dateTime.millisecond,
+        dateTime.microsecond,
+        dateTime.nanosecond
+      );
+    }
+  }
+
+  @inline
+  static from<T = TimeLike>(time: T): PlainTime {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>time);
+    } else {
+      if (isReference<T>()) {
+        if (time instanceof PlainTime) {
+          return this.fromPlainTime(time);
+        } else if (time instanceof TimeLike) {
+          return this.fromTimeLike(time);
+        } else if (time instanceof PlainDateTime) {
+          return this.fromPlainDateTime(time)
+        }
+      }
+      throw new TypeError("invalid time type");
+    }
+  }
+
   constructor(
-    readonly hour: i32        = 0,
-    readonly minute: i32      = 0,
-    readonly second: i32      = 0,
+    readonly hour: i32 = 0,
+    readonly minute: i32 = 0,
+    readonly second: i32 = 0,
     readonly millisecond: i32 = 0,
     readonly microsecond: i32 = 0,
-    readonly nanosecond: i32  = 0
+    readonly nanosecond: i32 = 0
   ) {
-    if (!(
-      checkRange(hour,        0,  23) &&
-      checkRange(minute,      0,  59) &&
-      checkRange(second,      0,  59) &&
-      checkRange(millisecond, 0, 999) &&
-      checkRange(microsecond, 0, 999) &&
-      checkRange(nanosecond,  0, 999)
-    )) throw new RangeError("invalid plain time");
+    if (
+      !(
+        checkRange(hour, 0, 23) &&
+        checkRange(minute, 0, 59) &&
+        checkRange(second, 0, 59) &&
+        checkRange(millisecond, 0, 999) &&
+        checkRange(microsecond, 0, 999) &&
+        checkRange(nanosecond, 0, 999)
+      )
+    )
+      throw new RangeError("invalid plain time");
+  }
+
+  toString(): string {
+    // 22:54:31
+    return (
+      toPaddedString(this.hour) +
+      ":" +
+      toPaddedString(this.minute) +
+      ":" +
+      toPaddedString(this.second) +
+      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
+        ? (
+            f64(this.nanosecond) / 1_000_000_000.0 +
+            f64(this.microsecond) / 1_000_000.0 +
+            f64(this.millisecond) / 1_000.0
+          )
+            .toString()
+            .substring(1)
+        : "")
+    );
   }
 
   equals(other: PlainTime): bool {
     if (this === other) return true;
     return (
-      this.nanosecond  == other.nanosecond  &&
+      this.nanosecond == other.nanosecond &&
       this.microsecond == other.microsecond &&
       this.millisecond == other.millisecond &&
       this.second == other.second &&
       this.minute == other.minute &&
-      this.hour   == other.hour
+      this.hour == other.hour
     );
   }
 
@@ -105,7 +227,7 @@ export class PlainTime {
       duration.microseconds,
       duration.nanoseconds,
       TimeComponent.nanoseconds
-    )
+    );
     const newTime = addTime(
       this.hour,
       this.minute,
@@ -119,7 +241,7 @@ export class PlainTime {
       duration.milliseconds,
       duration.microseconds,
       balancedDuration.nanoseconds
-    )
+    );
     return new PlainTime(
       newTime.hour,
       newTime.minute,
@@ -127,12 +249,12 @@ export class PlainTime {
       newTime.millisecond,
       newTime.microsecond,
       newTime.nanosecond
-    )
+    );
   }
 
   subtract<T>(durationToSubtract: T): PlainTime {
     const duration =
-    durationToSubtract instanceof DurationLike
+      durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
         : // @ts-ignore TS2352
           (durationToSubtract as Duration);
@@ -146,7 +268,7 @@ export class PlainTime {
       duration.microseconds,
       duration.nanoseconds,
       TimeComponent.nanoseconds
-    )
+    );
     const newTime = addTime(
       this.hour,
       this.minute,
@@ -160,7 +282,7 @@ export class PlainTime {
       -duration.milliseconds,
       -duration.microseconds,
       -balancedDuration.nanoseconds
-    )
+    );
     return new PlainTime(
       newTime.hour,
       newTime.minute,
@@ -168,7 +290,6 @@ export class PlainTime {
       newTime.millisecond,
       newTime.microsecond,
       newTime.nanosecond
-    )
+    );
   }
-
 }
