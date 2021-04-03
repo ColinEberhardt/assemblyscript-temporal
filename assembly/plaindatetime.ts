@@ -67,6 +67,7 @@ export class PlainDateTime {
     );
     const match = dateRegex.exec(date);
     if (match != null) {
+      const fraction = match.matches[7] + "000000000";
       return new PlainDateTime(
         I32.parseInt(match.matches[1]),
         // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
@@ -79,9 +80,9 @@ export class PlainDateTime {
         I32.parseInt(match.matches[4]),
         I32.parseInt(match.matches[5]),
         I32.parseInt(match.matches[6]),
-        I32.parseInt(match.matches[7].substring(0, 3)),
-        I32.parseInt(match.matches[7].substring(3, 6)),
-        I32.parseInt(match.matches[7].substring(6, 9))
+        I32.parseInt(fraction.substring(0, 3)),
+        I32.parseInt(fraction.substring(3, 6)),
+        I32.parseInt(fraction.substring(6, 9))
       );
     }
     throw new RangeError("invalid ISO 8601 string: " + date);
