@@ -190,13 +190,17 @@ export class PlainTime {
     );
   }
 
-  toPlainDateTime(
-    dateLike: DateLike = { year: 0, month: 0, day: 0 }
-  ): PlainDateTime {
+  toPlainDateTime(dateLike: DateLike | null = null): PlainDateTime {
+    let year = 0, month = 0, day = 0;
+    if (dateLike !== null) {
+       year  = coalesce(dateLike.year, 0);
+       month = coalesce(dateLike.month, 0);
+       day   = coalesce(dateLike.day, 0);
+    }
     return new PlainDateTime(
-      coalesce(dateLike.year, 0),
-      coalesce(dateLike.month, 0),
-      coalesce(dateLike.day, 0),
+      year,
+      month,
+      day,
       this.hour,
       this.minute,
       this.second,
@@ -243,8 +247,8 @@ export class PlainTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -284,8 +288,8 @@ export class PlainTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        : // @ts-ignore TS2352
-          (durationToSubtract as Duration);
+        // @ts-ignore TS2352
+        : (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
