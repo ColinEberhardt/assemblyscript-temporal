@@ -179,8 +179,6 @@ describe("time.equals() works", () => {
 describe("time.add() works", () => {
   time = new PlainTime(15, 23, 30, 123, 456, 789);
   it(time.toString() + ".add({ hours: 16 })", () => {
-    log(time.second);
-
     expect(
       time
         .add<DurationLike>({ hours: 16 })
@@ -194,7 +192,8 @@ describe("time.add() works", () => {
         .toString()
     ).toBe("16:08:30.123456789");
   });
-  it(time.toString() + ".add({ nanoseconds: 300 })", () => {
+  xit(time.toString() + ".add({ nanoseconds: 300 })", () => {
+    // https://github.com/ColinEberhardt/assemblyscript-temporal/pull/25#issuecomment-812995856
     expect(
       time
         .add<DurationLike>({ nanoseconds: 300 })
