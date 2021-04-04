@@ -5,18 +5,19 @@ import {
   balanceDuration,
   addTime,
   toPaddedString,
+  coalesce,
 } from "./utils";
 import { DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { PlainDateTime } from "./plaindatetime";
 export class TimeLike {
-  hour: i32 = 0;
-  minute: i32 = 0;
-  second: i32 = 0;
-  millisecond: i32 = 0;
-  microsecond: i32 = 0;
-  nanosecond: i32 = 0;
+  hour: i32 = -1;
+  minute: i32 = -1;
+  second: i32 = -1;
+  millisecond: i32 = -1;
+  microsecond: i32 = -1;
+  nanosecond: i32 = -1;
 }
 
 export class PlainTime {
@@ -47,12 +48,12 @@ export class PlainTime {
   @inline
   static fromTimeLike(time: TimeLike): PlainTime {
     return new PlainTime(
-      time.hour,
-      time.minute,
-      time.second,
-      time.millisecond,
-      time.microsecond,
-      time.nanosecond
+      coalesce(time.hour, 0),
+      coalesce(time.minute, 0),
+      coalesce(time.second, 0),
+      coalesce(time.millisecond, 0),
+      coalesce(time.microsecond, 0),
+      coalesce(time.nanosecond, 0)
     );
   }
 
@@ -156,6 +157,17 @@ export class PlainTime {
       )
     )
       throw new RangeError("invalid plain time");
+  }
+
+  with(timeLike: TimeLike): PlainTime {
+    return new PlainTime(
+      coalesce(timeLike.hour, this.hour),
+      coalesce(timeLike.minute, this.minute),
+      coalesce(timeLike.second, this.second),
+      coalesce(timeLike.millisecond, this.millisecond),
+      coalesce(timeLike.microsecond, this.microsecond),
+      coalesce(timeLike.nanosecond, this.nanosecond)
+    );
   }
 
   toString(): string {

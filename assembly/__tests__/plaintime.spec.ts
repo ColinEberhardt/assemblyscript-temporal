@@ -132,6 +132,70 @@ describe("Construction", () => {
   });
 });
 
+describe(".with manipulation", () => {
+  time = new PlainTime(15, 23, 30, 123, 456, 789);
+  it("time.with({ hour: 3 } works", () => {
+    expect(time.with({ hour: 3 }).toString()).toBe("03:23:30.123456789");
+  });
+  it("time.with({ minute: 3 } works", () => {
+    expect(time.with({ minute: 3 }).toString()).toBe("15:03:30.123456789");
+  });
+  it("time.with({ second: 3 } works", () => {
+    expect(time.with({ second: 3 }).toString()).toBe("15:23:03.123456789");
+  });
+  it("time.with({ millisecond: 3 } works", () => {
+    expect(time.with({ millisecond: 3 }).toString()).toBe("15:23:30.003456789");
+  });
+  it("time.with({ microsecond: 3 } works", () => {
+    expect(time.with({ microsecond: 3 }).toString()).toBe("15:23:30.123003789");
+  });
+  it("time.with({ nanosecond: 3 } works", () => {
+    expect(time.with({ nanosecond: 3 }).toString()).toBe("15:23:30.123456003");
+  });
+  it("time.with({ minute: 8, nanosecond: 3 } works", () => {
+    expect(time.with({ minute: 8, nanosecond: 3 }).toString()).toBe(
+      "15:08:30.123456003"
+    );
+  });
+  // it("invalid overflow", () => {
+  //   ["", "CONSTRAIN", "balance", 3, null].forEach((overflow) =>
+  //     throws(() => time.with({ hour: 3 }, { overflow }), RangeError)
+  //   );
+  // });
+  // it("options may only be an object or undefined", () => {
+  //   [null, 1, "hello", true, Symbol("foo"), 1n].forEach((badOptions) =>
+  //     throws(() => time.with({ hour: 3 }, badOptions), TypeError)
+  //   );
+  //   [{}, () => {}, undefined].forEach((options) =>
+  //     expect(time.with({ hour: 3 }, options).toString()).toBe(
+  //       "03:23:30.123456789"
+  //     )
+  //   );
+  // });
+  // it("object must contain at least one correctly-spelled property", () => {
+  //   throws(() => time.with({}), TypeError);
+  //   throws(() => time.with({ minutes: 12 }), TypeError);
+  // });
+  // it("incorrectly-spelled properties are ignored", () => {
+  //   expect(time.with({ minutes: 1, hour: 1 }).toString()).toBe(
+  //     "01:23:30.123456789"
+  //   );
+  // });
+  // it("time.with(string) throws", () => {
+  //   throws(() => time.with("18:05:42.577"), TypeError);
+  //   throws(() => time.with("2019-05-17T18:05:42.577"), TypeError);
+  //   throws(() => time.with("2019-05-17T18:05:42.577Z"), TypeError);
+  //   throws(() => time.with("2019-05-17"), TypeError);
+  //   throws(() => time.with("42"), TypeError);
+  // // });
+  // it("throws with calendar property", () => {
+  //   throws(() => time.with({ hour: 21, calendar: "iso8601" }), TypeError);
+  // });
+  // it("throws with timeZone property", () => {
+  //   throws(() => time.with({ hour: 21, timeZone: "UTC" }), TypeError);
+  // });
+});
+
 describe("Time.compare() works", () => {
   t1 = PlainTime.from("08:44:15.321");
   t2 = PlainTime.from("14:23:30.123");
