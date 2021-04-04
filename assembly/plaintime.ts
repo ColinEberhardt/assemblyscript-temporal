@@ -166,7 +166,7 @@ export class PlainTime {
       toPaddedString(this.minute) +
       ":" +
       toPaddedString(this.second) +
-      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
+      ((this.nanosecond | this.microsecond | this.millisecond) != 0
         ? (
             f64(this.nanosecond) / 1_000_000_000.0 +
             f64(this.microsecond) / 1_000_000.0 +
@@ -215,8 +215,8 @@ export class PlainTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -256,8 +256,8 @@ export class PlainTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        : // @ts-ignore TS2352
-          (durationToSubtract as Duration);
+        // @ts-ignore TS2352
+        : (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
