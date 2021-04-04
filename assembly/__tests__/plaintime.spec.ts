@@ -1,8 +1,13 @@
 import { Duration, DurationLike } from "../duration";
+import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 import { PlainTime, TimeLike } from "../plaintime";
 
-let time: PlainTime, t1: PlainTime, t2: PlainTime, t3: PlainTime;
+let time: PlainTime,
+  t1: PlainTime,
+  t2: PlainTime,
+  t3: PlainTime,
+  dt: PlainDateTime;
 
 describe("Construction", () => {
   describe("complete", () => {
@@ -193,6 +198,35 @@ describe(".with manipulation", () => {
   // });
   // it("throws with timeZone property", () => {
   //   throws(() => time.with({ hour: 21, timeZone: "UTC" }), TypeError);
+  // });
+});
+
+describe("time.toPlainDateTime() works", () => {
+  time = PlainTime.from("11:30:23.123456789");
+  dt = time.toPlainDateTime({ year: 1976, month: 11, day: 18 });
+  it("with no argument", () => {
+    expect(time.toPlainDateTime().toString()).toBe(
+      "0-00-00T11:30:23.123456789"
+    );
+  });
+  it("returns a Temporal.PlainDateTime", () => {
+    assert(dt instanceof PlainDateTime);
+  });
+  it("combines the date and time", () => {
+    expect(dt.toString()).toBe("1976-11-18T11:30:23.123456789");
+  });
+  it("casts argument date like", () => {
+    expect(
+      time.toPlainDateTime({ year: 1976, month: 11, day: 18 }).toString()
+    ).toBe("1976-11-18T11:30:23.123456789");
+  });
+  xit("casts argument string like", () => {
+    // expect(time.toPlainDateTime("1976-11-18").toString()).toBe(
+    //   "1976-11-18T11:30:23.123456789"
+    // );
+  });
+  // it("object must contain at least the required properties", () => {
+  //   throws(() => time.toPlainDateTime({ year: 1976 }), TypeError);
   // });
 });
 

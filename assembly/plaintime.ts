@@ -11,6 +11,7 @@ import { DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { PlainDateTime } from "./plaindatetime";
+import { DateLike } from "./plaindate";
 export class TimeLike {
   hour: i32 = -1;
   minute: i32 = -1;
@@ -93,8 +94,7 @@ export class PlainTime {
           ? match.matches[4]
           : match.matches[7] != ""
           ? match.matches[7]
-          : match.matches[15]) +
-        "000000000";
+          : match.matches[15]) + "000000000";
       millisecond = I32.parseInt(fraction.substring(0, 3));
       microsecond = I32.parseInt(fraction.substring(3, 6));
       nanosecond = I32.parseInt(fraction.substring(6, 9));
@@ -131,7 +131,7 @@ export class PlainTime {
         } else if (time instanceof TimeLike) {
           return this.fromTimeLike(time);
         } else if (time instanceof PlainDateTime) {
-          return this.fromPlainDateTime(time)
+          return this.fromPlainDateTime(time);
         }
       }
       throw new TypeError("invalid time type");
@@ -190,6 +190,22 @@ export class PlainTime {
     );
   }
 
+  toPlainDateTime(
+    dateLike: DateLike = { year: 0, month: 0, day: 0 }
+  ): PlainDateTime {
+    return new PlainDateTime(
+      coalesce(dateLike.year, 0),
+      coalesce(dateLike.month, 0),
+      coalesce(dateLike.day, 0),
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond
+    );
+  }
+
   equals(other: PlainTime): bool {
     if (this === other) return true;
     return (
@@ -227,8 +243,8 @@ export class PlainTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : (durationToAdd as Duration);
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -268,8 +284,8 @@ export class PlainTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        // @ts-ignore TS2352
-        : (durationToSubtract as Duration);
+        : // @ts-ignore TS2352
+          (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
