@@ -243,7 +243,7 @@ export class PlainTime {
     return ord(a.nanosecond, b.nanosecond);
   }
 
-  add<T>(durationToAdd: T): PlainTime {
+  add<T = DurationLike>(durationToAdd: T): PlainTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -284,7 +284,7 @@ export class PlainTime {
     );
   }
 
-  subtract<T>(durationToSubtract: T): PlainTime {
+  subtract<T = DurationLike>(durationToSubtract: T): PlainTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()

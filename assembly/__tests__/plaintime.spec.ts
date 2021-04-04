@@ -233,6 +233,7 @@ describe("time.toPlainDateTime() works", () => {
 describe("Time.compare() works", () => {
   t1 = PlainTime.from("08:44:15.321");
   t2 = PlainTime.from("14:23:30.123");
+
   it("equal", () => {
     expect(PlainTime.compare(t1, t1)).toBe(0);
   });
@@ -279,14 +280,14 @@ describe("time.add() works", () => {
   it(time.toString() + ".add({ hours: 16 })", () => {
     expect(
       time
-        .add<DurationLike>({ hours: 16 })
+        .add({ hours: 16 })
         .toString()
     ).toBe("07:23:30.123456789");
   });
   it(time.toString() + ".add({ minutes: 45 })", () => {
     expect(
       time
-        .add<DurationLike>({ minutes: 45 })
+        .add({ minutes: 45 })
         .toString()
     ).toBe("16:08:30.123456789");
   });
@@ -294,24 +295,24 @@ describe("time.add() works", () => {
     // https://github.com/ColinEberhardt/assemblyscript-temporal/pull/25#issuecomment-812995856
     expect(
       time
-        .add<DurationLike>({ nanoseconds: 300 })
+        .add({ nanoseconds: 300 })
         .toString()
     ).toBe("15:23:30.123457089");
   });
   it("symmetric with regard to negative durations", () => {
     expect(
       PlainTime.from<string>("07:23:30.123456789")
-        .add<DurationLike>({ hours: -16 })
+        .add({ hours: -16 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from<string>("16:08:30.123456789")
-        .add<DurationLike>({ minutes: -45 })
+        .add({ minutes: -45 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from<string>("15:23:30.123457089")
-        .add<DurationLike>({ nanoseconds: -300 })
+        .add({ nanoseconds: -300 })
         .toString()
     ).toBe("15:23:30.123456789");
   });
@@ -373,74 +374,74 @@ describe("time.subtract() works", () => {
   it(time.toString() + ".subtract({ hours: 16 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ hours: 16 })
+        .subtract({ hours: 16 })
         .toString()
     ).toBe("23:23:30.123456789");
   });
   it(time.toString() + ".subtract({ minutes: 45 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ minutes: 45 })
+        .subtract({ minutes: 45 })
         .toString()
     ).toBe("14:38:30.123456789");
   });
   it(time.toString() + ".subtract({ seconds: 45 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ seconds: 45 })
+        .subtract({ seconds: 45 })
         .toString()
     ).toBe("15:22:45.123456789");
   });
   it(time.toString() + ".subtract({ milliseconds: 800 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ milliseconds: 800 })
+        .subtract({ milliseconds: 800 })
         .toString()
     ).toBe("15:23:29.323456789");
   });
   it(time.toString() + ".subtract({ microseconds: 800 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ microseconds: 800 })
+        .subtract({ microseconds: 800 })
         .toString()
     ).toBe("15:23:30.122656789");
   });
   it(time.toString() + ".subtract({ nanoseconds: 800 })", () => {
     expect(
       time
-        .subtract<DurationLike>({ nanoseconds: 800 })
+        .subtract({ nanoseconds: 800 })
         .toString()
     ).toBe("15:23:30.123455989");
   });
   it("symmetric with regard to negative durations", () => {
     expect(
       PlainTime.from("23:23:30.123456789")
-        .subtract<DurationLike>({ hours: -16 })
+        .subtract({ hours: -16 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("14:38:30.123456789")
-        .subtract<DurationLike>({ minutes: -45 })
+        .subtract({ minutes: -45 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("15:22:45.123456789")
-        .subtract<DurationLike>({ seconds: -45 })
+        .subtract({ seconds: -45 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("15:23:29.323456789")
-        .subtract<DurationLike>({ milliseconds: -800 })
+        .subtract({ milliseconds: -800 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("15:23:30.122656789")
-        .subtract<DurationLike>({ microseconds: -800 })
+        .subtract({ microseconds: -800 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("15:23:30.123455989")
-        .subtract<DurationLike>({ nanoseconds: -800 })
+        .subtract({ nanoseconds: -800 })
         .toString()
     ).toBe("15:23:30.123456789");
   });
@@ -454,17 +455,17 @@ describe("time.subtract() works", () => {
   it("ignores higher units", () => {
     expect(
       time
-        .subtract<DurationLike>({ days: 1 })
+        .subtract({ days: 1 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       time
-        .subtract<DurationLike>({ months: 1 })
+        .subtract({ months: 1 })
         .toString()
     ).toBe("15:23:30.123456789");
     expect(
       time
-        .subtract<DurationLike>({ years: 1 })
+        .subtract({ years: 1 })
         .toString()
     ).toBe("15:23:30.123456789");
   });
