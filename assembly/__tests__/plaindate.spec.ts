@@ -154,7 +154,7 @@ describe("date.until() works", () => {
 
   it('date.until({ year: 2019, month: 7, day: 24 }, { largestUnit: "years" })', () => {
     const later = PlainDate.from({ year: 2019, month: 7, day: 24 });
-    const duration = date.until(later, TimeComponent.years);
+    const duration = date.until(later, TimeComponent.Years);
     expect(duration.years).toBe(50);
     expect(duration.months).toBe(0);
     expect(duration.weeks).toBe(0);
@@ -198,12 +198,12 @@ describe("date.until() works", () => {
   it("defaults to returning days", () => {
     expect(feb20.until(feb21).toString()).toBe("P366D");
     // expect(feb20.until(feb21, TimeComponent.auto).toString()).toBe('P366D');
-    expect(feb20.until(feb21, TimeComponent.days).toString()).toBe("P366D");
+    expect(feb20.until(feb21, TimeComponent.Days).toString()).toBe("P366D");
   });
   it("can return higher units", () => {
-    expect(feb20.until(feb21, TimeComponent.years).toString()).toBe("P1Y");
-    expect(feb20.until(feb21, TimeComponent.months).toString()).toBe("P12M");
-    expect(feb20.until(feb21, TimeComponent.weeks).toString()).toBe("P52W2D");
+    expect(feb20.until(feb21, TimeComponent.Years).toString()).toBe("P1Y");
+    expect(feb20.until(feb21, TimeComponent.Months).toString()).toBe("P12M");
+    expect(feb20.until(feb21, TimeComponent.Weeks).toString()).toBe("P52W2D");
   });
   xit("cannot return lower units", () => {
     // ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'].forEach((largestUnit) =>
@@ -214,20 +214,20 @@ describe("date.until() works", () => {
     lastFeb20 = PlainDate.from("2020-02-29");
     lastFeb21 = PlainDate.from("2021-02-28");
     expect(lastFeb20.until(lastFeb21).toString()).toBe("P365D");
-    expect(lastFeb20.until(lastFeb21, TimeComponent.months).toString()).toBe(
+    expect(lastFeb20.until(lastFeb21, TimeComponent.Months).toString()).toBe(
       "P12M"
     );
-    expect(lastFeb20.until(lastFeb21, TimeComponent.years).toString()).toBe(
+    expect(lastFeb20.until(lastFeb21, TimeComponent.Years).toString()).toBe(
       "P1Y"
     );
   });
   it("weeks and months are mutually exclusive", () => {
     // @ts-ignore
     laterDate = date.add({ days: 42 });
-    weeksDifference = date.until(laterDate, TimeComponent.weeks);
+    weeksDifference = date.until(laterDate, TimeComponent.Weeks);
     expect(weeksDifference.weeks).not.toBe(0);
     expect(weeksDifference.months).toBe(0);
-    monthsDifference = date.until(laterDate, TimeComponent.months);
+    monthsDifference = date.until(laterDate, TimeComponent.Months);
     expect(monthsDifference.weeks).toBe(0);
     expect(monthsDifference.months).not.toBe(0);
   });
@@ -384,7 +384,7 @@ describe("date.since() works", () => {
   });
   it('date.since({ year: 2019, month: 11, day: 18 }, { largestUnit: "years" })', () => {
     const later = PlainDate.from({ year: 2019, month: 11, day: 18 });
-    const duration = later.since(date, TimeComponent.years);
+    const duration = later.since(date, TimeComponent.Years);
     expect(duration.years).toBe(43);
     expect(duration.months).toBe(0);
     expect(duration.weeks).toBe(0);
@@ -428,35 +428,35 @@ describe("date.since() works", () => {
   it("defaults to returning days", () => {
     expect(feb21.since(feb20).toString()).toBe("P366D");
     // expect(feb21.since(feb20, TimeComponent.auto).toString()).toBe('P366D')
-    expect(feb21.since(feb20, TimeComponent.days).toString()).toBe("P366D");
+    expect(feb21.since(feb20, TimeComponent.Days).toString()).toBe("P366D");
   });
   it("can return higher units", () => {
-    expect(feb21.since(feb20, TimeComponent.years).toString()).toBe("P1Y");
-    expect(feb21.since(feb20, TimeComponent.months).toString()).toBe("P12M");
-    expect(feb21.since(feb20, TimeComponent.weeks).toString()).toBe("P52W2D");
+    expect(feb21.since(feb20, TimeComponent.Years).toString()).toBe("P1Y");
+    expect(feb21.since(feb20, TimeComponent.Months).toString()).toBe("P12M");
+    expect(feb21.since(feb20, TimeComponent.Weeks).toString()).toBe("P52W2D");
   });
   xit("cannot return lower units", () => {
-    // throws(() => feb21.since(feb20, TimeComponent.hours), RangeError);
-    // throws(() => feb21.since(feb20, TimeComponent.minutes), RangeError);
-    // throws(() => feb21.since(feb20, TimeComponent.seconds), RangeError);
-    // throws(() => feb21.since(feb20, TimeComponent.milliseconds), RangeError);
-    // throws(() => feb21.since(feb20, TimeComponent.microseconds), RangeError);
-    // throws(() => feb21.since(feb20, TimeComponent.nanoseconds), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Hours), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Minutes), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Seconds), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Milliseconds), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Microseconds), RangeError);
+    // throws(() => feb21.since(feb20, TimeComponent.Nanoseconds), RangeError);
   });
   xit("does not include higher units than necessary", () => {
     // const lastFeb20 = PlainDate.from('2020-02-29');
     // const lastFeb21 = PlainDate.from('2021-02-28');
     // expect(lastFeb21.since(lastFeb20).toString()).toBe('P365D')
-    // expect(lastFeb21.since(lastFeb20, TimeComponent.months).toString()).toBe('P11M28D')
-    // expect(lastFeb21.since(lastFeb20, TimeComponent.years).toString()).toBe('P11M28D')
+    // expect(lastFeb21.since(lastFeb20, TimeComponent.Months).toString()).toBe('P11M28D')
+    // expect(lastFeb21.since(lastFeb20, TimeComponent.Years).toString()).toBe('P11M28D')
   });
   xit("weeks and months are mutually exclusive", () => {
     //@ts-ignore
     const laterDate = date.add({ days: 42 });
-    const weeksDifference = laterDate.since(date, TimeComponent.weeks);
+    const weeksDifference = laterDate.since(date, TimeComponent.Weeks);
     expect(weeksDifference.weeks).not.toBe(0);
     expect(weeksDifference.months).toBe(0);
-    const monthsDifference = laterDate.since(date, TimeComponent.months);
+    const monthsDifference = laterDate.since(date, TimeComponent.Months);
     expect(monthsDifference.weeks).toBe(0);
     expect(monthsDifference.months).not.toBe(0);
   });
@@ -570,14 +570,14 @@ describe("date.since() works", () => {
   //   );
   // });
   // it('accepts singular units', () => {
-  //   expect(later.since(earlier, TimeComponent.year)}`, `${later.since(earlier).toBe(TimeComponent.years).toString())
+  //   expect(later.since(earlier, TimeComponent.Year)}`, `${later.since(earlier).toBe(TimeComponent.Years).toString())
   //   expect(later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier).toBe({ smallestUnit: 'years' }).toString())
-  //   expect(later.since(earlier, TimeComponent.month)}`, `${later.since(earlier).toBe(TimeComponent.months).toString())
+  //   expect(later.since(earlier, TimeComponent.Month)}`, `${later.since(earlier).toBe(TimeComponent.Months).toString())
   //   equal(
   //     later.since(earlier, { smallestUnit: 'month' }).toString(),
   //     later.since(earlier, { smallestUnit: 'months' }).toString()
   //   );
-  //   expect(later.since(earlier, TimeComponent.day)}`, `${later.since(earlier).toBe(TimeComponent.days).toString())
+  //   expect(later.since(earlier, TimeComponent.Day)}`, `${later.since(earlier).toBe(TimeComponent.Days).toString())
   //   expect(later.since(earlier, { smallestUnit: 'day' })}`, `${later.since(earlier).toBe({ smallestUnit: 'days' }).toString())
   // });
   // it('rounds relative to the receiver', () => {

@@ -387,8 +387,8 @@ export function balanceDuration(
   );
 
   if (
-    largestUnit >= TimeComponent.years &&
-    largestUnit <= TimeComponent.days
+    largestUnit >= TimeComponent.Years &&
+    largestUnit <= TimeComponent.Days
   ) {
     const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
     days        = _ES$NanosecondsToDays.days;
@@ -406,11 +406,11 @@ export function balanceDuration(
   hours = 0;
 
   switch (largestUnit) {
-    case TimeComponent.years:
-    case TimeComponent.months:
-    case TimeComponent.weeks:
-    case TimeComponent.days:
-    case TimeComponent.hours:
+    case TimeComponent.Years:
+    case TimeComponent.Months:
+    case TimeComponent.Weeks:
+    case TimeComponent.Days:
+    case TimeComponent.Hours:
       microseconds = nanoseconds / 1000;
       nanoseconds  = nanoseconds % 1000;
 
@@ -427,7 +427,7 @@ export function balanceDuration(
       minutes = minutes % 60;
       break;
 
-    case TimeComponent.minutes:
+    case TimeComponent.Minutes:
       microseconds = nanoseconds / 1000;
       nanoseconds  = nanoseconds % 1000;
 
@@ -441,7 +441,7 @@ export function balanceDuration(
       seconds = seconds % 60;
       break;
 
-    case TimeComponent.seconds:
+    case TimeComponent.Seconds:
       microseconds = nanoseconds / 1000;
       nanoseconds  = nanoseconds % 1000;
 
@@ -452,7 +452,7 @@ export function balanceDuration(
       milliseconds = milliseconds % 1000;
       break;
 
-    case TimeComponent.milliseconds:
+    case TimeComponent.Milliseconds:
       microseconds = nanoseconds / 1000;
       nanoseconds  = nanoseconds % 1000;
 
@@ -460,12 +460,12 @@ export function balanceDuration(
       microseconds = microseconds % 1000;
       break;
 
-    case TimeComponent.microseconds:
+    case TimeComponent.Microseconds:
       microseconds = nanoseconds / 1000;
       nanoseconds  = nanoseconds % 1000;
       break;
 
-    case TimeComponent.nanoseconds:
+    case TimeComponent.Nanoseconds:
       break;
   }
 
@@ -535,11 +535,11 @@ export function differenceDate(
   y2: i32,
   m2: i32,
   d2: i32,
-  largestUnit: TimeComponent = TimeComponent.days
+  largestUnit: TimeComponent = TimeComponent.Days
 ): Duration {
   switch (largestUnit) {
-    case TimeComponent.years:
-    case TimeComponent.months: {
+    case TimeComponent.Years:
+    case TimeComponent.Months: {
       let sign = -compareTemporalDate(y1, m1, d1, y2, m2, d2);
       if (sign == 0) return new Duration();
 
@@ -555,7 +555,7 @@ export function differenceDate(
       let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
       if (midSign === 0) {
-        return largestUnit === TimeComponent.years
+        return largestUnit === TimeComponent.Years
           ? new Duration(years)
           : new Duration(0, years * 12);
       }
@@ -571,7 +571,7 @@ export function differenceDate(
       midSign = compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
       if (midSign === 0) {
-        return largestUnit === TimeComponent.years
+        return largestUnit === TimeComponent.Years
           ? new Duration(years, months)
           : new Duration(0, months + years * 12);
       }
@@ -610,7 +610,7 @@ export function differenceDate(
         days = endDay + daysInMonth(mid.year, mid.month) - mid.day;
       }
 
-      if (largestUnit === TimeComponent.months) {
+      if (largestUnit === TimeComponent.Months) {
         months += years * 12;
         years = 0;
       }
@@ -618,8 +618,8 @@ export function differenceDate(
       return new Duration(years, months, 0, days);
     }
 
-    case TimeComponent.weeks:
-    case TimeComponent.days: {
+    case TimeComponent.Weeks:
+    case TimeComponent.Days: {
       let neg = compareTemporalDate(y1, m1, d1, y2, m2, d2) < 0;
 
       let smallerYear  = neg ? y1 : y2;
@@ -645,7 +645,7 @@ export function differenceDate(
       }
 
       let weeks = 0;
-      if (largestUnit === TimeComponent.weeks) {
+      if (largestUnit === TimeComponent.Weeks) {
         weeks = floorDiv(days, 7);
         days -= weeks * 7;
       }

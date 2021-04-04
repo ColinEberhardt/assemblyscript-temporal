@@ -1,7 +1,7 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
-import { Overflow, TimeComponent } from "./enums";
+import { Overflow } from "./enums";
 import {
   dayOfWeek,
   dayOfYear,
