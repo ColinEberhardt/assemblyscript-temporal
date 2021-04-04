@@ -23,12 +23,12 @@ datetime.month; // 11;
 // ...
 datetime.nanosecond; // 789;
 
-datetime = PlainDateTime.fromString("1976-11-18T12:34:56");
+datetime = PlainDateTime.from("1976-11-18T12:34:56");
 datetime.toString(); // "1976-11-18T12:34:56"
 
 datetime = PlainDateTime.from({ year: 1966, month: 3, day: 3 });
 datetime.toString(); // "1966-03-03T00:00:00"
-``` 
+```
 
 There are various ways you can manipulate a date:
 
@@ -43,19 +43,19 @@ datetime.add({ months: 1 }).toString(); // "2020-02-12T15:00:00");
 
 // add /  subtract support Duration objects or object literals
 datetime.add(new Duration(1)).toString(); // "2021-01-12T15:00:00");
-``` 
+```
 
 You can compare dates and check for equality
 
 ```javascript
-dt1 = PlainDateTime.fromString("1976-11-18");
-dt2 = PlainDateTime.fromString("2019-10-29");
+dt1 = PlainDateTime.from("1976-11-18");
+dt2 = PlainDateTime.from("2019-10-29");
 PlainDateTime.compare(dt1, dt1); // 0
 PlainDateTime.compare(dt1, dt2); // -1
 dt1.equals(dt1); // true
 ```
 
-Currently `PlainDateTime` only supports the ISO 8601 (Gregorian) calendar. 
+Currently `PlainDateTime` only supports the ISO 8601 (Gregorian) calendar.
 
 #### `PlainDate`
 

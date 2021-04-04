@@ -212,28 +212,28 @@ describe(".with manipulation", () => {
 
 describe("DateTime.fromString() works", () => {
   it("date components only", () => {
-    expect(PlainDateTime.fromString("1976-11-18T00:00:00").toString()).toBe(
+    expect(PlainDateTime.from("1976-11-18T00:00:00").toString()).toBe(
       "1976-11-18T00:00:00"
     );
   });
   it("date components without dash separator", () => {
-    expect(PlainDateTime.fromString("19761118T00:00:00").toString()).toBe(
+    expect(PlainDateTime.from("19761118T00:00:00").toString()).toBe(
       "1976-11-18T00:00:00"
     );
   });
   it("date and time components only", () => {
-    expect(PlainDateTime.fromString("1976-11-18T12:34:56").toString()).toBe(
+    expect(PlainDateTime.from("1976-11-18T12:34:56").toString()).toBe(
       "1976-11-18T12:34:56"
     );
   });
   it("with milliseconds", () => {
     expect(
-      PlainDateTime.fromString("1976-11-18T12:34:56.123456789").toString()
+      PlainDateTime.from("1976-11-18T12:34:56.123456789").toString()
     ).toBe("1976-11-18T12:34:56.123456789");
   });
   it("throws on invalid string", () => {
     expect(() => {
-      PlainDateTime.fromString("fish");
+      PlainDateTime.from("fish");
     }).toThrow();
   });
 });
@@ -241,8 +241,8 @@ describe("DateTime.fromString() works", () => {
 let dt1: PlainDateTime, dt2: PlainDateTime;
 
 describe("DateTime.compare() works", () => {
-  dt1 = PlainDateTime.fromString("1976-11-18T15:23:30.123456789");
-  dt2 = PlainDateTime.fromString("2019-10-29T10:46:38.271986102");
+  dt1 = PlainDateTime.from("1976-11-18T15:23:30.123456789");
+  dt2 = PlainDateTime.from("2019-10-29T10:46:38.271986102");
   it("equal", () => {
     expect(PlainDateTime.compare(dt1, dt1)).toBe(0);
   });
