@@ -281,11 +281,9 @@ describe("time.until() works", () => {
   t1 = PlainTime.from("10:23:15");
   t2 = PlainTime.from("17:15:57");
   it("the default largest unit is at least hours", () => {
-    // changing to 2S to 2.0S to follow AS behavior.
-    // see https://github.com/ColinEberhardt/assemblyscript-temporal/pull/25#issuecomment-813415799
-    expect(t1.until(t2).toString()).toBe("PT6H52M42.0S");
+    expect(t1.until(t2).toString()).toBe("PT6H52M42S");
     // expect(t1.until(t2, { largestUnit: "auto" }).toString()).toBe( "PT6H52M42S");
-    expect(t1.until(t2, TimeComponent.hours).toString()).toBe("PT6H52M42.0S");
+    expect(t1.until(t2, TimeComponent.hours).toString()).toBe("PT6H52M42S");
   });
   it("higher units are not allowed", () => {
     expect(() => {
@@ -302,10 +300,8 @@ describe("time.until() works", () => {
     }).toThrow();
   });
   it("can return lower units", () => {
-    // changing to 2S to 2.0S to follow AS behavior.
-    // see https://github.com/ColinEberhardt/assemblyscript-temporal/pull/25#issuecomment-813415799
-    expect(t1.until(t2, TimeComponent.minutes).toString()).toBe("PT412M42.0S");
-    expect(t1.until(t2, TimeComponent.seconds).toString()).toBe("PT24762.0S");
+    expect(t1.until(t2, TimeComponent.minutes).toString()).toBe("PT412M42S");
+    expect(t1.until(t2, TimeComponent.seconds).toString()).toBe("PT24762S");
   });
   it("can return subseconds", () => {
     t3 = t2.add({
@@ -744,9 +740,9 @@ describe("time.since() works", () => {
   t1 = PlainTime.from("10:23:15");
   t2 = PlainTime.from("17:15:57");
   it("the default largest unit is at least hours", () => {
-    expect(t2.since(t1).toString()).toBe("PT6H52M42.0S");
+    expect(t2.since(t1).toString()).toBe("PT6H52M42S");
     // expect(t2.since(t1, largestUnit: 'auto)", 'PT6H52M42S');
-    expect(t2.since(t1, TimeComponent.hours).toString()).toBe("PT6H52M42.0S");
+    expect(t2.since(t1, TimeComponent.hours).toString()).toBe("PT6H52M42S");
   });
   it("higher units are not allowed", () => {
     expect(() => {
@@ -763,8 +759,8 @@ describe("time.since() works", () => {
     }).toThrow();
   });
   it("can return lower units", () => {
-    expect(t2.since(t1, TimeComponent.minutes).toString()).toBe("PT412M42.0S");
-    expect(t2.since(t1, TimeComponent.seconds).toString()).toBe("PT24762.0S");
+    expect(t2.since(t1, TimeComponent.minutes).toString()).toBe("PT412M42S");
+    expect(t2.since(t1, TimeComponent.seconds).toString()).toBe("PT24762S");
   });
   it("can return subseconds", () => {
     t3 = t2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
