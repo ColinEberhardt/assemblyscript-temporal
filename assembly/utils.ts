@@ -670,6 +670,63 @@ export function differenceDate(
   }
 }
 
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
+export function differenceTime(
+  h1: i32,
+  min1: i32,
+  s1: i32,
+  ms1: i32,
+  µs1:i32,
+  ns1: i32,
+  h2: i32,
+  min2: i32,
+  s2: i32,
+  ms2: i32,
+  µs2: i32,
+  ns2: i32
+): Duration {
+  let hours = h2 - h1;
+  let minutes = min2 - min1;
+  let seconds = s2 - s1;
+  let milliseconds = ms2 - ms1;
+  let microseconds = µs2 - µs1;
+  let nanoseconds = ns2 - ns1;
+
+  const sign = durationSign(
+    0, 
+    0, 
+    0, 
+    0, 
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  );
+  hours *= sign;
+  minutes *= sign;
+  seconds *= sign;
+  milliseconds *= sign;
+  microseconds *= sign;
+  nanoseconds *= sign;
+
+  let balancedTime = balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+  return new Duration(
+    0,
+    0,
+    0,
+    balancedTime.deltaDays * sign,
+    balancedTime.hour * sign,
+    balancedTime.minute * sign,
+    balancedTime.second * sign,
+    balancedTime.millisecond * sign,
+    balancedTime.microsecond * sign,
+    balancedTime.nanosecond * sign
+  )
+
+}
 
 export function epochFromParts(
   year: i32,
