@@ -186,7 +186,7 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 export function sign<T extends number>(x: T): T {
   // x < 0 ? -1 : 1   ->   x >> 31 | 1
   // @ts-ignore
-  return (x >> (sizeof<T>() * 4 - 1)) | 1;
+  return (x >> (sizeof<T>() * 8 - 1)) | 1;
 }
 
 // @ts-ignore: decorator
@@ -395,24 +395,28 @@ export function balanceDuration(
     nanoseconds as i64
   );
 
+  let nanosecondsI64: i64 = 0;
+  let microsecondsI64: i64 = 0;
+  let millisecondsI64: i64 = 0;
+  let secondsI64: i64 = 0;
+  let minutesI64: i64 = 0;
+  let hoursI64: i64 = 0;
+  let daysI64: i64 = 0;
+
   if (
     largestUnit >= TimeComponent.years &&
     largestUnit <= TimeComponent.days
   ) {
     const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
-    days        = _ES$NanosecondsToDays.days;
-    nanoseconds = _ES$NanosecondsToDays.nanoseconds;
+    daysI64        = _ES$NanosecondsToDays.days;
+    nanosecondsI64 = _ES$NanosecondsToDays.nanoseconds;
   } else {
-    days = 0;
+    daysI64 = 0;
+    nanosecondsI64 = durationNs
   }
 
-  const sig = sign(nanoseconds);
-  nanoseconds = abs(nanoseconds);
-  microseconds = 0;
-  milliseconds = 0;
-  seconds = 0;
-  minutes = 0;
-  hours = 0;
+  const sig = sign(nanosecondsI64);
+  nanosecondsI64 = abs(nanosecondsI64);
 
   switch (largestUnit) {
     case TimeComponent.years:
@@ -420,58 +424,58 @@ export function balanceDuration(
     case TimeComponent.weeks:
     case TimeComponent.days:
     case TimeComponent.hours:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
 
-      minutes = seconds / 60;
-      seconds = seconds % 60;
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
 
-      hours   = minutes / 60;
-      minutes = minutes % 60;
+      hoursI64   = minutesI64 / 60;
+      minutesI64 = minutesI64 % 60;
       break;
 
     case TimeComponent.minutes:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
 
-      minutes = seconds / 60;
-      seconds = seconds % 60;
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
       break;
 
     case TimeComponent.seconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
       break;
 
     case TimeComponent.milliseconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
       break;
 
     case TimeComponent.microseconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
       break;
 
     case TimeComponent.nanoseconds:
@@ -482,13 +486,13 @@ export function balanceDuration(
     0,
     0,
     0,
-    days,
-    hours * sig,
-    minutes * sig,
-    seconds * sig,
-    milliseconds * sig,
-    microseconds * sig,
-    nanoseconds * sig
+    i32(daysI64),
+    i32(hoursI64 * sig),
+    i32(minutesI64 * sig),
+    i32(secondsI64 * sig),
+    i32(millisecondsI64 * sig),
+    i32(microsecondsI64 * sig),
+    i32(nanosecondsI64 * sig)
   );
 }
 
