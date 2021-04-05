@@ -415,7 +415,7 @@ export function balanceDuration(
     nanosecondsI64 = durationNs
   }
 
-  const sig = sign(nanosecondsI64);
+  const sig = i32(sign(nanosecondsI64));
   nanosecondsI64 = abs(nanosecondsI64);
 
   switch (largestUnit) {
@@ -487,12 +487,12 @@ export function balanceDuration(
     0,
     0,
     i32(daysI64),
-    i32(hoursI64 * sig),
-    i32(minutesI64 * sig),
-    i32(secondsI64 * sig),
-    i32(millisecondsI64 * sig),
-    i32(microsecondsI64 * sig),
-    i32(nanosecondsI64 * sig)
+    i32(hoursI64) * sig,
+    i32(minutesI64) * sig,
+    i32(secondsI64) * sig,
+    i32(millisecondsI64) * sig,
+    i32(microsecondsI64) * sig,
+    i32(nanosecondsI64) * sig
   );
 }
 
