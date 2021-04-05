@@ -1,4 +1,5 @@
 import { Duration, DurationLike } from "../duration";
+import { TimeComponent } from "../enums";
 import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 import { PlainTime, TimeLike } from "../plaintime";
@@ -230,6 +231,471 @@ describe("time.toPlainDateTime() works", () => {
   // });
 });
 
+let one: PlainTime;
+let two: PlainTime;
+let msDiff: Duration;
+let µsDiff: Duration;
+let nsDiff: Duration;
+describe("time.until() works", () => {
+  time = new PlainTime(15, 23, 30, 123, 456, 789);
+  one = new PlainTime(16, 23, 30, 123, 456, 789);
+  two = new PlainTime(17, 0, 30, 123, 456, 789);
+
+  it("(" + time.toString() + ").until(" + one.toString() + ") => PT1H", () => {
+    expect(time.until(one).toString()).toBe("PT1H");
+  });
+  it(
+    "(" + time.toString() + ").until(" + two.toString() + ") => PT1H37M",
+    () => {
+      expect(time.until(two).toString()).toBe("PT1H37M");
+    }
+  );
+  it(
+    "(" + two.toString() + ").until(" + time.toString() + ") => -PT1H37M",
+    () => {
+      expect(two.until(time).toString()).toBe("-PT1H37M");
+    }
+  );
+  xit(
+    "(" +
+      time.toString() +
+      ").until(" +
+      two.toString() +
+      ") === (" +
+      two.toString() +
+      ").since(" +
+      time.toString() +
+      ")",
+    () => {
+      // expect(time.until(two).toString()).toBe(two.since(time).toString());
+    }
+  );
+  xit("casts argument", () => {
+    // expect(time.until({ hour: 16, minute: 34 }).toString()).toBe( "PT1H10M29.876543211S");
+    // expect(time.until("16:34").toString()).toBe( "PT1H10M29.876543211S");
+  });
+  // xit("object must contain at least one correctly-spelled property", () => {
+  // throws(() => time.until({}), TypeError);
+  // throws(() => time.until({ minutes: 30 }), TypeError);
+  // });
+  t1 = PlainTime.from("10:23:15");
+  t2 = PlainTime.from("17:15:57");
+  it("the default largest unit is at least hours", () => {
+    expect(t1.until(t2).toString()).toBe("PT6H52M42S");
+    // expect(t1.until(t2, { largestUnit: "auto" }).toString()).toBe( "PT6H52M42S");
+    expect(t1.until(t2, TimeComponent.hours).toString()).toBe("PT6H52M42S");
+  });
+  it("higher units are not allowed", () => {
+    expect(() => {
+      t1.until(t2, TimeComponent.days);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.weeks);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.months);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.years);
+    }).toThrow();
+  });
+  it("can return lower units", () => {
+    expect(t1.until(t2, TimeComponent.minutes).toString()).toBe("PT412M42S");
+    expect(t1.until(t2, TimeComponent.seconds).toString()).toBe("PT24762S");
+  });
+  it("can return subseconds", () => {
+    t3 = t2.add({
+      milliseconds: 250,
+      microseconds: 250,
+      nanoseconds: 250,
+    });
+
+    msDiff = t1.until(t3, TimeComponent.milliseconds);
+    expect(msDiff.seconds).toBe(0);
+    expect(msDiff.milliseconds).toBe(24762250);
+    expect(msDiff.microseconds).toBe(250);
+    expect(msDiff.nanoseconds).toBe(250);
+
+    µsDiff = t1.until(t3, TimeComponent.microseconds);
+    expect(µsDiff.milliseconds).toBe(0);
+    expect(µsDiff.microseconds).toBe(<i32>24762250250);
+    expect(µsDiff.nanoseconds).toBe(250);
+
+    nsDiff = t1.until(t3, TimeComponent.nanoseconds);
+    expect(nsDiff.microseconds).toBe(0);
+    expect(nsDiff.nanoseconds).toBe(<i32>24762250250250);
+  });
+  // it("options may only be an object or undefined", () => {
+  //   [null, 1, "hello", true, Symbol("foo"), 1n].forEach((badOptions) =>
+  //     throws(() => time.until(one, badOptions), TypeError)
+  //   );
+  //   [{}, () => {}, undefined].forEach((options) =>
+  //     expect(time.until(one, options).toString()).toBe( "PT1H")
+  //   );
+  // });
+  // earlier = PlainTime.from("08:22:36.123456789");
+  // later = PlainTime.from("12:39:40.987654321");
+  // it("throws on disallowed or invalid smallestUnit", () => {
+  //   [
+  //     "era",
+  //     "years",
+  //     "months",
+  //     "weeks",
+  //     "days",
+  //     "year",
+  //     "month",
+  //     "week",
+  //     "day",
+  //     "nonsense",
+  //   ].forEach((smallestUnit) => {
+  //     throws(() => earlier.until(later, { smallestUnit }), RangeError);
+  //   });
+  // });
+  // it("throws if smallestUnit is larger than largestUnit", () => {
+  //   const units = [
+  //     "hours",
+  //     "minutes",
+  //     "seconds",
+  //     "milliseconds",
+  //     "microseconds",
+  //     "nanoseconds",
+  //   ];
+  //   for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+  //     for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+  //       const largestUnit = units[largestIdx];
+  //       const smallestUnit = units[smallestIdx];
+  //       throws(
+  //         () => earlier.until(later, { largestUnit, smallestUnit }),
+  //         RangeError
+  //       );
+  //     }
+  //   }
+  // });
+  // it("throws on invalid roundingMode", () => {
+  //   throws(() => earlier.until(later, { roundingMode: "cile" }), RangeError);
+  // });
+  // const incrementOneNearest = [
+  //   ["hours", "PT4H"],
+  //   ["minutes", "PT4H17M"],
+  //   ["seconds", "PT4H17M5S"],
+  //   ["milliseconds", "PT4H17M4.864S"],
+  //   ["microseconds", "PT4H17M4.864198S"],
+  //   ["nanoseconds", "PT4H17M4.864197532S"],
+  // ];
+  // incrementOneNearest.forEach(([smallestUnit, expected]) => {
+  //   const roundingMode = "halfExpand";
+  //   it(`rounds to nearest ${smallestUnit.toString()).toBe( () => {
+  //     equal(
+  //       `${earlier.until(later, { smallestUnit, roundingMode })}`,
+  //       expected
+  //     );
+  //     equal(
+  //       `${later.until(earlier, { smallestUnit, roundingMode })}`,
+  //       `-${expected}`
+  //     );
+  //   });
+  // });
+  // const incrementOneCeil = [
+  //   ["hours", "PT5H", "-PT4H"],
+  //   ["minutes", "PT4H18M", "-PT4H17M"],
+  //   ["seconds", "PT4H17M5S", "-PT4H17M4S"],
+  //   ["milliseconds", "PT4H17M4.865S", "-PT4H17M4.864S"],
+  //   ["microseconds", "PT4H17M4.864198S", "-PT4H17M4.864197S"],
+  //   ["nanoseconds", "PT4H17M4.864197532S", "-PT4H17M4.864197532S"],
+  // ];
+  // incrementOneCeil.forEach(
+  //   ([smallestUnit, expectedPositive, expectedNegative]) => {
+  //     const roundingMode = "ceil";
+  //     it(`rounds up to ${smallestUnit.toString()).toBe( () => {
+  //       equal(
+  //         `${earlier.until(later, { smallestUnit, roundingMode })}`,
+  //         expectedPositive
+  //       );
+  //       equal(
+  //         `${later.until(earlier, { smallestUnit, roundingMode })}`,
+  //         expectedNegative
+  //       );
+  //     });
+  //   }
+  // );
+  // const incrementOneFloor = [
+  //   ["hours", "PT4H", "-PT5H"],
+  //   ["minutes", "PT4H17M", "-PT4H18M"],
+  //   ["seconds", "PT4H17M4S", "-PT4H17M5S"],
+  //   ["milliseconds", "PT4H17M4.864S", "-PT4H17M4.865S"],
+  //   ["microseconds", "PT4H17M4.864197S", "-PT4H17M4.864198S"],
+  //   ["nanoseconds", "PT4H17M4.864197532S", "-PT4H17M4.864197532S"],
+  // ];
+  // incrementOneFloor.forEach(
+  //   ([smallestUnit, expectedPositive, expectedNegative]) => {
+  //     const roundingMode = "floor";
+  //     it(`rounds down to ${smallestUnit.toString()).toBe( () => {
+  //       equal(
+  //         `${earlier.until(later, { smallestUnit, roundingMode })}`,
+  //         expectedPositive
+  //       );
+  //       equal(
+  //         `${later.until(earlier, { smallestUnit, roundingMode })}`,
+  //         expectedNegative
+  //       );
+  //     });
+  //   }
+  // );
+  // const incrementOneTrunc = [
+  //   ["hours", "PT4H"],
+  //   ["minutes", "PT4H17M"],
+  //   ["seconds", "PT4H17M4S"],
+  //   ["milliseconds", "PT4H17M4.864S"],
+  //   ["microseconds", "PT4H17M4.864197S"],
+  //   ["nanoseconds", "PT4H17M4.864197532S"],
+  // ];
+  // incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+  //   const roundingMode = "trunc";
+  //   it(`truncates to ${smallestUnit.toString()).toBe( () => {
+  //     equal(
+  //       `${earlier.until(later, { smallestUnit, roundingMode })}`,
+  //       expected
+  //     );
+  //     equal(
+  //       `${later.until(earlier, { smallestUnit, roundingMode })}`,
+  //       `-${expected}`
+  //     );
+  //   });
+  // });
+  // it("trunc is the default", () => {
+  //   expect(earlier.until(later, { smallestUnit: "minutes" }).toString()).toBe( "PT4H17M");
+  //   expect(earlier.until(later, { smallestUnit: "seconds" }).toString()).toBe( "PT4H17M4S");
+  // });
+  // it("rounds to an increment of hours", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "hours",
+  //       roundingIncrement: 3,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT3H"
+  //   );
+  // });
+  // it("rounds to an increment of minutes", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "minutes",
+  //       roundingIncrement: 30,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT4H30M"
+  //   );
+  // });
+  // it("rounds to an increment of seconds", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "seconds",
+  //       roundingIncrement: 15,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT4H17M"
+  //   );
+  // });
+  // it("rounds to an increment of milliseconds", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "milliseconds",
+  //       roundingIncrement: 10,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT4H17M4.86S"
+  //   );
+  // });
+  // it("rounds to an increment of microseconds", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "microseconds",
+  //       roundingIncrement: 10,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT4H17M4.8642S"
+  //   );
+  // });
+  // it("rounds to an increment of nanoseconds", () => {
+  //   equal(
+  //     `${earlier.until(later, {
+  //       smallestUnit: "nanoseconds",
+  //       roundingIncrement: 10,
+  //       roundingMode: "halfExpand",
+  //     })}`,
+  //     "PT4H17M4.86419753S"
+  //   );
+  // });
+  // it("valid hour increments divide into 24", () => {
+  //   [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+  //     const options = { smallestUnit: "hours", roundingIncrement };
+  //     assert(earlier.until(later, options) instanceof Temporal.Duration);
+  //   });
+  // });
+  // ["minutes", "seconds"].forEach((smallestUnit) => {
+  //   it(`valid ${smallestUnit} increments divide into 60", () => {
+  //     [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+  //       const options = { smallestUnit, roundingIncrement };
+  //       assert(earlier.until(later, options) instanceof Temporal.Duration);
+  //     });
+  //   });
+  // });
+  // ["milliseconds", "microseconds", "nanoseconds"].forEach((smallestUnit) => {
+  //   it(`valid ${smallestUnit} increments divide into 1000", () => {
+  //     [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach(
+  //       (roundingIncrement) => {
+  //         const options = { smallestUnit, roundingIncrement };
+  //         assert(earlier.until(later, options) instanceof Temporal.Duration);
+  //       }
+  //     );
+  //   });
+  // });
+  // it("throws on increments that do not divide evenly into the next highest", () => {
+  //   throws(
+  //     () =>
+  //       earlier.until(later, { smallestUnit: "hours", roundingIncrement: 11 }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "minutes",
+  //         roundingIncrement: 29,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "seconds",
+  //         roundingIncrement: 29,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "milliseconds",
+  //         roundingIncrement: 29,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "microseconds",
+  //         roundingIncrement: 29,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "nanoseconds",
+  //         roundingIncrement: 29,
+  //       }),
+  //     RangeError
+  //   );
+  // });
+  // it("throws on increments that are equal to the next highest", () => {
+  //   throws(
+  //     () =>
+  //       earlier.until(later, { smallestUnit: "hours", roundingIncrement: 24 }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "minutes",
+  //         roundingIncrement: 60,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "seconds",
+  //         roundingIncrement: 60,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "milliseconds",
+  //         roundingIncrement: 1000,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "microseconds",
+  //         roundingIncrement: 1000,
+  //       }),
+  //     RangeError
+  //   );
+  //   throws(
+  //     () =>
+  //       earlier.until(later, {
+  //         smallestUnit: "nanoseconds",
+  //         roundingIncrement: 1000,
+  //       }),
+  //     RangeError
+  //   );
+  // });
+  // it("accepts singular units", () => {
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "hour" })}`,
+  //     `${earlier.until(later, { largestUnit: "hours" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "hour" })}`,
+  //     `${earlier.until(later, { smallestUnit: "hours" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "minute" })}`,
+  //     `${earlier.until(later, { largestUnit: "minutes" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "minute" })}`,
+  //     `${earlier.until(later, { smallestUnit: "minutes" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "second" })}`,
+  //     `${earlier.until(later, { largestUnit: "seconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "second" })}`,
+  //     `${earlier.until(later, { smallestUnit: "seconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "millisecond" })}`,
+  //     `${earlier.until(later, { largestUnit: "milliseconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "millisecond" })}`,
+  //     `${earlier.until(later, { smallestUnit: "milliseconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "microsecond" })}`,
+  //     `${earlier.until(later, { largestUnit: "microseconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "microsecond" })}`,
+  //     `${earlier.until(later, { smallestUnit: "microseconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { largestUnit: "nanosecond" })}`,
+  //     `${earlier.until(later, { largestUnit: "nanoseconds" })}`
+  //   );
+  //   equal(
+  //     `${earlier.until(later, { smallestUnit: "nanosecond" })}`,
+  //     `${earlier.until(later, { smallestUnit: "nanoseconds" })}`
+  //   );
+  // });
+});
+
 describe("Time.compare() works", () => {
   t1 = PlainTime.from("08:44:15.321");
   t2 = PlainTime.from("14:23:30.123");
@@ -278,26 +744,16 @@ describe("time.equals() works", () => {
 describe("time.add() works", () => {
   time = new PlainTime(15, 23, 30, 123, 456, 789);
   it(time.toString() + ".add({ hours: 16 })", () => {
-    expect(
-      time
-        .add({ hours: 16 })
-        .toString()
-    ).toBe("07:23:30.123456789");
+    expect(time.add({ hours: 16 }).toString()).toBe("07:23:30.123456789");
   });
   it(time.toString() + ".add({ minutes: 45 })", () => {
-    expect(
-      time
-        .add({ minutes: 45 })
-        .toString()
-    ).toBe("16:08:30.123456789");
+    expect(time.add({ minutes: 45 }).toString()).toBe("16:08:30.123456789");
   });
   xit(time.toString() + ".add({ nanoseconds: 300 })", () => {
     // https://github.com/ColinEberhardt/assemblyscript-temporal/pull/25#issuecomment-812995856
-    expect(
-      time
-        .add({ nanoseconds: 300 })
-        .toString()
-    ).toBe("15:23:30.123457089");
+    expect(time.add({ nanoseconds: 300 }).toString()).toBe(
+      "15:23:30.123457089"
+    );
   });
   it("symmetric with regard to negative durations", () => {
     expect(
@@ -372,62 +828,42 @@ describe("time.add() works", () => {
 describe("time.subtract() works", () => {
   time = PlainTime.from("15:23:30.123456789");
   it(time.toString() + ".subtract({ hours: 16 })", () => {
-    expect(
-      time
-        .subtract({ hours: 16 })
-        .toString()
-    ).toBe("23:23:30.123456789");
+    expect(time.subtract({ hours: 16 }).toString()).toBe("23:23:30.123456789");
   });
   it(time.toString() + ".subtract({ minutes: 45 })", () => {
-    expect(
-      time
-        .subtract({ minutes: 45 })
-        .toString()
-    ).toBe("14:38:30.123456789");
+    expect(time.subtract({ minutes: 45 }).toString()).toBe(
+      "14:38:30.123456789"
+    );
   });
   it(time.toString() + ".subtract({ seconds: 45 })", () => {
-    expect(
-      time
-        .subtract({ seconds: 45 })
-        .toString()
-    ).toBe("15:22:45.123456789");
+    expect(time.subtract({ seconds: 45 }).toString()).toBe(
+      "15:22:45.123456789"
+    );
   });
   it(time.toString() + ".subtract({ milliseconds: 800 })", () => {
-    expect(
-      time
-        .subtract({ milliseconds: 800 })
-        .toString()
-    ).toBe("15:23:29.323456789");
+    expect(time.subtract({ milliseconds: 800 }).toString()).toBe(
+      "15:23:29.323456789"
+    );
   });
   it(time.toString() + ".subtract({ microseconds: 800 })", () => {
-    expect(
-      time
-        .subtract({ microseconds: 800 })
-        .toString()
-    ).toBe("15:23:30.122656789");
+    expect(time.subtract({ microseconds: 800 }).toString()).toBe(
+      "15:23:30.122656789"
+    );
   });
   it(time.toString() + ".subtract({ nanoseconds: 800 })", () => {
-    expect(
-      time
-        .subtract({ nanoseconds: 800 })
-        .toString()
-    ).toBe("15:23:30.123455989");
+    expect(time.subtract({ nanoseconds: 800 }).toString()).toBe(
+      "15:23:30.123455989"
+    );
   });
   it("symmetric with regard to negative durations", () => {
     expect(
-      PlainTime.from("23:23:30.123456789")
-        .subtract({ hours: -16 })
-        .toString()
+      PlainTime.from("23:23:30.123456789").subtract({ hours: -16 }).toString()
     ).toBe("15:23:30.123456789");
     expect(
-      PlainTime.from("14:38:30.123456789")
-        .subtract({ minutes: -45 })
-        .toString()
+      PlainTime.from("14:38:30.123456789").subtract({ minutes: -45 }).toString()
     ).toBe("15:23:30.123456789");
     expect(
-      PlainTime.from("15:22:45.123456789")
-        .subtract({ seconds: -45 })
-        .toString()
+      PlainTime.from("15:22:45.123456789").subtract({ seconds: -45 }).toString()
     ).toBe("15:23:30.123456789");
     expect(
       PlainTime.from("15:23:29.323456789")
@@ -453,21 +889,9 @@ describe("time.subtract() works", () => {
   // it("casts argument", () =>
   //   expect(time.subtract("PT16H").toString()).toBe("23:23:30.123456789"));
   it("ignores higher units", () => {
-    expect(
-      time
-        .subtract({ days: 1 })
-        .toString()
-    ).toBe("15:23:30.123456789");
-    expect(
-      time
-        .subtract({ months: 1 })
-        .toString()
-    ).toBe("15:23:30.123456789");
-    expect(
-      time
-        .subtract({ years: 1 })
-        .toString()
-    ).toBe("15:23:30.123456789");
+    expect(time.subtract({ days: 1 }).toString()).toBe("15:23:30.123456789");
+    expect(time.subtract({ months: 1 }).toString()).toBe("15:23:30.123456789");
+    expect(time.subtract({ years: 1 }).toString()).toBe("15:23:30.123456789");
   });
   // it("mixed positive and negative values always throw", () => {
   //   ["constrain", "reject"].forEach((overflow) =>
