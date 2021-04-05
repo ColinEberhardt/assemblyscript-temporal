@@ -175,9 +175,11 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 // @ts-ignore: decorator
 @inline
 export function sign<T extends number>(x: T): T {
-  // x < 0 ? -1 : 1   ->   x >> 31 | 1
+  // optimized variant of x < 0 ? -1 : 1
+  // i32: x >> 31 | 1
+  // i64: x >> 63 | 1
   // @ts-ignore
-  return (x >> (sizeof<T>() * 4 - 1)) | 1;
+  return (x >> (sizeof<T>() * 8 - 1)) | 1;
 }
 
 // @ts-ignore: decorator
