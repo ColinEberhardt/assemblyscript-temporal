@@ -27,6 +27,15 @@ export class YM {
   month: i32;
 }
 
+export class PT {
+  hour: i32;
+  minute: i32;
+  second: i32;
+  millisecond: i32;
+  microsecond: i32;
+  nanosecond: i32;
+}
+
 export class DT {
   year: i32;
   month: i32;
@@ -748,6 +757,60 @@ export function addDateTime(
     microsecond,
     nanosecond
   };
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2676-L2684
+export function constrainTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+): PT {
+  hour = clamp(hour, 0, 23);
+  minute = clamp(minute, 0, 59);
+  second = clamp(second, 0, 59);
+  millisecond = clamp(millisecond, 0, 999);
+  microsecond = clamp(microsecond, 0, 999);
+  nanosecond = clamp(nanosecond, 0, 999);
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L407-L422
+export function regulateTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  overflow: Overflow
+): PT {
+  switch (overflow) {
+    case Overflow.Reject:
+      // rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+      break;
+
+    case Overflow.Constrain:
+      const time = constrainTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      );
+      hour = time.hour;
+      minute = time.minute;
+      second = time.second;
+      millisecond = time.millisecond;
+      microsecond = time.microsecond;
+      nanosecond = time.nanosecond;
+      break;
+  }
+
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
 }
 
 export function addTime(
