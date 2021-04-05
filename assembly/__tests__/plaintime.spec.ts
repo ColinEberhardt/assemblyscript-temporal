@@ -700,6 +700,302 @@ describe("time.until() works", () => {
   // });
 });
 
+describe("time.since() works", () => {
+  time = new PlainTime(15, 23, 30, 123, 456, 789);
+  one = new PlainTime(14, 23, 30, 123, 456, 789);
+  it("(" + time.toString() + ").since(" + one.toString() + ") => PT1H", () => {
+    expect(time.since(one).toString()).toBe("PT1H");
+  });
+  two = new PlainTime(13, 30, 30, 123, 456, 789);
+  it(
+    "(" + time.toString() + ").since(" + two.toString() + ") => PT1H53M",
+    () => {
+      expect(time.since(two).toString()).toBe("PT1H53M");
+    }
+  );
+  it(
+    "(" + two.toString() + ").since(" + time.toString() + ") => -PT1H53M",
+    () => {
+      expect(two.since(time).toString()).toBe("-PT1H53M");
+    }
+  );
+  it(
+    "(" +
+      two.toString() +
+      ").since(" +
+      time.toString() +
+      ") === (" +
+      time.toString() +
+      ").until(" +
+      two.toString() +
+      ")",
+    () => {
+      expect(two.since(time).toString()).toBe(time.until(two).toString());
+    }
+  );
+  xit("casts argument", () => {
+    // equal(`${time.since({ hour: 16, minute: 34 })}", '-PT1H10M29.876543211S');
+    // equal(`${time.since('16:34')}", '-PT1H10M29.876543211S');
+  });
+  // it('object must contain at least one correctly-spelled property', () => {
+  //   throws(() => time.since({}), TypeError);
+  //   throws(() => time.since({ minutes: 30 }), TypeError);
+  // });
+  t1 = PlainTime.from("10:23:15");
+  t2 = PlainTime.from("17:15:57");
+  it("the default largest unit is at least hours", () => {
+    expect(t2.since(t1).toString()).toBe("PT6H52M42.0S");
+    // expect(t2.since(t1, largestUnit: 'auto)", 'PT6H52M42S');
+    expect(t2.since(t1, TimeComponent.hours).toString()).toBe("PT6H52M42.0S");
+  });
+  it("higher units are not allowed", () => {
+    expect(() => {
+      t1.until(t2, TimeComponent.days);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.weeks);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.months);
+    }).toThrow();
+    expect(() => {
+      t1.until(t2, TimeComponent.years);
+    }).toThrow();
+  });
+  it("can return lower units", () => {
+    expect(t2.since(t1, TimeComponent.minutes).toString()).toBe("PT412M42.0S");
+    expect(t2.since(t1, TimeComponent.seconds).toString()).toBe("PT24762.0S");
+  });
+  it("can return subseconds", () => {
+    t3 = t2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+
+    msDiff = t3.since(t1, TimeComponent.milliseconds);
+    expect(msDiff.seconds).toBe(0);
+    expect(msDiff.milliseconds).toBe(24762250);
+    expect(msDiff.microseconds).toBe(250);
+    expect(msDiff.nanoseconds).toBe(250);
+
+    µsDiff = t3.since(t1, TimeComponent.microseconds);
+    expect(µsDiff.milliseconds).toBe(0);
+    expect(µsDiff.microseconds).toBe(24762250250 as i32);
+    expect(µsDiff.nanoseconds).toBe(250);
+
+    nsDiff = t3.since(t1, TimeComponent.nanoseconds);
+    expect(nsDiff.microseconds).toBe(0);
+    expect(nsDiff.nanoseconds).toBe(24762250250250 as i32);
+  });
+  // it('options may only be an object or undefined', () => {
+  //   [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
+  //     throws(() => time.since(one, badOptions), TypeError)
+  //   );
+  //   [{}, () => {}, undefined].forEach((options) => equal(`${time.since(one, options)}", 'PT1H'));
+  // });
+  // const earlier = PlainTime.from('08:22:36.123456789');
+  // const later = PlainTime.from('12:39:40.987654321');
+  // it('throws on disallowed or invalid smallestUnit', () => {
+  //   ['era', 'years', 'months', 'weeks', 'days', 'year', 'month', 'week', 'day', 'nonsense'].forEach(
+  //     (smallestUnit) => {
+  //       throws(() => later.since(earlier, { smallestUnit }), RangeError);
+  //     }
+  //   );
+  // });
+  // it('throws if smallestUnit is larger than largestUnit', () => {
+  //   const units = ['hours', 'minutes', 'seconds', 'milliseconds', 'microseconds', 'nanoseconds'];
+  //   for (let largestIdx = 1; largestIdx < units.length; largestIdx++) {
+  //     for (let smallestIdx = 0; smallestIdx < largestIdx; smallestIdx++) {
+  //       const largestUnit = units[largestIdx];
+  //       const smallestUnit = units[smallestIdx];
+  //       throws(() => later.since(earlier, { largestUnit, smallestUnit }), RangeError);
+  //     }
+  //   }
+  // });
+  // it('throws on invalid roundingMode', () => {
+  //   throws(() => later.since(earlier, { roundingMode: 'cile' }), RangeError);
+  // });
+  // const incrementOneNearest = [
+  //   ['hours', 'PT4H'],
+  //   ['minutes', 'PT4H17M'],
+  //   ['seconds', 'PT4H17M5S'],
+  //   ['milliseconds', 'PT4H17M4.864S'],
+  //   ['microseconds', 'PT4H17M4.864198S'],
+  //   ['nanoseconds', 'PT4H17M4.864197532S']
+  // ];
+  // incrementOneNearest.forEach(([smallestUnit, expected]) => {
+  //   const roundingMode = 'halfExpand';
+  //   it(`rounds to nearest ${smallestUnit}", () => {
+  //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}", expected);
+  //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}", `-${expected}`);
+  //   });
+  // });
+  // const incrementOneCeil = [
+  //   ['hours', 'PT5H', '-PT4H'],
+  //   ['minutes', 'PT4H18M', '-PT4H17M'],
+  //   ['seconds', 'PT4H17M5S', '-PT4H17M4S'],
+  //   ['milliseconds', 'PT4H17M4.865S', '-PT4H17M4.864S'],
+  //   ['microseconds', 'PT4H17M4.864198S', '-PT4H17M4.864197S'],
+  //   ['nanoseconds', 'PT4H17M4.864197532S', '-PT4H17M4.864197532S']
+  // ];
+  // incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+  //   const roundingMode = 'ceil';
+  //   it(`rounds up to ${smallestUnit}", () => {
+  //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}", expectedPositive);
+  //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}", expectedNegative);
+  //   });
+  // });
+  // const incrementOneFloor = [
+  //   ['hours', 'PT4H', '-PT5H'],
+  //   ['minutes', 'PT4H17M', '-PT4H18M'],
+  //   ['seconds', 'PT4H17M4S', '-PT4H17M5S'],
+  //   ['milliseconds', 'PT4H17M4.864S', '-PT4H17M4.865S'],
+  //   ['microseconds', 'PT4H17M4.864197S', '-PT4H17M4.864198S'],
+  //   ['nanoseconds', 'PT4H17M4.864197532S', '-PT4H17M4.864197532S']
+  // ];
+  // incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
+  //   const roundingMode = 'floor';
+  //   it(`rounds down to ${smallestUnit}", () => {
+  //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}", expectedPositive);
+  //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}", expectedNegative);
+  //   });
+  // });
+  // const incrementOneTrunc = [
+  //   ['hours', 'PT4H'],
+  //   ['minutes', 'PT4H17M'],
+  //   ['seconds', 'PT4H17M4S'],
+  //   ['milliseconds', 'PT4H17M4.864S'],
+  //   ['microseconds', 'PT4H17M4.864197S'],
+  //   ['nanoseconds', 'PT4H17M4.864197532S']
+  // ];
+  // incrementOneTrunc.forEach(([smallestUnit, expected]) => {
+  //   const roundingMode = 'trunc';
+  //   it(`truncates to ${smallestUnit}", () => {
+  //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}", expected);
+  //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}", `-${expected}`);
+  //   });
+  // });
+  // it('trunc is the default', () => {
+  //   equal(`${later.since(earlier, { smallestUnit: 'minutes' })}", 'PT4H17M');
+  //   equal(`${later.since(earlier, { smallestUnit: 'seconds' })}", 'PT4H17M4S');
+  // });
+  // it('rounds to an increment of hours', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 3, roundingMode: 'halfExpand' })}`,
+  //     'PT3H'
+  //   );
+  // });
+  // it('rounds to an increment of minutes', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 30, roundingMode: 'halfExpand' })}`,
+  //     'PT4H30M'
+  //   );
+  // });
+  // it('rounds to an increment of seconds', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 15, roundingMode: 'halfExpand' })}`,
+  //     'PT4H17M'
+  //   );
+  // });
+  // it('rounds to an increment of milliseconds', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
+  //     'PT4H17M4.86S'
+  //   );
+  // });
+  // it('rounds to an increment of microseconds', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
+  //     'PT4H17M4.8642S'
+  //   );
+  // });
+  // it('rounds to an increment of nanoseconds', () => {
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 10, roundingMode: 'halfExpand' })}`,
+  //     'PT4H17M4.86419753S'
+  //   );
+  // });
+  // it('valid hour increments divide into 24', () => {
+  //   [1, 2, 3, 4, 6, 8, 12].forEach((roundingIncrement) => {
+  //     const options = { smallestUnit: 'hours', roundingIncrement };
+  //     assert(later.since(earlier, options) instanceof Temporal.Duration);
+  //   });
+  // });
+  // ['minutes', 'seconds'].forEach((smallestUnit) => {
+  //   it(`valid ${smallestUnit} increments divide into 60", () => {
+  //     [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30].forEach((roundingIncrement) => {
+  //       const options = { smallestUnit, roundingIncrement };
+  //       assert(later.since(earlier, options) instanceof Temporal.Duration);
+  //     });
+  //   });
+  // });
+  // ['milliseconds', 'microseconds', 'nanoseconds'].forEach((smallestUnit) => {
+  //   it(`valid ${smallestUnit} increments divide into 1000", () => {
+  //     [1, 2, 4, 5, 8, 10, 20, 25, 40, 50, 100, 125, 200, 250, 500].forEach((roundingIncrement) => {
+  //       const options = { smallestUnit, roundingIncrement };
+  //       assert(later.since(earlier, options) instanceof Temporal.Duration);
+  //     });
+  //   });
+  // });
+  // it('throws on increments that do not divide evenly into the next highest', () => {
+  //   throws(() => later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 11 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 29 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 29 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 29 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 29 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 29 }), RangeError);
+  // });
+  // it('throws on increments that are equal to the next highest', () => {
+  //   throws(() => later.since(earlier, { smallestUnit: 'hours', roundingIncrement: 24 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'minutes', roundingIncrement: 60 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'seconds', roundingIncrement: 60 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'milliseconds', roundingIncrement: 1000 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'microseconds', roundingIncrement: 1000 }), RangeError);
+  //   throws(() => later.since(earlier, { smallestUnit: 'nanoseconds', roundingIncrement: 1000 }), RangeError);
+  // });
+  // it('accepts singular units', () => {
+  //   equal(`${later.since(earlier, { largestUnit: 'hour' })}", `${later.since(earlier, { largestUnit: 'hours' })}`);
+  //   equal(`${later.since(earlier, { smallestUnit: 'hour' })}", `${later.since(earlier, { smallestUnit: 'hours' })}`);
+  //   equal(
+  //     `${later.since(earlier, { largestUnit: 'minute' })}`,
+  //     `${later.since(earlier, { largestUnit: 'minutes' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'minute' })}`,
+  //     `${later.since(earlier, { smallestUnit: 'minutes' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { largestUnit: 'second' })}`,
+  //     `${later.since(earlier, { largestUnit: 'seconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'second' })}`,
+  //     `${later.since(earlier, { smallestUnit: 'seconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { largestUnit: 'millisecond' })}`,
+  //     `${later.since(earlier, { largestUnit: 'milliseconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'millisecond' })}`,
+  //     `${later.since(earlier, { smallestUnit: 'milliseconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { largestUnit: 'microsecond' })}`,
+  //     `${later.since(earlier, { largestUnit: 'microseconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'microsecond' })}`,
+  //     `${later.since(earlier, { smallestUnit: 'microseconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { largestUnit: 'nanosecond' })}`,
+  //     `${later.since(earlier, { largestUnit: 'nanoseconds' })}`
+  //   );
+  //   equal(
+  //     `${later.since(earlier, { smallestUnit: 'nanosecond' })}`,
+  //     `${later.since(earlier, { smallestUnit: 'nanoseconds' })}`
+  //   );
+  // });
+});
+
 describe("Time.compare() works", () => {
   t1 = PlainTime.from("08:44:15.321");
   t2 = PlainTime.from("14:23:30.123");

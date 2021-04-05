@@ -252,6 +252,46 @@ export class PlainTime {
     );
   }
 
+  since(
+    other: PlainTime,
+    largestUnit: TimeComponent = TimeComponent.hours
+  ): Duration {
+    if (
+      largestUnit == TimeComponent.years ||
+      largestUnit == TimeComponent.months ||
+      largestUnit == TimeComponent.weeks ||
+      largestUnit == TimeComponent.days
+    ) {
+      throw new RangeError("higher units are not allowed");
+    }
+
+    let diffTime = differenceTime(
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond,
+      other.hour,
+      other.minute,
+      other.second,
+      other.millisecond,
+      other.microsecond,
+      other.nanosecond,
+    )
+    return balanceDuration(
+      // diffTime.days,
+      0,
+      -diffTime.hours,
+      -diffTime.minutes,
+      -diffTime.seconds,
+      -diffTime.milliseconds,
+      -diffTime.microseconds,
+      -diffTime.nanoseconds,
+      largestUnit
+    );
+  }
+
   equals(other: PlainTime): bool {
     if (this === other) return true;
     return (
