@@ -6,9 +6,11 @@ import {
   addTime,
   toPaddedString,
   coalesce,
+  differenceTime,
+  regulateTime,
 } from "./utils";
-import { DurationLike } from "./duration";
-import { TimeComponent } from "./enums";
+import { Duration, DurationLike } from "./duration";
+import { Overflow, TimeComponent } from "./enums";
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { PlainDateTime } from "./plaindatetime";
 import { DateLike } from "./plaindate";
@@ -250,16 +252,6 @@ export class PlainTime {
         // @ts-ignore TS2352
         : (durationToAdd as Duration);
 
-    const balancedDuration = balanceDuration(
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-      duration.milliseconds,
-      duration.microseconds,
-      duration.nanoseconds,
-      TimeComponent.nanoseconds
-    );
     const newTime = addTime(
       this.hour,
       this.minute,
@@ -272,15 +264,25 @@ export class PlainTime {
       duration.seconds,
       duration.milliseconds,
       duration.microseconds,
-      balancedDuration.nanoseconds
+      duration.nanoseconds
     );
-    return new PlainTime(
+
+    const regulatedTime = regulateTime(
       newTime.hour,
       newTime.minute,
       newTime.second,
       newTime.millisecond,
       newTime.microsecond,
-      newTime.nanosecond
+      newTime.nanosecond,
+      Overflow.Reject
+    )
+    return new PlainTime(
+      regulatedTime.hour,
+      regulatedTime.minute,
+      regulatedTime.second,
+      regulatedTime.millisecond,
+      regulatedTime.microsecond,
+      regulatedTime.nanosecond
     );
   }
 
@@ -291,16 +293,6 @@ export class PlainTime {
         // @ts-ignore TS2352
         : (durationToSubtract as Duration);
 
-    const balancedDuration = balanceDuration(
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-      duration.milliseconds,
-      duration.microseconds,
-      duration.nanoseconds,
-      TimeComponent.nanoseconds
-    );
     const newTime = addTime(
       this.hour,
       this.minute,
@@ -313,15 +305,25 @@ export class PlainTime {
       -duration.seconds,
       -duration.milliseconds,
       -duration.microseconds,
-      -balancedDuration.nanoseconds
+      -duration.nanoseconds
     );
-    return new PlainTime(
+
+    const regulatedTime = regulateTime(
       newTime.hour,
       newTime.minute,
       newTime.second,
       newTime.millisecond,
       newTime.microsecond,
-      newTime.nanosecond
+      newTime.nanosecond,
+      Overflow.Reject
+    )
+    return new PlainTime(
+      regulatedTime.hour,
+      regulatedTime.minute,
+      regulatedTime.second,
+      regulatedTime.millisecond,
+      regulatedTime.microsecond,
+      regulatedTime.nanosecond
     );
   }
 }
