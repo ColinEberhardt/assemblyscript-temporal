@@ -60,14 +60,14 @@ export class Duration {
   // P1Y1M1DT1H1M1.1S
   toString(): string {
     const date =
-      toString(this.years, "Y") +
-      toString(this.months, "M") +
-      toString(this.weeks, "W") +
-      toString(this.days, "D");
+      toString(abs(this.years), "Y") +
+      toString(abs(this.months), "M") +
+      toString(abs(this.weeks), "W") +
+      toString(abs(this.days), "D");
 
     const time =
-      toString(this.hours, "H") +
-      toString(this.minutes, "M") +
+      toString(abs(this.hours), "H") +
+      toString(abs(this.minutes), "M") +
       toString(
         // sort in ascending order for better sum precision
         f64(this.nanoseconds) / 1000000000.0 +
