@@ -85,5 +85,11 @@ export class Duration {
 }
 
 function toString<T extends number>(value: T, suffix: string): string {
-  return value ? value.toString() + suffix : "";
+  return value
+    ? (isFloat<T>() ? stringify(value) : value.toString()) + suffix
+    : "";
+}
+
+function stringify(value: f64): string {
+  return F64.isSafeInteger(value) ? i64(value).toString() : value.toString();
 }
