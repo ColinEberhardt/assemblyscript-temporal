@@ -2,6 +2,7 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { PlainTime } from "./plaintime";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import {
   dayOfWeek,
@@ -68,9 +69,12 @@ export class PlainDateTime {
     );
     const match = dateRegex.exec(date);
     if (match != null) {
+      // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
+      const fraction = (
+        match.matches[7] != "" ? match.matches[7] : match.matches[18]
+      ) + "000000000";
       return new PlainDateTime(
         I32.parseInt(match.matches[1]),
-        // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
         I32.parseInt(
           match.matches[2] != "" ? match.matches[2] : match.matches[19]
         ),
@@ -78,11 +82,11 @@ export class PlainDateTime {
           match.matches[3] != "" ? match.matches[3] : match.matches[20]
         ),
         I32.parseInt(match.matches[4]),
-        I32.parseInt(match.matches[5]),
-        I32.parseInt(match.matches[6]),
-        I32.parseInt(match.matches[7].substring(0, 3)),
-        I32.parseInt(match.matches[7].substring(3, 6)),
-        I32.parseInt(match.matches[7].substring(6, 9))
+        I32.parseInt(match.matches[5] != "" ? match.matches[5]: match.matches[16]),
+        I32.parseInt(match.matches[6] != "" ? match.matches[6]: match.matches[17]),
+        I32.parseInt(fraction.substring(0, 3)),
+        I32.parseInt(fraction.substring(3, 6)),
+        I32.parseInt(fraction.substring(6, 9))
       );
     }
     throw new RangeError("invalid ISO 8601 string: " + date);
@@ -190,6 +194,17 @@ export class PlainDateTime {
           ).toString().substring(1)
         : ""
       )
+    );
+  }
+
+  toPlainTime(): PlainTime {
+    return new PlainTime(
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond
     );
   }
 
