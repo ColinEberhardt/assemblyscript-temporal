@@ -283,25 +283,25 @@ describe("time.until() works", () => {
   it("the default largest unit is at least hours", () => {
     expect(t1.until(t2).toString()).toBe("PT6H52M42S");
     // expect(t1.until(t2, { largestUnit: "auto" }).toString()).toBe( "PT6H52M42S");
-    expect(t1.until(t2, TimeComponent.hours).toString()).toBe("PT6H52M42S");
+    expect(t1.until(t2, TimeComponent.Hours).toString()).toBe("PT6H52M42S");
   });
   it("higher units are not allowed", () => {
     expect(() => {
-      t1.until(t2, TimeComponent.days);
+      t1.until(t2, TimeComponent.Days);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.weeks);
+      t1.until(t2, TimeComponent.Weeks);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.months);
+      t1.until(t2, TimeComponent.Months);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.years);
+      t1.until(t2, TimeComponent.Years);
     }).toThrow();
   });
   it("can return lower units", () => {
-    expect(t1.until(t2, TimeComponent.minutes).toString()).toBe("PT412M42S");
-    expect(t1.until(t2, TimeComponent.seconds).toString()).toBe("PT24762S");
+    expect(t1.until(t2, TimeComponent.Minutes).toString()).toBe("PT412M42S");
+    expect(t1.until(t2, TimeComponent.Seconds).toString()).toBe("PT24762S");
   });
   it("can return subseconds", () => {
     t3 = t2.add({
@@ -310,18 +310,18 @@ describe("time.until() works", () => {
       nanoseconds: 250,
     });
 
-    msDiff = t1.until(t3, TimeComponent.milliseconds);
+    msDiff = t1.until(t3, TimeComponent.Milliseconds);
     expect(msDiff.seconds).toBe(0);
     expect(msDiff.milliseconds).toBe(24762250);
     expect(msDiff.microseconds).toBe(250);
     expect(msDiff.nanoseconds).toBe(250);
 
-    µsDiff = t1.until(t3, TimeComponent.microseconds);
+    µsDiff = t1.until(t3, TimeComponent.Microseconds);
     expect(µsDiff.milliseconds).toBe(0);
     expect(µsDiff.microseconds).toBe(<i32>24762250250);
     expect(µsDiff.nanoseconds).toBe(250);
 
-    nsDiff = t1.until(t3, TimeComponent.nanoseconds);
+    nsDiff = t1.until(t3, TimeComponent.Nanoseconds);
     expect(nsDiff.microseconds).toBe(0);
     expect(nsDiff.nanoseconds).toBe(<i32>24762250250250);
   });
@@ -742,41 +742,41 @@ describe("time.since() works", () => {
   it("the default largest unit is at least hours", () => {
     expect(t2.since(t1).toString()).toBe("PT6H52M42S");
     // expect(t2.since(t1, largestUnit: 'auto)", 'PT6H52M42S');
-    expect(t2.since(t1, TimeComponent.hours).toString()).toBe("PT6H52M42S");
+    expect(t2.since(t1, TimeComponent.Hours).toString()).toBe("PT6H52M42S");
   });
   it("higher units are not allowed", () => {
     expect(() => {
-      t1.until(t2, TimeComponent.days);
+      t1.until(t2, TimeComponent.Days);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.weeks);
+      t1.until(t2, TimeComponent.Weeks);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.months);
+      t1.until(t2, TimeComponent.Months);
     }).toThrow();
     expect(() => {
-      t1.until(t2, TimeComponent.years);
+      t1.until(t2, TimeComponent.Years);
     }).toThrow();
   });
   it("can return lower units", () => {
-    expect(t2.since(t1, TimeComponent.minutes).toString()).toBe("PT412M42S");
-    expect(t2.since(t1, TimeComponent.seconds).toString()).toBe("PT24762S");
+    expect(t2.since(t1, TimeComponent.Minutes).toString()).toBe("PT412M42S");
+    expect(t2.since(t1, TimeComponent.Seconds).toString()).toBe("PT24762S");
   });
   it("can return subseconds", () => {
     t3 = t2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
-    msDiff = t3.since(t1, TimeComponent.milliseconds);
+    msDiff = t3.since(t1, TimeComponent.Milliseconds);
     expect(msDiff.seconds).toBe(0);
     expect(msDiff.milliseconds).toBe(24762250);
     expect(msDiff.microseconds).toBe(250);
     expect(msDiff.nanoseconds).toBe(250);
 
-    µsDiff = t3.since(t1, TimeComponent.microseconds);
+    µsDiff = t3.since(t1, TimeComponent.Microseconds);
     expect(µsDiff.milliseconds).toBe(0);
     expect(µsDiff.microseconds).toBe(24762250250 as i32);
     expect(µsDiff.nanoseconds).toBe(250);
 
-    nsDiff = t3.since(t1, TimeComponent.nanoseconds);
+    nsDiff = t3.since(t1, TimeComponent.Nanoseconds);
     expect(nsDiff.microseconds).toBe(0);
     expect(nsDiff.nanoseconds).toBe(24762250250250 as i32);
   });
