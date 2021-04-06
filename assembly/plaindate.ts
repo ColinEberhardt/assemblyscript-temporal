@@ -9,6 +9,7 @@ import {
   dayOfYear,
   weekOfYear,
   daysInMonth,
+  daysInYear,
   balanceDuration,
   toPaddedString,
   rejectDate,
@@ -111,7 +112,7 @@ export class PlainDate {
 
   @inline
   get daysInYear(): i32 {
-    return 365 + i32(leapYear(this.year));
+    return daysInYear(this.year);
   }
 
   @inline
