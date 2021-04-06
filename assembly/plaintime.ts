@@ -109,7 +109,7 @@ export class PlainTime {
         nanosecond
       );
     } else {
-      const dateTime = PlainDateTime.fromString(time);
+      const dateTime = PlainDateTime.from(time);
       return new PlainTime(
         dateTime.hour,
         dateTime.minute,
@@ -214,13 +214,13 @@ export class PlainTime {
 
   until(
     other: PlainTime,
-    largestUnit: TimeComponent = TimeComponent.hours
+    largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
     if (
-      largestUnit == TimeComponent.years ||
-      largestUnit == TimeComponent.months ||
-      largestUnit == TimeComponent.weeks ||
-      largestUnit == TimeComponent.days
+      largestUnit == TimeComponent.Years ||
+      largestUnit == TimeComponent.Months ||
+      largestUnit == TimeComponent.Weeks ||
+      largestUnit == TimeComponent.Days
     ) {
       throw new RangeError("higher units are not allowed");
     }
@@ -254,13 +254,13 @@ export class PlainTime {
 
   since(
     other: PlainTime,
-    largestUnit: TimeComponent = TimeComponent.hours
+    largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
     if (
-      largestUnit == TimeComponent.years ||
-      largestUnit == TimeComponent.months ||
-      largestUnit == TimeComponent.weeks ||
-      largestUnit == TimeComponent.days
+      largestUnit == TimeComponent.Years ||
+      largestUnit == TimeComponent.Months ||
+      largestUnit == TimeComponent.Weeks ||
+      largestUnit == TimeComponent.Days
     ) {
       throw new RangeError("higher units are not allowed");
     }
