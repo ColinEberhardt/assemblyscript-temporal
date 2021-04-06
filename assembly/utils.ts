@@ -517,8 +517,8 @@ export function compareTemporalDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32,
 }
 
 export function compareTemporalDateTime(
-  y1: i32, m1: i32, d1: i32, h1: i32, min1: i32, s1: i32, mill1: i32, mic1: i32, nan1: i32,
-  y2: i32, m2: i32, d2: i32, h2: i32, min2: i32, s2: i32, mill2: i32, mic2: i32, nan2: i32
+  y1: i32, m1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  y2: i32, m2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
 ): i32 {
 
   let res = y1 - y2;
@@ -539,13 +539,13 @@ export function compareTemporalDateTime(
   res = s1 - s2;
   if (res) return sign(res);
 
-  res = mill1 - mill2;
+  res = ms1 - ms2;
   if (res) return sign(res);
 
-  res = mic1 - mic2;
+  res = µs1 - µs2;
   if (res) return sign(res);
 
-  res = nan1 - nan2;
+  res = ns1 - ns2;
   if (res) return sign(res);
 
   return ord(d1, d2);
@@ -686,31 +686,21 @@ export function differenceDate(
 
 // https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
 export function differenceTime(
-  h1: i32,
-  min1: i32,
-  s1: i32,
-  ms1: i32,
-  µs1:i32,
-  ns1: i32,
-  h2: i32,
-  min2: i32,
-  s2: i32,
-  ms2: i32,
-  µs2: i32,
-  ns2: i32
+  h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
 ): Duration {
   let hours = h2 - h1;
-  let minutes = min2 - min1;
+  let minutes = m2 - m1;
   let seconds = s2 - s1;
   let milliseconds = ms2 - ms1;
   let microseconds = µs2 - µs1;
   let nanoseconds = ns2 - ns1;
 
   const sign = durationSign(
-    0, 
-    0, 
-    0, 
-    0, 
+    0,
+    0,
+    0,
+    0,
     hours,
     minutes,
     seconds,
@@ -725,7 +715,9 @@ export function differenceTime(
   microseconds *= sign;
   nanoseconds *= sign;
 
-  let balancedTime = balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  let balancedTime = balanceTime(
+    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
+  );
 
   return new Duration(
     0,

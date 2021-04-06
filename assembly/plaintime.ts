@@ -14,6 +14,7 @@ import { Overflow, TimeComponent } from "./enums";
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { PlainDateTime } from "./plaindatetime";
 import { DateLike } from "./plaindate";
+
 export class TimeLike {
   hour: i32 = -1;
   minute: i32 = -1;
