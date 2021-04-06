@@ -233,7 +233,7 @@ export class PlainDateTime {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T): PlainDateTime {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -260,7 +260,7 @@ export class PlainDateTime {
       duration.milliseconds,
       duration.microseconds,
       duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,
@@ -275,7 +275,7 @@ export class PlainDateTime {
     );
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T): PlainDateTime {
+  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
@@ -302,7 +302,7 @@ export class PlainDateTime {
       -duration.milliseconds,
       -duration.microseconds,
       -duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,
