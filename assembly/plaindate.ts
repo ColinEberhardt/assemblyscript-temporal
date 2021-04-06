@@ -151,7 +151,7 @@ export class PlainDate {
 
   until(
     date: PlainDate,
-    largestUnit: TimeComponent = TimeComponent.days
+    largestUnit: TimeComponent = TimeComponent.Days
   ): Duration {
     return differenceDate(
       this.year,
@@ -166,7 +166,7 @@ export class PlainDate {
 
   since(
     date: PlainDate,
-    largestUnit: TimeComponent = TimeComponent.days
+    largestUnit: TimeComponent = TimeComponent.Days
   ): Duration {
     return differenceDate(
       date.year,
@@ -202,7 +202,7 @@ export class PlainDate {
       duration.milliseconds,
       duration.microseconds,
       duration.nanoseconds,
-      TimeComponent.days
+      TimeComponent.Days
     );
     const newDate = addDate(
       this.year,
@@ -232,7 +232,7 @@ export class PlainDate {
       duration.milliseconds,
       duration.microseconds,
       duration.nanoseconds,
-      TimeComponent.days
+      TimeComponent.Days
     );
 
     const newDate = addDate(

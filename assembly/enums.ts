@@ -4,14 +4,14 @@ export const enum Overflow {
 }
 
 export const enum TimeComponent {
-  years,
-  months,
-  weeks,
-  days,
-  hours,
-  minutes,
-  seconds,
-  milliseconds,
-  microseconds,
-  nanoseconds,
+  Years,
+  Months,
+  Weeks,
+  Days,
+  Hours,
+  Minutes,
+  Seconds,
+  Milliseconds,
+  Microseconds,
+  Nanoseconds,
 }

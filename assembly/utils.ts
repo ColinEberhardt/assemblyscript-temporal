@@ -414,8 +414,8 @@ export function balanceDuration(
   let daysI64: i64 = 0;
 
   if (
-    largestUnit >= TimeComponent.years &&
-    largestUnit <= TimeComponent.days
+    largestUnit >= TimeComponent.Years &&
+    largestUnit <= TimeComponent.Days
   ) {
     const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
     daysI64        = _ES$NanosecondsToDays.days;
@@ -429,11 +429,11 @@ export function balanceDuration(
   nanosecondsI64 = abs(nanosecondsI64);
 
   switch (largestUnit) {
-    case TimeComponent.years:
-    case TimeComponent.months:
-    case TimeComponent.weeks:
-    case TimeComponent.days:
-    case TimeComponent.hours:
+    case TimeComponent.Years:
+    case TimeComponent.Months:
+    case TimeComponent.Weeks:
+    case TimeComponent.Days:
+    case TimeComponent.Hours:
       microsecondsI64 = nanosecondsI64 / 1000;
       nanosecondsI64  = nanosecondsI64 % 1000;
 
@@ -450,7 +450,7 @@ export function balanceDuration(
       minutesI64 = minutesI64 % 60;
       break;
 
-    case TimeComponent.minutes:
+    case TimeComponent.Minutes:
       microsecondsI64 = nanosecondsI64 / 1000;
       nanosecondsI64  = nanosecondsI64 % 1000;
 
@@ -464,7 +464,7 @@ export function balanceDuration(
       secondsI64 = secondsI64 % 60;
       break;
 
-    case TimeComponent.seconds:
+    case TimeComponent.Seconds:
       microsecondsI64 = nanosecondsI64 / 1000;
       nanosecondsI64  = nanosecondsI64 % 1000;
 
@@ -475,7 +475,7 @@ export function balanceDuration(
       millisecondsI64 = millisecondsI64 % 1000;
       break;
 
-    case TimeComponent.milliseconds:
+    case TimeComponent.Milliseconds:
       microsecondsI64 = nanosecondsI64 / 1000;
       nanosecondsI64  = nanosecondsI64 % 1000;
 
@@ -483,12 +483,12 @@ export function balanceDuration(
       microsecondsI64 = microsecondsI64 % 1000;
       break;
 
-    case TimeComponent.microseconds:
+    case TimeComponent.Microseconds:
       microsecondsI64 = nanosecondsI64 / 1000;
       nanosecondsI64  = nanosecondsI64 % 1000;
       break;
 
-    case TimeComponent.nanoseconds:
+    case TimeComponent.Nanoseconds:
       break;
   }
 
@@ -558,11 +558,11 @@ export function differenceDate(
   y2: i32,
   m2: i32,
   d2: i32,
-  largestUnit: TimeComponent = TimeComponent.days
+  largestUnit: TimeComponent = TimeComponent.Days
 ): Duration {
   switch (largestUnit) {
-    case TimeComponent.years:
-    case TimeComponent.months: {
+    case TimeComponent.Years:
+    case TimeComponent.Months: {
       let sign = -compareTemporalDate(y1, m1, d1, y2, m2, d2);
       if (sign == 0) return new Duration();
 
@@ -578,7 +578,7 @@ export function differenceDate(
       let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
       if (midSign === 0) {
-        return largestUnit === TimeComponent.years
+        return largestUnit === TimeComponent.Years
           ? new Duration(years)
           : new Duration(0, years * 12);
       }
@@ -594,7 +594,7 @@ export function differenceDate(
       midSign = compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
 
       if (midSign === 0) {
-        return largestUnit === TimeComponent.years
+        return largestUnit === TimeComponent.Years
           ? new Duration(years, months)
           : new Duration(0, months + years * 12);
       }
@@ -633,7 +633,7 @@ export function differenceDate(
         days = endDay + daysInMonth(mid.year, mid.month) - mid.day;
       }
 
-      if (largestUnit === TimeComponent.months) {
+      if (largestUnit === TimeComponent.Months) {
         months += years * 12;
         years = 0;
       }
@@ -641,8 +641,8 @@ export function differenceDate(
       return new Duration(years, months, 0, days);
     }
 
-    case TimeComponent.weeks:
-    case TimeComponent.days: {
+    case TimeComponent.Weeks:
+    case TimeComponent.Days: {
       let neg = compareTemporalDate(y1, m1, d1, y2, m2, d2) < 0;
 
       let smallerYear  = neg ? y1 : y2;
@@ -668,7 +668,7 @@ export function differenceDate(
       }
 
       let weeks = 0;
-      if (largestUnit === TimeComponent.weeks) {
+      if (largestUnit === TimeComponent.Weeks) {
         weeks = floorDiv(days, 7);
         days -= weeks * 7;
       }
