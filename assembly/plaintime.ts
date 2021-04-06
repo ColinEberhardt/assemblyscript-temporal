@@ -25,7 +25,26 @@ export class TimeLike {
 
 export class PlainTime {
   @inline
-  static fromPlainTime(time: PlainTime): PlainTime {
+  static from<T = TimeLike>(time: T): PlainTime {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>time);
+    } else {
+      if (isReference<T>()) {
+        if (time instanceof PlainTime) {
+          return this.fromPlainTime(time);
+        } else if (time instanceof TimeLike) {
+          return this.fromTimeLike(time);
+        } else if (time instanceof PlainDateTime) {
+          return this.fromPlainDateTime(time);
+        }
+      }
+      throw new TypeError("invalid time type");
+    }
+  }
+
+  @inline
+  private static fromPlainTime(time: PlainTime): PlainTime {
     return new PlainTime(
       time.hour,
       time.minute,
@@ -37,7 +56,7 @@ export class PlainTime {
   }
 
   @inline
-  static fromPlainDateTime(date: PlainDateTime): PlainTime {
+  private static fromPlainDateTime(date: PlainDateTime): PlainTime {
     return new PlainTime(
       date.hour,
       date.minute,
@@ -49,7 +68,7 @@ export class PlainTime {
   }
 
   @inline
-  static fromTimeLike(time: TimeLike): PlainTime {
+  private static fromTimeLike(time: TimeLike): PlainTime {
     return new PlainTime(
       coalesce(time.hour, 0),
       coalesce(time.minute, 0),
@@ -60,7 +79,7 @@ export class PlainTime {
     );
   }
 
-  static fromString(time: string): PlainTime {
+  private static fromString(time: string): PlainTime {
     const timeRegex = new RegExp(
       "^(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?(?:(?:([zZ])|(?:([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13})(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?)?(?:\\[u-ca=((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
       "i"
@@ -121,25 +140,6 @@ export class PlainTime {
     }
   }
 
-  @inline
-  static from<T = TimeLike>(time: T): PlainTime {
-    if (isString<T>()) {
-      // @ts-ignore: cast
-      return this.fromString(<string>time);
-    } else {
-      if (isReference<T>()) {
-        if (time instanceof PlainTime) {
-          return this.fromPlainTime(time);
-        } else if (time instanceof TimeLike) {
-          return this.fromTimeLike(time);
-        } else if (time instanceof PlainDateTime) {
-          return this.fromPlainDateTime(time);
-        }
-      }
-      throw new TypeError("invalid time type");
-    }
-  }
-
   constructor(
     readonly hour: i32 = 0,
     readonly minute: i32 = 0,
@@ -148,17 +148,14 @@ export class PlainTime {
     readonly microsecond: i32 = 0,
     readonly nanosecond: i32 = 0
   ) {
-    if (
-      !(
-        checkRange(hour, 0, 23) &&
-        checkRange(minute, 0, 59) &&
-        checkRange(second, 0, 59) &&
-        checkRange(millisecond, 0, 999) &&
-        checkRange(microsecond, 0, 999) &&
-        checkRange(nanosecond, 0, 999)
-      )
-    )
-      throw new RangeError("invalid plain time");
+    if (!(
+      checkRange(hour, 0, 23) &&
+      checkRange(minute, 0, 59) &&
+      checkRange(second, 0, 59) &&
+      checkRange(millisecond, 0, 999) &&
+      checkRange(microsecond, 0, 999) &&
+      checkRange(nanosecond, 0, 999)
+    )) throw new RangeError("invalid plain time");
   }
 
   with(timeLike: TimeLike): PlainTime {
