@@ -11,6 +11,7 @@ import {
   daysInMonth,
   balanceDuration,
   toPaddedString,
+  rejectDate,
   checkDateTimeRange,
   compareTemporalDate,
   differenceDate,
@@ -76,10 +77,7 @@ export class PlainDate {
   }
 
   constructor(readonly year: i32, readonly month: i32, readonly day: i32) {
-    // if (!(
-    //   checkRange(month, 1, 12) &&
-    //   checkRange(day, 1, daysInMonth(year, month))
-    // )) throw new RangeError("invalid plain date");
+    rejectDate(year, month, day);
 
     if (!checkDateTimeRange(year, month, day, 12)) {
       throw new RangeError("DateTime outside of supported range");
@@ -189,7 +187,7 @@ export class PlainDate {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T): PlainDate {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDate {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -214,7 +212,7 @@ export class PlainDate {
       duration.months,
       duration.weeks,
       balancedDuration.days,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
