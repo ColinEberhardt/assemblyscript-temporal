@@ -1,6 +1,7 @@
 /// <reference types="@as-pect/assembly/types/as-pect" />
 
 import { Duration, DurationLike } from "../duration";
+import { Overflow } from "../enums";
 import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 
@@ -351,13 +352,10 @@ describe("DateTime.add() works", () => {
         .toString()
     ).toBe("2020-01-31T14:59:30");
   });
-  xit("throw when ambiguous result with reject", () => {
-    //        throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
-  });
-  xit("invalid overflow", () => {
-    //        ['', 'CONSTRAIN', 'balance', 3, null].forEach((overflow) =>
-    //          throws(() => PlainDateTime.from('2019-11-18T15:00').add({ months: 1 }, { overflow }), RangeError)
-    //        );
+  it("throw when overflowing result with reject", () => {
+    throws("TypeError", () => {
+      jan31.add({ months: 1 }, Overflow.Reject)
+    });
   });
   xit("mixed positive and negative values always throw", () => {
     //        ['constrain', 'reject'].forEach((overflow) =>

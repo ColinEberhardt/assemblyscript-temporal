@@ -1,4 +1,5 @@
 import { durationSign } from "./utils";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 
 export class DurationLike {
   years: i32 = 0;
@@ -70,9 +71,9 @@ export class Duration {
       toString(abs(this.minutes), "M") +
       toString(
         // sort in ascending order for better sum precision
-        f64(this.nanoseconds) / 1000000000.0 +
-          f64(this.microseconds) / 1000000.0 +
-          f64(this.milliseconds) / 1000.0 +
+        f64(this.nanoseconds) / NANOS_PER_SECOND +
+          f64(this.microseconds) / MICROS_PER_SECOND +
+          f64(this.milliseconds) / MILLIS_PER_SECOND +
           f64(this.seconds),
         "S"
       );

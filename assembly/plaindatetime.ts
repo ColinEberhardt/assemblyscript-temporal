@@ -3,6 +3,7 @@ import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainTime } from "./plaintime";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import {
   dayOfWeek,
   dayOfYear,
@@ -187,9 +188,9 @@ export class PlainDateTime {
        this.microsecond != 0 ||
        this.millisecond != 0
         ? (
-            f64(this.nanosecond)  / 1_000_000_000.0 +
-            f64(this.microsecond) / 1_000_000.0 +
-            f64(this.millisecond) / 1_000.0
+            f64(this.nanosecond)  / NANOS_PER_SECOND +
+            f64(this.microsecond) / MICROS_PER_SECOND +
+            f64(this.millisecond) / MILLIS_PER_SECOND
           ).toString().substring(1)
         : ""
       )
@@ -248,7 +249,7 @@ export class PlainDateTime {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T): PlainDateTime {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -275,7 +276,7 @@ export class PlainDateTime {
       duration.milliseconds,
       duration.microseconds,
       duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,
@@ -290,7 +291,7 @@ export class PlainDateTime {
     );
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T): PlainDateTime {
+  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
@@ -317,7 +318,7 @@ export class PlainDateTime {
       -duration.milliseconds,
       -duration.microseconds,
       -duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,

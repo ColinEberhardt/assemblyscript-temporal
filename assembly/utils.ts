@@ -8,6 +8,7 @@
 
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { log } from "./env";
 
 const YEAR_MIN = -271821;
@@ -238,6 +239,15 @@ export function checkDateTimeRange(
   return true;
 }
 
+export function rejectDate(year: i32, month: i32, day: i32): void {
+  if (!checkRange(month, 1, 12)) {
+    throw new RangeError("month out of range");
+  }
+  if (!checkRange(day, 1, daysInMonth(year, month))) {
+    throw new RangeError("day out of range");
+  }
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
   month = clamp(month, 1, 12);
@@ -254,7 +264,7 @@ export function regulateDate(
 ): YMD {
   switch (overflow) {
     case Overflow.Reject:
-      // rejectDate(year, month, day);
+      rejectDate(year, month, day);
       break;
 
     case Overflow.Constrain:
@@ -359,13 +369,13 @@ function totalDurationNanoseconds(
   hours += days * 24;
   minutes += hours * 60;
   seconds += minutes * 60;
-  milliseconds += seconds * 1000;
+  milliseconds += seconds * MILLIS_PER_SECOND;
   microseconds += milliseconds * 1000;
   return nanoseconds + microseconds * 1000;
 }
 
 function nanosecondsToDays(ns: i64): NanoDays {
-  const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
+  const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
   return ns == 0
     ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
     : {
