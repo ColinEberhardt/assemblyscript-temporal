@@ -8,6 +8,7 @@
 
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { log } from "./env";
 
 const YEAR_MIN = -271821;
@@ -25,6 +26,15 @@ export class YMD {
 export class YM {
   year: i32;
   month: i32;
+}
+
+export class PT {
+  hour: i32;
+  minute: i32;
+  second: i32;
+  millisecond: i32;
+  microsecond: i32;
+  nanosecond: i32;
 }
 
 export class DT {
@@ -177,7 +187,7 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
 export function sign<T extends number>(x: T): T {
   // x < 0 ? -1 : 1   ->   x >> 31 | 1
   // @ts-ignore
-  return (x >> (sizeof<T>() * 4 - 1)) | 1;
+  return (x >> (sizeof<T>() * 8 - 1)) | 1;
 }
 
 // @ts-ignore: decorator
@@ -229,6 +239,15 @@ export function checkDateTimeRange(
   return true;
 }
 
+export function rejectDate(year: i32, month: i32, day: i32): void {
+  if (!checkRange(month, 1, 12)) {
+    throw new RangeError("month out of range");
+  }
+  if (!checkRange(day, 1, daysInMonth(year, month))) {
+    throw new RangeError("day out of range");
+  }
+}
+
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
 export function constrainDate(year: i32, month: i32, day: i32): YMD {
   month = clamp(month, 1, 12);
@@ -245,7 +264,7 @@ export function regulateDate(
 ): YMD {
   switch (overflow) {
     case Overflow.Reject:
-      // rejectDate(year, month, day);
+      rejectDate(year, month, day);
       break;
 
     case Overflow.Constrain:
@@ -350,13 +369,13 @@ function totalDurationNanoseconds(
   hours += days * 24;
   minutes += hours * 60;
   seconds += minutes * 60;
-  milliseconds += seconds * 1000;
+  milliseconds += seconds * MILLIS_PER_SECOND;
   microseconds += milliseconds * 1000;
   return nanoseconds + microseconds * 1000;
 }
 
 function nanosecondsToDays(ns: i64): NanoDays {
-  const oneDayNs: i64 = 24 * 60 * 60 * 1_000_000_000;
+  const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
   return ns == 0
     ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
     : {
@@ -386,24 +405,28 @@ export function balanceDuration(
     nanoseconds as i64
   );
 
+  let nanosecondsI64: i64 = 0;
+  let microsecondsI64: i64 = 0;
+  let millisecondsI64: i64 = 0;
+  let secondsI64: i64 = 0;
+  let minutesI64: i64 = 0;
+  let hoursI64: i64 = 0;
+  let daysI64: i64 = 0;
+
   if (
     largestUnit >= TimeComponent.Years &&
     largestUnit <= TimeComponent.Days
   ) {
     const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
-    days        = _ES$NanosecondsToDays.days;
-    nanoseconds = _ES$NanosecondsToDays.nanoseconds;
+    daysI64        = _ES$NanosecondsToDays.days;
+    nanosecondsI64 = _ES$NanosecondsToDays.nanoseconds;
   } else {
-    days = 0;
+    daysI64 = 0;
+    nanosecondsI64 = durationNs
   }
 
-  const sig = sign(nanoseconds);
-  nanoseconds = abs(nanoseconds);
-  microseconds = 0;
-  milliseconds = 0;
-  seconds = 0;
-  minutes = 0;
-  hours = 0;
+  const sig = i32(sign(nanosecondsI64));
+  nanosecondsI64 = abs(nanosecondsI64);
 
   switch (largestUnit) {
     case TimeComponent.Years:
@@ -411,58 +434,58 @@ export function balanceDuration(
     case TimeComponent.Weeks:
     case TimeComponent.Days:
     case TimeComponent.Hours:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
 
-      minutes = seconds / 60;
-      seconds = seconds % 60;
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
 
-      hours   = minutes / 60;
-      minutes = minutes % 60;
+      hoursI64   = minutesI64 / 60;
+      minutesI64 = minutesI64 % 60;
       break;
 
     case TimeComponent.Minutes:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
 
-      minutes = seconds / 60;
-      seconds = seconds % 60;
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
       break;
 
     case TimeComponent.Seconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
 
-      seconds      = milliseconds / 1000;
-      milliseconds = milliseconds % 1000;
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
       break;
 
     case TimeComponent.Milliseconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
 
-      milliseconds = microseconds / 1000;
-      microseconds = microseconds % 1000;
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
       break;
 
     case TimeComponent.Microseconds:
-      microseconds = nanoseconds / 1000;
-      nanoseconds  = nanoseconds % 1000;
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
       break;
 
     case TimeComponent.Nanoseconds:
@@ -473,13 +496,13 @@ export function balanceDuration(
     0,
     0,
     0,
-    days,
-    hours * sig,
-    minutes * sig,
-    seconds * sig,
-    milliseconds * sig,
-    microseconds * sig,
-    nanoseconds * sig
+    i32(daysI64),
+    i32(hoursI64) * sig,
+    i32(minutesI64) * sig,
+    i32(secondsI64) * sig,
+    i32(millisecondsI64) * sig,
+    i32(microsecondsI64) * sig,
+    i32(nanosecondsI64) * sig
   );
 }
 
@@ -661,6 +684,63 @@ export function differenceDate(
   }
 }
 
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
+export function differenceTime(
+  h1: i32,
+  min1: i32,
+  s1: i32,
+  ms1: i32,
+  µs1:i32,
+  ns1: i32,
+  h2: i32,
+  min2: i32,
+  s2: i32,
+  ms2: i32,
+  µs2: i32,
+  ns2: i32
+): Duration {
+  let hours = h2 - h1;
+  let minutes = min2 - min1;
+  let seconds = s2 - s1;
+  let milliseconds = ms2 - ms1;
+  let microseconds = µs2 - µs1;
+  let nanoseconds = ns2 - ns1;
+
+  const sign = durationSign(
+    0, 
+    0, 
+    0, 
+    0, 
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  );
+  hours *= sign;
+  minutes *= sign;
+  seconds *= sign;
+  milliseconds *= sign;
+  microseconds *= sign;
+  nanoseconds *= sign;
+
+  let balancedTime = balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+
+  return new Duration(
+    0,
+    0,
+    0,
+    balancedTime.deltaDays * sign,
+    balancedTime.hour * sign,
+    balancedTime.minute * sign,
+    balancedTime.second * sign,
+    balancedTime.millisecond * sign,
+    balancedTime.microsecond * sign,
+    balancedTime.nanosecond * sign
+  )
+
+}
 
 export function epochFromParts(
   year: i32,
@@ -750,7 +830,61 @@ export function addDateTime(
   };
 }
 
-function addTime(
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2676-L2684
+export function constrainTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+): PT {
+  hour = clamp(hour, 0, 23);
+  minute = clamp(minute, 0, 59);
+  second = clamp(second, 0, 59);
+  millisecond = clamp(millisecond, 0, 999);
+  microsecond = clamp(microsecond, 0, 999);
+  nanosecond = clamp(nanosecond, 0, 999);
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L407-L422
+export function regulateTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  overflow: Overflow
+): PT {
+  switch (overflow) {
+    case Overflow.Reject:
+      // rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+      break;
+
+    case Overflow.Constrain:
+      const time = constrainTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      );
+      hour = time.hour;
+      minute = time.minute;
+      second = time.second;
+      millisecond = time.millisecond;
+      microsecond = time.microsecond;
+      nanosecond = time.nanosecond;
+      break;
+  }
+
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
+}
+
+export function addTime(
   hour: i32,
   minute: i32,
   second: i32,

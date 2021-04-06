@@ -1,6 +1,6 @@
 import { PlainDate } from "..";
 import { Duration, DurationLike } from "../duration";
-import { TimeComponent } from "../enums";
+import { TimeComponent, Overflow } from "../enums";
 import { DateLike } from "../plaindate";
 
 let date: PlainDate;
@@ -633,9 +633,11 @@ describe("date.add() works", () => {
     //   expect(jan31.add({ months: 1 }).toString()).toBe('2020-02-29');
     //   expect(jan31.add({ months: 1 }, { overflow: 'constrain' }).toString()).toBe('2020-02-29');
   });
-  xit("throw when overflowing result with reject", () => {
-    // const jan31 = PlainDate.from('2020-01-31');
-    // throws(() => jan31.add({ months: 1 }, { overflow: 'reject' }), RangeError);
+  it("throw when overflowing result with reject", () => {
+    throws("TypeError", () => {
+      new PlainDate(2020, 1, 31)
+        .add({ months: 1 }, Overflow.Reject)
+    });
   });
   it("symmetrical with regard to negative durations", () => {
     // @ts-ignore
@@ -1112,13 +1114,13 @@ describe("Date.equal works", () => {
 //   it('>=', () => throws(() => d1 >= d2));
 // });
 
-// describe('Min/max range', () => {
-//   it('constructing from numbers', () => {
-//     throws(() => new PlainDate(-271821, 4, 18), RangeError);
-//     throws(() => new PlainDate(275760, 9, 14), RangeError);
-//     expect(new PlainDate(-271821, 4, 19).toString()).toBe('-271821-04-19');
-//     expect(new PlainDate(275760, 9, 13).toString()).toBe('+275760-09-13');
-//   });
+describe('Min/max range', () => {
+  it('constructing from numbers', () => {
+    // throws("RangeError", () => { new PlainDate(-271821, 4, 18) });
+    // throws("RangeError", () => { new PlainDate(275760, 9, 14) });
+    expect(new PlainDate(-271821, 4, 19).toString()).toBe('-271821-04-19');
+    expect(new PlainDate(275760, 9, 13).toString()).toBe('275760-09-13');
+  });
 //   it('constructing from property bag', () => {
 //     const tooEarly = { year: -271821, month: 4, day: 18 };
 //     const tooLate = { year: 275760, month: 9, day: 14 };
@@ -1171,7 +1173,7 @@ describe("Date.equal works", () => {
 //       throws(() => max.add({ days: 1 }, { overflow }), RangeError);
 //     });
 //   });
-// });
+});
 
 // describe('date.getISOFields() works', () => {
 //   const d1 = PlainDate.from('1976-11-18');

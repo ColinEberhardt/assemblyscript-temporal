@@ -1,4 +1,5 @@
 import { durationSign } from "./utils";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 
 export class DurationLike {
   years: i32 = 0;
@@ -60,19 +61,19 @@ export class Duration {
   // P1Y1M1DT1H1M1.1S
   toString(): string {
     const date =
-      toString(this.years, "Y") +
-      toString(this.months, "M") +
-      toString(this.weeks, "W") +
-      toString(this.days, "D");
+      toString(abs(this.years), "Y") +
+      toString(abs(this.months), "M") +
+      toString(abs(this.weeks), "W") +
+      toString(abs(this.days), "D");
 
     const time =
-      toString(this.hours, "H") +
-      toString(this.minutes, "M") +
+      toString(abs(this.hours), "H") +
+      toString(abs(this.minutes), "M") +
       toString(
         // sort in ascending order for better sum precision
-        f64(this.nanoseconds) / 1000000000.0 +
-          f64(this.microseconds) / 1000000.0 +
-          f64(this.milliseconds) / 1000.0 +
+        f64(this.nanoseconds) / NANOS_PER_SECOND +
+          f64(this.microseconds) / MICROS_PER_SECOND +
+          f64(this.milliseconds) / MILLIS_PER_SECOND +
           f64(this.seconds),
         "S"
       );
@@ -85,5 +86,11 @@ export class Duration {
 }
 
 function toString<T extends number>(value: T, suffix: string): string {
-  return value ? value.toString() + suffix : "";
+  return value
+    ? (isFloat<T>() ? stringify(value) : value.toString()) + suffix
+    : "";
+}
+
+function stringify(value: f64): string {
+  return F64.isSafeInteger(value) ? i64(value).toString() : value.toString();
 }

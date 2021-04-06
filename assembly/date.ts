@@ -2,11 +2,7 @@
 // https://github.com/AssemblyScript/assemblyscript/pull/1768
 
 import { YMD } from "./utils";
-
-const MILLIS_PER_DAY = 1_000 * 60 * 60 * 24;
-const MILLIS_PER_HOUR = 1_000 * 60 * 60;
-const MILLIS_PER_MINUTE = 1_000 * 60;
-const MILLIS_PER_SECOND = 1_000;
+import { MILLIS_PER_DAY, MILLIS_PER_HOUR, MILLIS_PER_MINUTE, MILLIS_PER_SECOND } from "./constants";
 
 export class Date {
   epochMilliseconds: i64;

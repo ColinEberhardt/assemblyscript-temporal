@@ -62,7 +62,7 @@ Methods
 
 General features
 
-- [ ] overflow modes (current implementation defaults to constrain)
+- [x] overflow modes (current implementation defaults to constrain)
 - [ ] non ISO 8601 calendars
 
 #### PlainDateTime
@@ -123,7 +123,7 @@ Methods
 
 General features
 
-- [ ] overflow modes (current implementation defaults to constrain)
+- [x] overflow modes (current implementation defaults to constrain)
 - [ ] non ISO 8601 calendars
 
 #### Duration

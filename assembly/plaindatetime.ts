@@ -1,7 +1,9 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
 
 import { Duration, DurationLike } from "./duration";
-import { Overflow } from "./enums";
+import { Overflow, TimeComponent } from "./enums";
+import { PlainTime } from "./plaintime";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import {
   dayOfWeek,
   dayOfYear,
@@ -28,7 +30,24 @@ export class DateTimeLike {
 
 export class PlainDateTime {
   @inline
-  static fromPlainDateTime(date: PlainDateTime): PlainDateTime {
+  static from<T = DateTimeLike>(date: T): PlainDateTime {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>date);
+    } else {
+      if (isReference<T>()) {
+        if (date instanceof PlainDateTime) {
+          return this.fromPlainDateTime(date);
+        } else if (date instanceof DateTimeLike) {
+          return this.fromDateTimeLike(date);
+        }
+      }
+      throw new TypeError("invalid date type");
+    }
+  }
+
+  @inline
+  private static fromPlainDateTime(date: PlainDateTime): PlainDateTime {
     return new PlainDateTime(
       date.year,
       date.month,
@@ -43,7 +62,7 @@ export class PlainDateTime {
   }
 
   @inline
-  static fromDateTimeLike(date: DateTimeLike): PlainDateTime {
+  private static fromDateTimeLike(date: DateTimeLike): PlainDateTime {
     if (date.year == -1 || date.month == -1 || date.day == -1) {
       throw new TypeError("missing required property");
     }
@@ -60,16 +79,19 @@ export class PlainDateTime {
     );
   }
 
-  static fromString(date: string): PlainDateTime {
+  private static fromString(date: string): PlainDateTime {
     const dateRegex = new RegExp(
       "^((?:[+-]\\d{6}|\\d{4}))(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))(?:(?:T|\\s+)(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?)?(?:([zZ])|(?:([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|_[-A-Za-z._]{0,13}|[a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,12})?|[a-zA-Z]-(?:[-._][-A-Za-z._]{0,11})?|[a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,10})?|[a-zA-Z]-[a-zA-Z][a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,9})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-(?:[-._][-A-Za-z._]{0,8})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,7})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z](?:[-._][-A-Za-z._]{0,6})?)(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?(?:\\[u-ca-((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
       "i"
     );
     const match = dateRegex.exec(date);
     if (match != null) {
+      // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
+      const fraction = (
+        match.matches[7] != "" ? match.matches[7] : match.matches[18]
+      ) + "000000000";
       return new PlainDateTime(
         I32.parseInt(match.matches[1]),
-        // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
         I32.parseInt(
           match.matches[2] != "" ? match.matches[2] : match.matches[19]
         ),
@@ -77,31 +99,14 @@ export class PlainDateTime {
           match.matches[3] != "" ? match.matches[3] : match.matches[20]
         ),
         I32.parseInt(match.matches[4]),
-        I32.parseInt(match.matches[5]),
-        I32.parseInt(match.matches[6]),
-        I32.parseInt(match.matches[7].substring(0, 3)),
-        I32.parseInt(match.matches[7].substring(3, 6)),
-        I32.parseInt(match.matches[7].substring(6, 9))
+        I32.parseInt(match.matches[5] != "" ? match.matches[5]: match.matches[16]),
+        I32.parseInt(match.matches[6] != "" ? match.matches[6]: match.matches[17]),
+        I32.parseInt(fraction.substring(0, 3)),
+        I32.parseInt(fraction.substring(3, 6)),
+        I32.parseInt(fraction.substring(6, 9))
       );
     }
     throw new RangeError("invalid ISO 8601 string: " + date);
-  }
-
-  @inline
-  static from<T = DateTimeLike>(date: T): PlainDateTime {
-    if (isString<T>()) {
-      // @ts-ignore: cast
-      return this.fromString(<string>date);
-    } else {
-      if (isReference<T>()) {
-        if (date instanceof PlainDateTime) {
-          return this.fromPlainDateTime(date);
-        } else if (date instanceof DateTimeLike) {
-          return this.fromDateTimeLike(date);
-        }
-      }
-      throw new TypeError("invalid date type");
-    }
   }
 
   constructor(
@@ -183,12 +188,23 @@ export class PlainDateTime {
        this.microsecond != 0 ||
        this.millisecond != 0
         ? (
-            f64(this.nanosecond)  / 1_000_000_000.0 +
-            f64(this.microsecond) / 1_000_000.0 +
-            f64(this.millisecond) / 1_000.0
+            f64(this.nanosecond)  / NANOS_PER_SECOND +
+            f64(this.microsecond) / MICROS_PER_SECOND +
+            f64(this.millisecond) / MILLIS_PER_SECOND
           ).toString().substring(1)
         : ""
       )
+    );
+  }
+
+  toPlainTime(): PlainTime {
+    return new PlainTime(
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond
     );
   }
 
@@ -233,7 +249,7 @@ export class PlainDateTime {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T): PlainDateTime {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
@@ -260,7 +276,7 @@ export class PlainDateTime {
       duration.milliseconds,
       duration.microseconds,
       duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,
@@ -275,7 +291,7 @@ export class PlainDateTime {
     );
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T): PlainDateTime {
+  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
@@ -302,7 +318,7 @@ export class PlainDateTime {
       -duration.milliseconds,
       -duration.microseconds,
       -duration.nanoseconds,
-      Overflow.Constrain
+      overflow
     );
     return new PlainDateTime(
       newDate.year,
