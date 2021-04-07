@@ -122,6 +122,7 @@ export function daysInMonth(year: i32, month: i32): i32 {
 // Original: Disparate variation
 // Modified: TomohikoSakamoto algorithm from https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
+// returns day of week in range [1,7], where 7 = Sunday
 export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const tab = memory.data<u8>([0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4]);
 

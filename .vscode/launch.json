@@ -17,7 +17,7 @@
       "request": "launch",
       "name": "Launch Test",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/test.js",
+      "program": "${workspaceFolder}/tzdb/index.mjs",
       "outFiles": ["${workspaceFolder}/**/*.js"],
       // "runtimeExecutable": "/Users/colineberhardt/.nvm/versions/node/v10.16.3/bin/node"
     }
