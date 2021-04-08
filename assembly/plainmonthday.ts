@@ -11,7 +11,7 @@ export class MonthDayLike {
 
 export class PlainMonthDay {
   @inline
-  static fromPlainMonthDay(monthDay: PlainMonthDay): PlainMonthDay {
+  private static fromPlainMonthDay(monthDay: PlainMonthDay): PlainMonthDay {
     return new PlainMonthDay(
       monthDay.month,
       monthDay.day,
@@ -19,7 +19,7 @@ export class PlainMonthDay {
     );
   }
 
-  static fromMonthDayLike(monthDay: MonthDayLike): PlainMonthDay {
+  private static fromMonthDayLike(monthDay: MonthDayLike): PlainMonthDay {
     if (monthDay.month == -1 || monthDay.day == -1) {
       throw new TypeError("missing required property");
     }
@@ -30,8 +30,8 @@ export class PlainMonthDay {
     );
   }
 
-  static fromString(monthDay: string): PlainMonthDay {
-    const dateRegex = new RegExp("^(?:--)?(d{2})-?(d{2})$", "i");
+  private static fromString(monthDay: string): PlainMonthDay {
+    const dateRegex = new RegExp("^(?:--)?(\\d{2})-?(\\d{2})$", "i");
     const match = dateRegex.exec(monthDay);
     if (match != null) {
       return new PlainMonthDay(
@@ -39,7 +39,7 @@ export class PlainMonthDay {
         I32.parseInt(match.matches[2])
       );
     } else {
-      const datetime = PlainDateTime.fromString(monthDay);
+      const datetime = PlainDateTime.from(monthDay);
       return new PlainMonthDay(datetime.month, datetime.day);
     }
   }
@@ -48,7 +48,7 @@ export class PlainMonthDay {
   static from<T = MonthDayLike>(monthDay: T): PlainMonthDay {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return this.fromString(<string>date);
+      return this.fromString(<string>monthDay);
     } else {
       if (isReference<T>()) {
         if (monthDay instanceof PlainMonthDay) {
@@ -98,7 +98,7 @@ export class PlainMonthDay {
     return new PlainMonthDay(
       coalesce(monthDay.month, this.month),
       coalesce(monthDay.day, this.day),
-      coalesce(monthDay.referenceISOYear, this.referenceISOYear)
+      coalesce(monthDay.referenceISOYear, this.referenceISOYear, 1972)
     );
   }
 }
