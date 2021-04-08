@@ -56,8 +56,7 @@ export class PlainYearMonth {
     if (match != null) {
       let yearStr = match.matches[1];
 
-      if (yearStr.charAt(0) === "\u2212")
-        yearStr = "-" + yearStr.slice(1);
+      if (yearStr.charAt(0) === "\u2212") yearStr = "-" + yearStr.slice(1);
       // workaround for parsing "-009999" year strings
       if (yearStr.charAt(0) == "−")
         yearStr = "-" + I32.parseInt(yearStr.slice(1)).toString();
@@ -125,7 +124,6 @@ export class PlainYearMonth {
   }
 
   toString(): string {
-    log(this);
     return isoYearString(this.year) + "-" + toPaddedString(this.month);
   }
 
@@ -145,8 +143,11 @@ export class PlainYearMonth {
 
   until(
     yearMonth: PlainYearMonth,
-    largestUnit: TimeComponent = TimeComponent.Days
+    largestUnit: TimeComponent = TimeComponent.Years
   ): Duration {
+    if (largestUnit > TimeComponent.Months)
+      throw new RangeError("lower units are not allowed");
+
     const thisDate = new PlainDate(this.year, this.month, this.referenceISODay);
     const otherDate = new PlainDate(
       yearMonth.year,
@@ -159,15 +160,18 @@ export class PlainYearMonth {
 
   since(
     yearMonth: PlainYearMonth,
-    largestUnit: TimeComponent = TimeComponent.Days
+    largestUnit: TimeComponent = TimeComponent.Years
   ): Duration {
+    if (largestUnit > TimeComponent.Months)
+      throw new RangeError("lower units are not allowed");
+
     const thisDate = new PlainDate(this.year, this.month, this.referenceISODay);
     const otherDate = new PlainDate(
       yearMonth.year,
       yearMonth.month,
       yearMonth.referenceISODay
     );
-    const result = thisDate.until(otherDate, largestUnit);
+    const result = thisDate.since(otherDate, largestUnit);
     return new Duration(result.years, result.months);
   }
 
