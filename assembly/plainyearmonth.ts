@@ -10,6 +10,7 @@ import {
   compareTemporalDate,
   daysInMonth,
   durationSign,
+  isoYearString,
   leapYear,
   toPaddedString,
 } from "./utils";
@@ -124,7 +125,8 @@ export class PlainYearMonth {
   }
 
   toString(): string {
-    return this.year.toString() + "-" + toPaddedString(this.month);
+    log(this);
+    return isoYearString(this.year) + "-" + toPaddedString(this.month);
   }
 
   toPlainDate(day: i32): PlainDate {
