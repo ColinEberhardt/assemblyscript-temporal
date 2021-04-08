@@ -32,7 +32,7 @@ export class PlainYearMonth {
 
   @inline
   private static fromString(yearMonth: string): PlainYearMonth {
-    const dateRegex = new RegExp("^((?:[+\u2212-]d{6}|d{4}))-?(d{2})$", "i");
+    const dateRegex = new RegExp("^((?:[+\u2212-]\d{6}|\d{4}))-?(\d{2})$", "i");
     const match = dateRegex.exec(yearMonth);
     if (match != null) {
       let yearStr = match.matches[1];
