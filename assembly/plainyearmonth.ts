@@ -119,6 +119,10 @@ export class PlainYearMonth {
     return this.year.toString() + "-" + toPaddedString(this.month);
   }
 
+  toPlainDate(day: i32): PlainDate {
+    return new PlainDate(this.year, this.month, day);
+  }
+
   @inline
   equals(other: PlainYearMonth): bool {
     if (this === other) return true;
