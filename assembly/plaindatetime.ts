@@ -7,9 +7,9 @@ import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./consta
 import {
   dayOfWeek,
   dayOfYear,
-  leapYear,
   weekOfYear,
   daysInMonth,
+  daysInYear,
   toPaddedString,
   coalesce,
   compareTemporalDateTime,
@@ -148,7 +148,7 @@ export class PlainDateTime {
 
   @inline
   get daysInYear(): i32 {
-    return 365 + i32(leapYear(this.year));
+    return daysInYear(this.year);
   }
 
   @inline

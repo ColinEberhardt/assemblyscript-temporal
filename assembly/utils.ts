@@ -118,6 +118,12 @@ export function daysInMonth(year: i32, month: i32): i32 {
     : 30 + ((month + i32(month >= 8)) & 1);
 }
 
+// @ts-ignore: decorator
+@inline
+export function daysInYear(year: i32): i32 {
+  return 365 + i32(leapYear(year));
+}
+
 // Original: Disparate variation
 // Modified: TomohikoSakamoto algorithm from https://en.wikipedia.org/wiki/Determination_of_the_day_of_the_week
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2171
@@ -147,21 +153,21 @@ function balanceDate(year: i32, month: i32, day: i32): YMD {
   year  = yearMonth.year;
   month = yearMonth.month;
 
-  let daysInYear = 0;
+  let daysPerYear = 0;
   let testYear = month > 2 ? year : year - 1;
 
-  while (((daysInYear = 365 + i32(leapYear(testYear))), day < -daysInYear)) {
+  while (((daysPerYear = daysInYear(testYear)), day < -daysPerYear)) {
     year -= 1;
     testYear -= 1;
-    day += daysInYear;
+    day += daysPerYear;
   }
 
   testYear += 1;
 
-  while (((daysInYear = 365 + i32(leapYear(testYear))), day > daysInYear)) {
+  while (((daysPerYear = daysInYear(testYear)), day > daysPerYear)) {
     year += 1;
     testYear += 1;
-    day -= daysInYear;
+    day -= daysPerYear;
   }
 
   while (day < 1) {
@@ -325,7 +331,7 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   }
 
   if (week === 53) {
-    if (365 + i32(leapYear(year)) - doy < 4 - dow) {
+    if (daysInYear(year) - doy < 4 - dow) {
       return 1;
     }
   }
@@ -407,21 +413,22 @@ export function balanceDuration(
     nanoseconds as i64
   );
 
-  let nanosecondsI64: i64 = 0;
-  let microsecondsI64: i64 = 0;
-  let millisecondsI64: i64 = 0;
-  let secondsI64: i64 = 0;
-  let minutesI64: i64 = 0;
-  let hoursI64: i64 = 0;
-  let daysI64: i64 = 0;
+  let
+    nanosecondsI64: i64 = 0,
+    microsecondsI64: i64 = 0,
+    millisecondsI64: i64 = 0,
+    secondsI64: i64 = 0,
+    minutesI64: i64 = 0,
+    hoursI64: i64 = 0,
+    daysI64: i64 = 0;
 
   if (
     largestUnit >= TimeComponent.Years &&
     largestUnit <= TimeComponent.Days
   ) {
-    const _ES$NanosecondsToDays = nanosecondsToDays(durationNs);
-    daysI64        = _ES$NanosecondsToDays.days;
-    nanosecondsI64 = _ES$NanosecondsToDays.nanoseconds;
+    const nanoDays = nanosecondsToDays(durationNs);
+    daysI64        = nanoDays.days;
+    nanosecondsI64 = nanoDays.nanoseconds;
   } else {
     daysI64 = 0;
     nanosecondsI64 = durationNs
@@ -508,25 +515,28 @@ export function balanceDuration(
   );
 }
 
-export function compareTemporalDate(y1: i32, m1: i32, d1: i32, y2: i32, m2: i32, d2: i32): i32 {
-  let res = y1 - y2;
+export function compareTemporalDate(
+  yr1: i32, mo1: i32, d1: i32,
+  yr2: i32, mo2: i32, d2: i32
+): i32 {
+  let res = yr1 - yr2;
   if (res) return sign(res);
 
-  res = m1 - m2;
+  res = mo1 - mo2;
   if (res) return sign(res);
 
   return ord(d1, d2);
 }
 
 export function compareTemporalDateTime(
-  y1: i32, m1: i32, d1: i32, h1: i32, min1: i32, s1: i32, mill1: i32, mic1: i32, nan1: i32,
-  y2: i32, m2: i32, d2: i32, h2: i32, min2: i32, s2: i32, mill2: i32, mic2: i32, nan2: i32
+  yr1: i32, mo1: i32, d1: i32, h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  yr2: i32, mo2: i32, d2: i32, h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
 ): i32 {
 
-  let res = y1 - y2;
+  let res = yr1 - yr2;
   if (res) return sign(res);
 
-  res = m1 - m2;
+  res = mo1 - mo2;
   if (res) return sign(res);
 
   res = d1 - d2;
@@ -535,49 +545,45 @@ export function compareTemporalDateTime(
   res = h1 - h2;
   if (res) return sign(res);
 
-  res = min1 - min2;
+  res = m1 - m2;
   if (res) return sign(res);
 
   res = s1 - s2;
   if (res) return sign(res);
 
-  res = mill1 - mill2;
+  res = ms1 - ms2;
   if (res) return sign(res);
 
-  res = mic1 - mic2;
+  res = µs1 - µs2;
   if (res) return sign(res);
 
-  res = nan1 - nan2;
+  res = ns1 - ns2;
   if (res) return sign(res);
 
   return ord(d1, d2);
 }
 
 export function differenceDate(
-  y1: i32,
-  m1: i32,
-  d1: i32,
-  y2: i32,
-  m2: i32,
-  d2: i32,
+  yr1: i32, mo1: i32, d1: i32,
+  yr2: i32, mo2: i32, d2: i32,
   largestUnit: TimeComponent = TimeComponent.Days
 ): Duration {
   switch (largestUnit) {
     case TimeComponent.Years:
     case TimeComponent.Months: {
-      let sign = -compareTemporalDate(y1, m1, d1, y2, m2, d2);
+      let sign = -compareTemporalDate(yr1, mo1, d1, yr2, mo2, d2);
       if (sign == 0) return new Duration();
 
-      let startYear  = y1;
-      let startMonth = m1;
+      let startYear  = yr1;
+      let startMonth = mo1;
 
-      let endYear  = y2;
-      let endMonth = m2;
+      let endYear  = yr2;
+      let endMonth = mo2;
       let endDay   = d2;
 
       let years = endYear - startYear;
-      let mid = addDate(y1, m1, d1, years, 0, 0, 0, Overflow.Constrain);
-      let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+      let mid = addDate(yr1, mo1, d1, years, 0, 0, 0, Overflow.Constrain);
+      let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
 
       if (midSign === 0) {
         return largestUnit === TimeComponent.Years
@@ -592,8 +598,8 @@ export function differenceDate(
         months += sign * 12;
       }
 
-      mid = addDate(y1, m1, d1, years, months, 0, 0, Overflow.Constrain);
-      midSign = compareTemporalDate(mid.year, mid.month, mid.day, y2, m2, d2);
+      mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
+      midSign = compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
 
       if (midSign === 0) {
         return largestUnit === TimeComponent.Years
@@ -611,8 +617,8 @@ export function differenceDate(
           months = sign * 11;
         }
 
-        mid = addDate(y1, m1, d1, years, months, 0, 0, Overflow.Constrain);
-        midSign = compareTemporalDate(y1, m1, d1, mid.year, mid.month, mid.day);
+        mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
+        midSign = compareTemporalDate(yr1, mo1, d1, mid.year, mid.month, mid.day);
       }
 
       let days = 0; // If we get here, months and years are correct (no overflow), and `mid`
@@ -645,14 +651,14 @@ export function differenceDate(
 
     case TimeComponent.Weeks:
     case TimeComponent.Days: {
-      let neg = compareTemporalDate(y1, m1, d1, y2, m2, d2) < 0;
+      let neg = compareTemporalDate(yr1, mo1, d1, yr2, mo2, d2) < 0;
 
-      let smallerYear  = neg ? y1 : y2;
-      let smallerMonth = neg ? m1 : m2;
+      let smallerYear  = neg ? yr1 : yr2;
+      let smallerMonth = neg ? mo1 : mo2;
       let smallerDay   = neg ? d1 : d2;
 
-      let largerYear  = neg ? y2 : y1;
-      let largerMonth = neg ? m2 : m1;
+      let largerYear  = neg ? yr2 : yr1;
+      let largerMonth = neg ? mo2 : mo1;
       let largerDay   = neg ? d2 : d1;
 
       let sign = neg ? 1 : -1;
@@ -688,31 +694,21 @@ export function differenceDate(
 
 // https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
 export function differenceTime(
-  h1: i32,
-  min1: i32,
-  s1: i32,
-  ms1: i32,
-  µs1:i32,
-  ns1: i32,
-  h2: i32,
-  min2: i32,
-  s2: i32,
-  ms2: i32,
-  µs2: i32,
-  ns2: i32
+  h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
 ): Duration {
   let hours = h2 - h1;
-  let minutes = min2 - min1;
+  let minutes = m2 - m1;
   let seconds = s2 - s1;
   let milliseconds = ms2 - ms1;
   let microseconds = µs2 - µs1;
   let nanoseconds = ns2 - ns1;
 
   const sign = durationSign(
-    0, 
-    0, 
-    0, 
-    0, 
+    0,
+    0,
+    0,
+    0,
     hours,
     minutes,
     seconds,
@@ -727,7 +723,9 @@ export function differenceTime(
   microseconds *= sign;
   nanoseconds *= sign;
 
-  let balancedTime = balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
+  let balancedTime = balanceTime(
+    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
+  );
 
   return new Duration(
     0,
