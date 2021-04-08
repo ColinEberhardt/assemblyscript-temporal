@@ -1,11 +1,23 @@
 import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+import { Duration, DurationLike } from "./duration";
+import { Overflow, TimeComponent } from "./enums";
+import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
-import { checkDateTimeRange, daysInMonth, leapYear } from "./utils";
+import {
+  balanceDuration,
+  checkDateTimeRange,
+  coalesce,
+  compareTemporalDate,
+  daysInMonth,
+  durationSign,
+  leapYear,
+  toPaddedString,
+} from "./utils";
 
 export class YearMonthLike {
   year: i32 = -1;
   month: i32 = -1;
-  referenceISODay: i32 = 1;
+  referenceISODay: i32 = -1;
 }
 
 export class PlainYearMonth {
@@ -23,6 +35,9 @@ export class PlainYearMonth {
     if (yearMonth.year == -1 || yearMonth.month == -1) {
       throw new TypeError("missing required property");
     }
+
+    if (yearMonth.referenceISODay == -1) yearMonth.referenceISODay = 1;
+
     return new PlainYearMonth(
       yearMonth.year,
       yearMonth.month,
@@ -32,7 +47,7 @@ export class PlainYearMonth {
 
   @inline
   private static fromString(yearMonth: string): PlainYearMonth {
-    const dateRegex = new RegExp("^((?:[+\u2212-]\d{6}|\d{4}))-?(\d{2})$", "i");
+    const dateRegex = new RegExp("^((?:[+\u2212-]d{6}|d{4}))-?(d{2})$", "i");
     const match = dateRegex.exec(yearMonth);
     if (match != null) {
       let yearStr = match.matches[1];
@@ -93,5 +108,153 @@ export class PlainYearMonth {
   @inline
   get inLeapYear(): bool {
     return leapYear(this.year);
+  }
+
+  @inline
+  get monthCode(): string {
+    return (this.month >= 10 ? "M" : "M0") + this.month.toString();
+  }
+
+  toString(): string {
+    return this.year.toString() + "-" + toPaddedString(this.month);
+  }
+
+  @inline
+  equals(other: PlainYearMonth): bool {
+    if (this === other) return true;
+    return (
+      this.referenceISODay == other.referenceISODay &&
+      this.month == other.month &&
+      this.year == other.year
+    );
+  }
+
+  until(
+    yearMonth: PlainYearMonth,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const thisDate = new PlainDate(this.year, this.month, this.referenceISODay);
+    const otherDate = new PlainDate(
+      yearMonth.year,
+      yearMonth.month,
+      yearMonth.referenceISODay
+    );
+    const result = thisDate.until(otherDate, largestUnit);
+    return new Duration(result.years, result.months);
+  }
+
+  since(
+    yearMonth: PlainYearMonth,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const thisDate = new PlainDate(this.year, this.month, this.referenceISODay);
+    const otherDate = new PlainDate(
+      yearMonth.year,
+      yearMonth.month,
+      yearMonth.referenceISODay
+    );
+    const result = thisDate.until(otherDate, largestUnit);
+    return new Duration(result.years, result.months);
+  }
+
+  with(yearMonth: YearMonthLike): PlainYearMonth {
+    return new PlainYearMonth(
+      coalesce(yearMonth.year, this.year),
+      coalesce(yearMonth.month, this.month),
+      coalesce(yearMonth.referenceISODay, this.referenceISODay)
+    );
+  }
+
+  add<T = DurationLike>(
+    durationToAdd: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainYearMonth {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
+
+    const balancedDuration = balanceDuration(
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      TimeComponent.Days
+    );
+
+    const sign = durationSign(
+      duration.years,
+      duration.months,
+      duration.weeks,
+      balancedDuration.days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    );
+
+    const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
+    const startdate = new PlainDate(this.year, this.month, day);
+    const addedDate = startdate.add(duration, overflow);
+    return new PlainYearMonth(addedDate.year, addedDate.month, addedDate.day);
+  }
+
+  subtract<T = DurationLike>(
+    durationToAdd: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainYearMonth {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
+
+    const balancedDuration = balanceDuration(
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      TimeComponent.Days
+    );
+
+    const sign = durationSign(
+      duration.years,
+      duration.months,
+      duration.weeks,
+      balancedDuration.days,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    );
+
+    const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
+    const startdate = new PlainDate(this.year, this.month, day);
+    const addedDate = startdate.subtract(duration, overflow);
+    return new PlainYearMonth(addedDate.year, addedDate.month, addedDate.day);
+  }
+
+  static compare(a: PlainYearMonth, b: PlainYearMonth): i32 {
+    if (a === b) return 0;
+
+    return compareTemporalDate(
+      a.year,
+      a.month,
+      a.referenceISODay,
+      b.year,
+      b.month,
+      b.referenceISODay
+    );
   }
 }
