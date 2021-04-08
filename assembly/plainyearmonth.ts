@@ -47,19 +47,27 @@ export class PlainYearMonth {
 
   @inline
   private static fromString(yearMonth: string): PlainYearMonth {
-    const dateRegex = new RegExp("^((?:[+\u2212-]d{6}|d{4}))-?(d{2})$", "i");
+    const dateRegex = new RegExp(
+      "^((?:[+\u2212-]\\d{6}|\\d{4}))-?(\\d{2})$",
+      "i"
+    );
     const match = dateRegex.exec(yearMonth);
     if (match != null) {
       let yearStr = match.matches[1];
+
+      if (yearStr.charAt(0) === "\u2212")
+        yearStr = "-" + yearStr.slice(1);
+      // workaround for parsing "-009999" year strings
+      if (yearStr.charAt(0) == "−")
+        yearStr = "-" + I32.parseInt(yearStr.slice(1)).toString();
+
       return new PlainYearMonth(
-        I32.parseInt(
-          yearStr === "\u2212" ? "-" + yearStr.substring(1) : yearStr
-        ),
+        I32.parseInt(yearStr),
         I32.parseInt(match.matches[2])
       );
     } else {
       const dateTime = PlainDateTime.from(yearMonth);
-      return new PlainYearMonth(dateTime.year, dateTime.month, dateTime.day);
+      return new PlainYearMonth(dateTime.year, dateTime.month);
     }
   }
 
