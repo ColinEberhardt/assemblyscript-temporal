@@ -191,8 +191,8 @@ export class PlainYearMonth {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
