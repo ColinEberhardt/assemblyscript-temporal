@@ -260,8 +260,12 @@ export class PlainYearMonth {
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
     const startdate = new PlainDate(this.year, this.month, day);
-    const addedDate = startdate.subtract(duration, overflow);
-    return new PlainYearMonth(addedDate.year, addedDate.month, addedDate.day);
+    const subtractedDate = startdate.subtract(duration, overflow);
+    return new PlainYearMonth(
+      subtractedDate.year,
+      subtractedDate.month,
+      subtractedDate.day
+    );
   }
 
   static compare(a: PlainYearMonth, b: PlainYearMonth): i32 {

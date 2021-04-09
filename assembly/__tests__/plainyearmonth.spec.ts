@@ -691,7 +691,7 @@ describe("YearMonth", () => {
         nov94.toString() +
         `)).negated()`,
       () => {
-        // equal(`${nov94.since(jun13)}`, `${diff.negated()}`)
+        //expect(nov94.since(jun13).toString()).toBe(`${diff.negated()}`)
       }
     );
     it(
@@ -725,8 +725,8 @@ describe("YearMonth", () => {
       }
     );
     xit("casts argument", () => {
-      // equal(`${jun13.since({ year: 1994, month: 11 })}`, `${diff}`);
-      // equal(`${jun13.since("1994-11")}`, `${diff}`);
+      //expect(jun13.since({ year: 1994, month: 11 }).toString()).toBe(`${diff}`);
+      //expect(jun13.since("1994-11").toString()).toBe(`${diff}`);
     });
     // it("object must contain at least the required properties", () => {
     //   throws(() => jun13.since({ year: 1994 }), TypeError);
@@ -775,7 +775,7 @@ describe("YearMonth", () => {
     //   [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
     //     throws(() => feb21.since(feb20, badOptions), TypeError)
     //   );
-    //   [{}, () => {}, undefined].forEach((options) => equal(`${feb21.since(feb20, options)}`, 'P1Y'));
+    //   [{}, () => {}, undefined].forEach((options) =>expect(feb21.since(feb20, options).toString()).toBe('P1Y'));
     // });
     // const earlier = PlainYearMonth.from('2019-01');
     // const later = PlainYearMonth.from('2021-09');
@@ -807,9 +807,9 @@ describe("YearMonth", () => {
     // ];
     // incrementOneNearest.forEach(([smallestUnit, expected]) => {
     //   const roundingMode = 'halfExpand';
-    //   it(`rounds to nearest ${smallestUnit}`, () => {
-    //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
-    //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+    //   it(`rounds to nearest ${smallestUnit.toString()).toBe(() => {
+    //    expect(later.since(earlier, { smallestUnit, roundingMode }).toString()).toBe(expected);
+    //    expect(earlier.since(later, { smallestUnit, roundingMode }).toString()).toBe(`-${expected}`);
     //   });
     // });
     // const incrementOneCeil = [
@@ -818,9 +818,9 @@ describe("YearMonth", () => {
     // ];
     // incrementOneCeil.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
     //   const roundingMode = 'ceil';
-    //   it(`rounds up to ${smallestUnit}`, () => {
-    //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
-    //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
+    //   it(`rounds up to ${smallestUnit.toString()).toBe(() => {
+    //    expect(later.since(earlier, { smallestUnit, roundingMode }).toString()).toBe(expectedPositive);
+    //    expect(earlier.since(later, { smallestUnit, roundingMode }).toString()).toBe(expectedNegative);
     //   });
     // });
     // const incrementOneFloor = [
@@ -829,9 +829,9 @@ describe("YearMonth", () => {
     // ];
     // incrementOneFloor.forEach(([smallestUnit, expectedPositive, expectedNegative]) => {
     //   const roundingMode = 'floor';
-    //   it(`rounds down to ${smallestUnit}`, () => {
-    //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expectedPositive);
-    //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, expectedNegative);
+    //   it(`rounds down to ${smallestUnit.toString()).toBe(() => {
+    //    expect(later.since(earlier, { smallestUnit, roundingMode }).toString()).toBe(expectedPositive);
+    //    expect(earlier.since(later, { smallestUnit, roundingMode }).toString()).toBe(expectedNegative);
     //   });
     // });
     // const incrementOneTrunc = [
@@ -840,14 +840,14 @@ describe("YearMonth", () => {
     // ];
     // incrementOneTrunc.forEach(([smallestUnit, expected]) => {
     //   const roundingMode = 'trunc';
-    //   it(`truncates to ${smallestUnit}`, () => {
-    //     equal(`${later.since(earlier, { smallestUnit, roundingMode })}`, expected);
-    //     equal(`${earlier.since(later, { smallestUnit, roundingMode })}`, `-${expected}`);
+    //   it(`truncates to ${smallestUnit.toString()).toBe(() => {
+    //    expect(later.since(earlier, { smallestUnit, roundingMode }).toString()).toBe(expected);
+    //    expect(earlier.since(later, { smallestUnit, roundingMode }).toString()).toBe(`-${expected}`);
     //   });
     // });
     // it('trunc is the default', () => {
-    //   equal(`${later.since(earlier, { smallestUnit: 'years' })}`, 'P2Y');
-    //   equal(`${earlier.since(later, { smallestUnit: 'years' })}`, '-P2Y');
+    //  expect(later.since(earlier, { smallestUnit: 'years' }).toString()).toBe('P2Y');
+    //  expect(earlier.since(later, { smallestUnit: 'years' }).toString()).toBe('-P2Y');
     // });
     // it('rounds to an increment of years', () => {
     //   equal(
@@ -856,20 +856,246 @@ describe("YearMonth", () => {
     //   );
     // });
     // it('rounds to an increment of months', () => {
-    //   equal(`${later.since(earlier, { smallestUnit: 'months', roundingIncrement: 5 })}`, 'P2Y5M');
+    //  expect(later.since(earlier, { smallestUnit: 'months', roundingIncrement: 5 }).toString()).toBe('P2Y5M');
     //   equal(
     //     `${later.since(earlier, { largestUnit: 'months', smallestUnit: 'months', roundingIncrement: 10 })}`,
     //     'P30M'
     //   );
     // });
     // it('accepts singular units', () => {
-    //   equal(`${later.since(earlier, { largestUnit: 'year' })}`, `${later.since(earlier, { largestUnit: 'years' })}`);
-    //   equal(`${later.since(earlier, { smallestUnit: 'year' })}`, `${later.since(earlier, { smallestUnit: 'years' })}`);
-    //   equal(`${later.since(earlier, { largestUnit: 'month' })}`, `${later.since(earlier, { largestUnit: 'months' })}`);
+    //  expect(later.since(earlier, { largestUnit: 'year' }).toString()).toBe(`${later.since(earlier, { largestUnit: 'years' })}`);
+    //  expect(later.since(earlier, { smallestUnit: 'year' }).toString()).toBe(`${later.since(earlier, { smallestUnit: 'years' })}`);
+    //  expect(later.since(earlier, { largestUnit: 'month' }).toString()).toBe(`${later.since(earlier, { largestUnit: 'months' })}`);
     //   equal(
     //     `${later.since(earlier, { smallestUnit: 'month' })}`,
     //     `${later.since(earlier, { smallestUnit: 'months' })}`
     //   );
+    // });
+  });
+
+  describe("YearMonth.add() works", () => {
+    ym = PlainYearMonth.from("2019-11");
+    it("(2019-11) plus 2 months === 2020-01", () => {
+      expect(ym.add({ months: 2 }).toString()).toBe("2020-01");
+      expect(ym.add({ months: 2 }, Overflow.Constrain).toString()).toBe(
+        "2020-01"
+      );
+      expect(ym.add({ months: 2 }, Overflow.Reject).toString()).toBe("2020-01");
+    });
+    it("(2019-11) plus 1 year === 2020-11", () => {
+      expect(ym.add({ years: 1 }).toString()).toBe("2020-11");
+      expect(ym.add({ years: 1 }, Overflow.Constrain).toString()).toBe(
+        "2020-11"
+      );
+      expect(ym.add({ years: 1 }, Overflow.Reject).toString()).toBe("2020-11");
+    });
+    it("symmetrical with regard to negative durations", () => {
+      expect(
+        PlainYearMonth.from("2020-01").add({ months: -2 }).toString()
+      ).toBe("2019-11");
+      expect(PlainYearMonth.from("2020-11").add({ years: -1 }).toString()).toBe(
+        "2019-11"
+      );
+    });
+    it("yearMonth.add(durationObj)", () => {
+      expect(ym.add(new Duration(0, 2)).toString()).toBe("2020-01");
+    });
+    xit("casts argument", () => {});
+    // expect(ym.add("P2M").toString()).toBe("2020-01"));
+    it("ignores lower units that don't balance up to the length of the month", () => {
+      expect(ym.add({ days: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ days: 29 }).toString()).toBe("2019-11");
+      expect(ym.add({ hours: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ minutes: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ seconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ milliseconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ microseconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.add({ nanoseconds: 1 }).toString()).toBe("2019-11");
+    });
+    it("adds lower units that balance up to a month or more", () => {
+      expect(ym.add({ days: 30 }).toString()).toBe("2019-12");
+      expect(ym.add({ days: 31 }).toString()).toBe("2019-12");
+      expect(ym.add({ days: 60 }).toString()).toBe("2019-12");
+      expect(ym.add({ days: 61 }).toString()).toBe("2020-01");
+      expect(ym.add({ hours: 720 }).toString()).toBe("2019-12");
+      expect(ym.add({ minutes: 43200 }).toString()).toBe("2019-12");
+      expect(ym.add({ seconds: 2592000 }).toString()).toBe("2019-12");
+
+      // // These are overflowing due to i32
+      // expect(ym.add({ milliseconds: 2592000_000 }).toString()).toBe("2019-12");
+      // expect(ym.add({ microseconds: 2592000_000_000 }).toString()).toBe(
+      //   "2019-12"
+      // );
+      // expect(ym.add({ nanoseconds: 2592000_000_000_000 }).toString()).toBe(
+      //   "2019-12"
+      // );
+    });
+    it("balances days to months based on the number of days in the ISO month", () => {
+      expect(PlainYearMonth.from("2019-02").add({ days: 27 }).toString()).toBe(
+        "2019-02"
+      );
+      expect(PlainYearMonth.from("2019-02").add({ days: 28 }).toString()).toBe(
+        "2019-03"
+      );
+      expect(PlainYearMonth.from("2020-02").add({ days: 28 }).toString()).toBe(
+        "2020-02"
+      );
+      expect(PlainYearMonth.from("2020-02").add({ days: 29 }).toString()).toBe(
+        "2020-03"
+      );
+      expect(PlainYearMonth.from("2019-11").add({ days: 29 }).toString()).toBe(
+        "2019-11"
+      );
+      expect(PlainYearMonth.from("2019-11").add({ days: 30 }).toString()).toBe(
+        "2019-12"
+      );
+      expect(PlainYearMonth.from("2020-01").add({ days: 30 }).toString()).toBe(
+        "2020-01"
+      );
+      expect(PlainYearMonth.from("2020-01").add({ days: 31 }).toString()).toBe(
+        "2020-02"
+      );
+    });
+    // it("invalid overflow", () => {
+    //   ["", "CONSTRAIN", "balance", 3, null].forEach((overflow) =>
+    //     throws(() => ym.add({ months: 1 }, { overflow }), RangeError)
+    //   );
+    // });
+    xit("mixed positive and negative values always throw", () => {
+      // ["constrain", "reject"].forEach((overflow) =>
+      //   throws(() => ym.add({ years: 1, months: -6 }, { overflow }), RangeError)
+      // );
+    });
+    // it("options may only be an object or undefined", () => {
+    //   [null, 1, "hello", true, Symbol("foo"), 1n].forEach((badOptions) =>
+    //     throws(() => ym.add({ months: 1 }, badOptions), TypeError)
+    //   );
+    //   [{}, () => {}, undefined].forEach((options) =>
+    //     expect(ym.add({ months: 1 }, options).toString()).toBe("2019-12")
+    //   );
+    // });
+    // it("object must contain at least one correctly-spelled property", () => {
+    //   throws(() => ym.add({}), TypeError);
+    //   throws(() => ym.add({ month: 12 }), TypeError);
+    // });
+    // it("incorrectly-spelled properties are ignored", () => {
+    //   expect(ym.add({ month: 1, years: 1 }).toString()).toBe("2020-11");
+    // });
+  });
+
+  describe("YearMonth.subtract() works", () => {
+    ym = PlainYearMonth.from("2019-11");
+    it("(2019-11) minus 11 months === 2018-12", () => {
+      expect(ym.subtract({ months: 11 }).toString()).toBe("2018-12");
+      expect(ym.subtract({ months: 11 }, Overflow.Constrain).toString()).toBe(
+        "2018-12"
+      );
+      expect(ym.subtract({ months: 11 }, Overflow.Reject).toString()).toBe(
+        "2018-12"
+      );
+    });
+    it("(2019-11) minus 12 years === 2007-11", () => {
+      expect(ym.subtract({ years: 12 }).toString()).toBe("2007-11");
+      expect(ym.subtract({ years: 12 }, Overflow.Constrain).toString()).toBe(
+        "2007-11"
+      );
+      expect(ym.subtract({ years: 12 }, Overflow.Reject).toString()).toBe(
+        "2007-11"
+      );
+    });
+    it("symmetrical with regard to negative durations", () => {
+      expect(
+        PlainYearMonth.from("2018-12").subtract({ months: -11 }).toString()
+      ).toBe("2019-11");
+      expect(
+        PlainYearMonth.from("2007-11").subtract({ years: -12 }).toString()
+      ).toBe("2019-11");
+    });
+    it("yearMonth.subtract(durationObj)", () => {
+      expect(ym.subtract(new Duration(0, 11)).toString()).toBe("2018-12");
+    });
+    xit("casts argument", () => {});
+    // expect(ym.subtract("P11M").toString()).toBe("2018-12"));
+    it("ignores lower units that don't balance up to the length of the month", () => {
+      expect(ym.subtract({ days: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ hours: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ minutes: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ seconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ milliseconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ microseconds: 1 }).toString()).toBe("2019-11");
+      expect(ym.subtract({ nanoseconds: 1 }).toString()).toBe("2019-11");
+    });
+    it("subtracts lower units that balance up to a day or more", () => {
+      expect(ym.subtract({ days: 29 }).toString()).toBe("2019-10");
+      expect(ym.subtract({ days: 30 }).toString()).toBe("2019-10");
+      expect(ym.subtract({ days: 60 }).toString()).toBe("2019-09");
+      expect(ym.subtract({ days: 61 }).toString()).toBe("2019-09");
+      expect(ym.subtract({ hours: 720 }).toString()).toBe("2019-10");
+      expect(ym.subtract({ minutes: 43200 }).toString()).toBe("2019-10");
+      expect(ym.subtract({ seconds: 2592000 }).toString()).toBe("2019-10");
+      // expect(ym.subtract({ milliseconds: 2592000_000 }).toString()).toBe(
+      //   "2019-10"
+      // );
+      // expect(ym.subtract({ microseconds: 2592000_000_000 }).toString()).toBe(
+      //   "2019-10"
+      // );
+      // expect(ym.subtract({ nanoseconds: 2592000_000_000_000 }).toString()).toBe(
+      //   "2019-10"
+      // );
+    });
+    it("balances days to months based on the number of days in the ISO month", () => {
+      expect(
+        PlainYearMonth.from("2019-02").subtract({ days: 27 }).toString()
+      ).toBe("2019-02");
+      expect(
+        PlainYearMonth.from("2019-02").subtract({ days: 28 }).toString()
+      ).toBe("2019-01");
+      expect(
+        PlainYearMonth.from("2020-02").subtract({ days: 28 }).toString()
+      ).toBe("2020-02");
+      expect(
+        PlainYearMonth.from("2020-02").subtract({ days: 29 }).toString()
+      ).toBe("2020-01");
+      expect(
+        PlainYearMonth.from("2019-11").subtract({ days: 29 }).toString()
+      ).toBe("2019-11");
+      expect(
+        PlainYearMonth.from("2019-11").subtract({ days: 30 }).toString()
+      ).toBe("2019-10");
+      expect(
+        PlainYearMonth.from("2020-01").subtract({ days: 30 }).toString()
+      ).toBe("2020-01");
+      expect(
+        PlainYearMonth.from("2020-01").subtract({ days: 31 }).toString()
+      ).toBe("2019-12");
+    });
+    // it("invalid overflow", () => {
+    //   ["", "CONSTRAIN", "balance", 3, null].forEach((overflow) =>
+    //     throws(() => ym.subtract({ months: 1 }, { overflow }), RangeError)
+    //   );
+    // });
+    xit("mixed positive and negative values always throw", () => {
+      // ["constrain", "reject"].forEach((overflow) =>
+      //   throws(
+      //     () => ym.subtract({ years: 1, months: -6 }, { overflow }),
+      //     RangeError
+      //   )
+      // );
+    });
+    // it("options may only be an object or undefined", () => {
+    //   [null, 1, "hello", true, Symbol("foo"), 1n].forEach((badOptions) =>
+    //     throws(() => ym.subtract({ months: 1 }, badOptions), TypeError)
+    //   );
+    //   [{}, () => {}, undefined].forEach((options) =>
+    //     expect(ym.subtract({ months: 1 }, options).toString()).toBe("2019-10")
+    //   );
+    // });
+    // it("object must contain at least one correctly-spelled property", () => {
+    //   throws(() => ym.subtract({}), TypeError);
+    //   throws(() => ym.subtract({ month: 12 }), TypeError);
+    // });
+    // it("incorrectly-spelled properties are ignored", () => {
+    //   expect(ym.subtract({ month: 1, years: 1 }).toString()).toBe("2018-11");
     // });
   });
 
@@ -884,7 +1110,7 @@ describe("YearMonth", () => {
     //   });
     // });
     // it('takes an object argument with day property', () => {
-    //   equal(`${ym.toPlainDate({ day: 22 })}`, '2002-01-22');
+    //  expect(ym.toPlainDate({ day: 22 }).toString()).toBe('2002-01-22');
     // });
     // it('needs at least a day property on the object in the ISO calendar', () => {
     //   throws(() => ym.toPlainDate({ something: 'nothing' }), TypeError);
