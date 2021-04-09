@@ -1026,9 +1026,9 @@ describe("YearMonth", () => {
       expect(ym.subtract({ nanoseconds: 1 }).toString()).toBe("2019-11");
     });
     it("subtracts lower units that balance up to a day or more", () => {
-      expect(ym.subtract({ days: 29 }).toString()).toBe("2019-10");
+      expect(ym.subtract({ days: 29 }).toString()).toBe("2019-11");
       expect(ym.subtract({ days: 30 }).toString()).toBe("2019-10");
-      expect(ym.subtract({ days: 60 }).toString()).toBe("2019-09");
+      expect(ym.subtract({ days: 60 }).toString()).toBe("2019-10");
       expect(ym.subtract({ days: 61 }).toString()).toBe("2019-09");
       expect(ym.subtract({ hours: 720 }).toString()).toBe("2019-10");
       expect(ym.subtract({ minutes: 43200 }).toString()).toBe("2019-10");
