@@ -13,6 +13,7 @@ import {
   isoYearString,
   leapYear,
   toPaddedString,
+  daysInYear,
 } from "./utils";
 
 export class YearMonthLike {
@@ -105,7 +106,7 @@ export class PlainYearMonth {
 
   @inline
   get daysInYear(): i32 {
-    return 365 + i32(leapYear(this.year));
+    return daysInYear(this.year);
   }
 
   @inline
@@ -190,8 +191,8 @@ export class PlainYearMonth {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
