@@ -63,6 +63,36 @@ A `PlainDate` object represents a calendar date that is not associated with a pa
 
 The `PlainDate` API is almost identical to `PlainDateTime`, so see above for API usage examples.
 
+#### `PlainTime`
+
+A `PlainTime` object represents a wall-clock time that is not associated with a particular date or time zone, e.g. 7:39 PM. For detailed documentation see the [TC39 Temporal proposal website](https://tc39.es/proposal-temporal/docs/plaintime.html), this implementation follows the specification as closely as possible.
+
+The `PlainTime` API is almost identical to `PlainDateTime`, so see above for API usage examples.
+
+#### `PlainMonthDay`
+
+A date without a year component. This is useful to express things like "Bastille Day is on the 14th of July".
+For detailed documentation see the
+[TC39 Temporal proposal website](https://tc39.es/proposal-temporal/docs/plainmonthday.html)
+, this implementation follows the specification as closely as possible.
+
+```javascript
+const monthDay = PlainMonthDay.from({ month: 7, day: 14 }); // => 07-14
+const date = monthDay.toPlainDate({ year: 2030 }); // => 2030-07-14
+date.dayOfWeek; // => 7
+```
+
+The `PlainMonthDay` API is almost identical to `PlainDateTime`, so see above for more API usage examples.
+
+#### `PlainYearMonth`
+
+A date without a day component. This is useful to express things like "the October 2020 meeting".
+For detailed documentation see the
+[TC39 Temporal proposal website](https://tc39.es/proposal-temporal/docs/plainyearmonth.html)
+, this implementation follows the specification as closely as possible.
+
+The `PlainYearMonth` API is almost identical to `PlainDateTime`, so see above for API usage examples.
+
 #### `now`
 
 The `now` object has several methods which give information about the current time and date.
@@ -72,7 +102,6 @@ dateTime = now.plainDateTimeISO();
 dateTime.toString(); // 2021-04-01T12:05:47.357
 ```
 
-
 ## Contributing
 
-This project is open source, MIT licenced and your contributions are very much welcomed.
+This project is open source, MIT licensed and your contributions are very much welcomed.
