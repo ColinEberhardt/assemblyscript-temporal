@@ -1,5 +1,5 @@
 import { checkDateTimeRange, coalesce, toPaddedString } from "./utils";
-import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
 import { PlainDate } from "./plaindate";
 
