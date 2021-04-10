@@ -1,4 +1,4 @@
-import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+import { RegExp } from "assemblyscript-regex";
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
