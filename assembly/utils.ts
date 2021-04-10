@@ -1006,3 +1006,12 @@ export function addInstant(epochNanoSeconds: i32, h: i32, min: i32, s: i32, ms: 
 
   return epochNanoSeconds + sum;
 }
+
+// https://tc39.es/proposal-temporal/#sec-temporal-validateinstant
+// @ts-ignore: decorator
+@inline
+export function rejectInstant(ns: i64): void {
+  if (!checkRange(ns, -8.64e21, 8.64e21)) {
+    throw new RangeError("nanoseconds out of range");
+  }
+}

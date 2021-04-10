@@ -1,8 +1,63 @@
-import { DurationLike } from "./duration";
-import { addInstant } from "./utils";
+import { NANOS_PER_SECOND } from "./constants";
+import { Duration, DurationLike } from "./duration";
+import { addInstant, rejectInstant, sign } from "./utils";
 
 export class Instant {
-  constructor(public epochNanoSeconds: i32) {}
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.from
+  @inline
+  static from<T = Instant>(item: T): Instant {
+    if (item instanceof Instant) {
+      return new Instant(item.epochNanoSeconds);
+    }
+
+    if (isString<T>()) {
+      // TODO
+      unreachable();
+    }
+
+    unreachable();
+  }
+
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.fromepochseconds
+  @inline
+  static fromEpochSeconds(epochSeconds: i32): Instant {
+    const epochNanoSeconds = epochSeconds * NANOS_PER_SECOND;
+    rejectInstant(epochNanoSeconds);
+    return new Instant(epochNanoSeconds);
+  }
+
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.fromepochmicroseconds
+  @inline
+  static fromEpochMicroseconds(epochMicroseconds: i32): Instant {
+    const epochNanoSeconds = epochMicroseconds * 1000;
+    rejectInstant(epochNanoSeconds);
+    return new Instant(epochNanoSeconds);
+  }
+
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.fromepochnanoseconds
+  @inline
+  static fromEpochNanoseconds(epochNanoSeconds: i32): Instant {
+    rejectInstant(epochNanoSeconds);
+    return new Instant(epochNanoSeconds);
+  }
+
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.compare
+  // https://tc39.es/proposal-temporal/#sec-temporal-compareepochnanoseconds
+  // TODO: should be able to take strings
+  @inline
+  static compare(one: Instant, two: Instant): i32 {
+    if (one === two) return 0;
+
+    return sign(one.epochNanoSeconds - two.epochNanoSeconds);
+  }
+
+  // https://tc39.es/proposal-temporal/#sec-properties-of-temporal-instant-instances
+  public epochNanoSeconds: i64;
+
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant
+  constructor(epochNanoSeconds: i64) {
+    this.epochNanoSeconds = epochNanoSeconds;
+  }
 
   @inline
   get epochSeconds(): i32 {
