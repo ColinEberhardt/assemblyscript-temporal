@@ -1,6 +1,6 @@
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
-import { RegExp } from "../node_modules/assemblyscript-regex/assembly/index";
+import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
 import { DateLike } from "./plaindate";
 import {
