@@ -26,6 +26,14 @@ export class Instant {
     return new Instant(epochNanoSeconds);
   }
 
+  // https://tc39.es/proposal-temporal/#sec-temporal.instant.fromepochmilliseconds
+  @inline
+  static fromEpochMilliseconds(epochMilliseconds: i32): Instant {
+    const epochNanoSeconds = epochMilliseconds * 1_000_000;
+    rejectInstant(epochNanoSeconds);
+    return new Instant(epochNanoSeconds);
+  }
+
   // https://tc39.es/proposal-temporal/#sec-temporal.instant.fromepochmicroseconds
   @inline
   static fromEpochMicroseconds(epochMicroseconds: i32): Instant {
