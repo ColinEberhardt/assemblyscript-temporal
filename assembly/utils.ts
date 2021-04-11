@@ -247,6 +247,24 @@ export function checkDateTimeRange(
   return true;
 }
 
+export function rejectTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32
+): void {
+  if (!(
+    checkRange(hour, 0, 23) ||
+    checkRange(minute, 0, 59) ||
+    checkRange(second, 0, 59) ||
+    checkRange(millisecond, 0, 999) ||
+    checkRange(microsecond, 0, 999) ||
+    checkRange(nanosecond, 0, 999)
+  )) throw new RangeError("time out of range");
+}
+
 export function rejectDate(year: i32, month: i32, day: i32): void {
   if (!checkRange(month, 1, 12)) {
     throw new RangeError("month out of range");
@@ -860,7 +878,7 @@ export function regulateTime(
 ): PT {
   switch (overflow) {
     case Overflow.Reject:
-      // rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+      rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
       break;
 
     case Overflow.Constrain:
