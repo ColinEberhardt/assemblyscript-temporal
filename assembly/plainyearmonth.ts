@@ -24,6 +24,23 @@ export class YearMonthLike {
 
 export class PlainYearMonth {
   @inline
+  static from<T = YearMonthLike>(yearMonth: T): PlainYearMonth {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>yearMonth);
+    } else {
+      if (isReference<T>()) {
+        if (yearMonth instanceof PlainYearMonth) {
+          return this.fromPlainYearMonth(yearMonth);
+        } else if (yearMonth instanceof YearMonthLike) {
+          return this.fromYearMonthLike(yearMonth);
+        }
+      }
+      throw new TypeError("invalid yearMonth type");
+    }
+  }
+
+  @inline
   private static fromPlainYearMonth(yearMonth: PlainYearMonth): PlainYearMonth {
     return new PlainYearMonth(
       yearMonth.year,
@@ -72,23 +89,6 @@ export class PlainYearMonth {
     }
   }
 
-  @inline
-  static from<T = YearMonthLike>(yearMonth: T): PlainYearMonth {
-    if (isString<T>()) {
-      // @ts-ignore: cast
-      return this.fromString(<string>yearMonth);
-    } else {
-      if (isReference<T>()) {
-        if (yearMonth instanceof PlainYearMonth) {
-          return this.fromPlainYearMonth(yearMonth);
-        } else if (yearMonth instanceof YearMonthLike) {
-          return this.fromYearMonthLike(yearMonth);
-        }
-      }
-      throw new TypeError("invalid yearMonth type");
-    }
-  }
-
   constructor(
     readonly year: i32,
     readonly month: i32,
@@ -124,10 +124,12 @@ export class PlainYearMonth {
     return (this.month >= 10 ? "M" : "M0") + this.month.toString();
   }
 
+  @inline
   toString(): string {
     return isoYearString(this.year) + "-" + toPaddedString(this.month);
   }
 
+  @inline
   toPlainDate(day: i32): PlainDate {
     return new PlainDate(this.year, this.month, day);
   }
@@ -136,16 +138,13 @@ export class PlainYearMonth {
   equals(other: PlainYearMonth): bool {
     if (this === other) return true;
     return (
-      this.referenceISODay == other.referenceISODay &&
       this.month == other.month &&
-      this.year == other.year
+      this.year == other.year &&
+      this.referenceISODay == other.referenceISODay
     );
   }
 
-  until(
-    yearMonth: PlainYearMonth,
-    largestUnit: TimeComponent = TimeComponent.Years
-  ): Duration {
+  until(yearMonth: PlainYearMonth, largestUnit: TimeComponent = TimeComponent.Years): Duration {
     if (largestUnit > TimeComponent.Months)
       throw new RangeError("lower units are not allowed");
 
@@ -159,10 +158,7 @@ export class PlainYearMonth {
     return new Duration(result.years, result.months);
   }
 
-  since(
-    yearMonth: PlainYearMonth,
-    largestUnit: TimeComponent = TimeComponent.Years
-  ): Duration {
+  since(yearMonth: PlainYearMonth, largestUnit: TimeComponent = TimeComponent.Years): Duration {
     if (largestUnit > TimeComponent.Months)
       throw new RangeError("lower units are not allowed");
 
@@ -184,15 +180,12 @@ export class PlainYearMonth {
     );
   }
 
-  add<T = DurationLike>(
-    durationToAdd: T,
-    overflow: Overflow = Overflow.Constrain
-  ): PlainYearMonth {
+  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainYearMonth {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
         // @ts-ignore TS2352
-        : (durationToAdd as Duration);
+        : durationToAdd as Duration;
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -209,30 +202,21 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      balancedDuration.days
     );
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
-    const startdate = new PlainDate(this.year, this.month, day);
-    const addedDate = startdate.add(duration, overflow);
+    const startDate = new PlainDate(this.year, this.month, day);
+    const addedDate = startDate.add(duration, overflow);
     return new PlainYearMonth(addedDate.year, addedDate.month);
   }
 
-  subtract<T = DurationLike>(
-    durationToAdd: T,
-    overflow: Overflow = Overflow.Constrain
-  ): PlainYearMonth {
+  subtract<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainYearMonth {
     let duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+        // @ts-ignore TS2352
+        : durationToAdd as Duration;
 
     duration = new Duration(
       -duration.years,
@@ -262,13 +246,7 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      balancedDuration.days
     );
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
@@ -279,7 +257,6 @@ export class PlainYearMonth {
 
   static compare(a: PlainYearMonth, b: PlainYearMonth): i32 {
     if (a === b) return 0;
-
     return compareTemporalDate(
       a.year,
       a.month,

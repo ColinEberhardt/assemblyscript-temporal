@@ -214,12 +214,7 @@ export class PlainTime {
     other: PlainTime,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
-    if (
-      largestUnit == TimeComponent.Years ||
-      largestUnit == TimeComponent.Months ||
-      largestUnit == TimeComponent.Weeks ||
-      largestUnit == TimeComponent.Days
-    ) {
+    if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
 
@@ -254,12 +249,7 @@ export class PlainTime {
     other: PlainTime,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
-    if (
-      largestUnit == TimeComponent.Years ||
-      largestUnit == TimeComponent.Months ||
-      largestUnit == TimeComponent.Weeks ||
-      largestUnit == TimeComponent.Days
-    ) {
+    if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
 
@@ -328,7 +318,7 @@ export class PlainTime {
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
         // @ts-ignore TS2352
-        : (durationToAdd as Duration);
+        : durationToAdd as Duration;
 
     const newTime = addTime(
       this.hour,
@@ -369,7 +359,7 @@ export class PlainTime {
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
         // @ts-ignore TS2352
-        : (durationToSubtract as Duration);
+        : durationToSubtract as Duration;
 
     const newTime = addTime(
       this.hour,

@@ -1,7 +1,11 @@
-import { checkDateTimeRange, coalesce, toPaddedString } from "./utils";
 import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
 import { PlainDate } from "./plaindate";
+import {
+  coalesce,
+  toPaddedString,
+  checkDateTimeRange
+} from "./utils";
 
 export class MonthDayLike {
   month: i32 = -1;
@@ -10,6 +14,23 @@ export class MonthDayLike {
 }
 
 export class PlainMonthDay {
+  @inline
+  static from<T = MonthDayLike>(monthDay: T): PlainMonthDay {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>monthDay);
+    } else {
+      if (isReference<T>()) {
+        if (monthDay instanceof PlainMonthDay) {
+          return this.fromPlainMonthDay(monthDay);
+        } else if (monthDay instanceof MonthDayLike) {
+          return this.fromMonthDayLike(monthDay);
+        }
+      }
+      throw new TypeError("invalid date type");
+    }
+  }
+
   @inline
   private static fromPlainMonthDay(monthDay: PlainMonthDay): PlainMonthDay {
     return new PlainMonthDay(
@@ -44,23 +65,6 @@ export class PlainMonthDay {
     }
   }
 
-  @inline
-  static from<T = MonthDayLike>(monthDay: T): PlainMonthDay {
-    if (isString<T>()) {
-      // @ts-ignore: cast
-      return this.fromString(<string>monthDay);
-    } else {
-      if (isReference<T>()) {
-        if (monthDay instanceof PlainMonthDay) {
-          return this.fromPlainMonthDay(monthDay);
-        } else if (monthDay instanceof MonthDayLike) {
-          return this.fromMonthDayLike(monthDay);
-        }
-      }
-      throw new TypeError("invalid date type");
-    }
-  }
-
   constructor(
     readonly month: i32,
     readonly day: i32,
@@ -76,10 +80,12 @@ export class PlainMonthDay {
     return (this.month >= 10 ? "M" : "M0") + this.month.toString();
   }
 
+  @inline
   toString(): string {
     return toPaddedString(this.month) + "-" + toPaddedString(this.day);
   }
 
+  @inline
   toPlainDate(year: i32): PlainDate {
     return new PlainDate(year, this.month, this.day);
   }

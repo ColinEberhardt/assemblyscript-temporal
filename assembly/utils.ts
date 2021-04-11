@@ -345,12 +345,12 @@ export function durationSign(
   months: i32,
   weeks: i32,
   days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32
+  hours: i32 = 0,
+  minutes: i32 = 0,
+  seconds: i32 = 0,
+  milliseconds: i32 = 0,
+  microseconds: i32 = 0,
+  nanoseconds: i32 = 0
 ): i32 {
   if (years) return sign(years);
   if (months) return sign(months);
@@ -671,7 +671,7 @@ export function differenceDate(
       );
 
       while (years > 0) {
-        days  += 365 + i32(leapYear(smallerYear + years - 1));
+        days  += daysInYear(smallerYear + years - 1);
         years -= 1;
       }
 
@@ -681,10 +681,7 @@ export function differenceDate(
         days -= weeks * 7;
       }
 
-      weeks *= sign;
-      days  *= sign;
-
-      return new Duration(0, 0, weeks, days);
+      return new Duration(0, 0, weeks * sign, days * sign);
     }
 
     default:
