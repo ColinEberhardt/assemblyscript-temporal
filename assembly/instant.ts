@@ -69,19 +69,18 @@ export class Instant {
 
   @inline
   get epochSeconds(): i32 {
-    return i32(this.epochNanoSeconds / 1_000_000_000);
+    return this.epochNanoSeconds / NANOS_PER_SECOND;
   }
 
   @inline
-  get epochMillisconds(): i32 {
-    return i32(this.epochNanoSeconds / 1_000_000);
+  get epochMilliseconds(): i32 {
+    return this.epochNanoSeconds / 1_000_000;
   }
 
   @inline
   get epochMicroseconds(): i32 {
-    return i32(this.epochNanoSeconds / 1_000);
+    return this.epochNanoSeconds / 1_000;
   }
-
   // https://github.com/tc39/proposal-temporal/blob/3fe5d062f58e2aa01e016b14c34bf0881ba2fb31/polyfill/lib/instant.mjs#L54
   add(durationLike: DurationLike): Instant {
     const ns = addInstant(
