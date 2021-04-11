@@ -963,3 +963,15 @@ export function toPaddedString(number: i32, length: i32 = 2): string {
 export function coalesce(a: i32, b: i32, nill: i32 = -1):i32 {
   return a == nill ? b : a;
 }
+
+export function isoYearString(year: i32): string {
+  let yearString: string;
+  if (year < 1000 || year > 9999) {
+    let sign = year < 0 ? '-' : '+';
+    let yearNumber = abs(year);
+    yearString = sign + `000000${yearNumber}`.slice(-6);
+  } else {
+    yearString = year.toString();
+  }
+  return yearString;
+}

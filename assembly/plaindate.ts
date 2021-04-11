@@ -218,7 +218,7 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T): PlainDate {
+  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDate {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
@@ -244,7 +244,7 @@ export class PlainDate {
       -duration.months,
       -duration.weeks,
       -balancedDuration.days,
-      Overflow.Constrain
+      overflow
     );
 
     return new PlainDate(newDate.year, newDate.month, newDate.day);
