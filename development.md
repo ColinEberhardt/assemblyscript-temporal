@@ -7,7 +7,6 @@ The current approach is as follows:
 3. Use the polyfill implementation as a starting point. However, it is riddled with JS-specific code that doesn't make sense to port. However, most of the algorithmic code is [within a single file](https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/ecmascript.mjs), which can be ported relatively easily.
 4. Don't bother refactoring heavily, being able to map between the polyfill implementation and this codebase will help ensure correctness
 
-
 ### Implementation progress
 
 #### PlainDate
@@ -58,6 +57,126 @@ Methods
 - [ ] toPlainDateTime
 - [ ] toPlainYearMonth
 - [ ] toPlainMonthDay
+- [ ] getISOFields
+
+General features
+
+- [x] overflow modes (current implementation defaults to constrain)
+- [ ] non ISO 8601 calendars
+
+#### PlainTime
+
+PlainTime is currently being implemented based on the ISO 8601 calendar.
+
+Constructor
+
+- [x] new PlainTime
+
+Static methods
+
+- [x] from
+- [x] compare
+
+Properties
+
+- [x] hour
+- [x] minute
+- [x] second
+- [x] millisecond
+- [x] microsecond
+- [x] nanosecond
+- [ ] calendar
+
+Methods
+
+- [x] with
+- [x] add
+- [x] subtract
+- [x] until
+- [x] since
+- [ ] round
+- [x] equals
+- [x] toString
+- [ ] toLocaleString
+- [ ] toJSON
+- [ ] valueOf
+- [ ] toZonedDateTime
+- [x] toPlainDateTime
+- [ ] getISOFields
+
+General features
+
+- [x] overflow modes (current implementation defaults to constrain)
+- [ ] non ISO 8601 calendars
+
+#### PlainMonthDay
+
+PlainMonthDay is currently being implemented based on the ISO 8601 calendar.
+
+Constructor
+
+- [x] new PlainMonthDay
+
+Static methods
+
+- [x] from
+
+Properties
+
+- [x] monthCode
+- [x] day
+- [ ] calendar
+
+Methods
+
+- [x] with
+- [x] equals
+- [x] toString
+- [ ] toLocaleString
+- [ ] toJSON
+- [ ] valueOf
+- [x] toPlainDate
+- [ ] getISOFields
+
+#### PlainYearMonth
+
+PlainYearMonth is currently being implemented based on the ISO 8601 calendar.
+
+Constructor
+
+- [x] new Temporal.PlainYearMonth
+
+Static methods
+
+- [x] from
+- [x] compare
+
+Properties
+
+- [x] year
+- [x] month
+- [x] monthCode
+- [ ] calendar
+- [ ] era
+- [ ] eraYear
+- [x] daysInMonth
+- [x] daysInYear
+- [x] monthsInYear
+- [x] inLeapYear
+
+Methods
+
+- [x] with
+- [x] add
+- [x] subtract
+- [x] until
+- [x] since
+- [x] equals
+- [x] toString
+- [ ] toLocaleString
+- [ ] toJSON
+- [ ] valueOf
+- [x] toPlainDate
 - [ ] getISOFields
 
 General features
