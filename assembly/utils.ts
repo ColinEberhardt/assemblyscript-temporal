@@ -681,10 +681,7 @@ export function differenceDate(
         days -= weeks * 7;
       }
 
-      weeks *= sign;
-      days  *= sign;
-
-      return new Duration(0, 0, weeks, days);
+      return new Duration(0, 0, weeks * sign, days * sign);
     }
 
     default:
