@@ -7,6 +7,7 @@ import {
   sign,
   ord,
   checkRange,
+  rejectTime,
   balanceDuration,
   addTime,
   toPaddedString,
@@ -149,14 +150,7 @@ export class PlainTime {
     readonly microsecond: i32 = 0,
     readonly nanosecond: i32 = 0
   ) {
-    if (!(
-      checkRange(hour, 0, 23) &&
-      checkRange(minute, 0, 59) &&
-      checkRange(second, 0, 59) &&
-      checkRange(millisecond, 0, 999) &&
-      checkRange(microsecond, 0, 999) &&
-      checkRange(nanosecond, 0, 999)
-    )) throw new RangeError("invalid plain time");
+    rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
   }
 
   with(timeLike: TimeLike): PlainTime {

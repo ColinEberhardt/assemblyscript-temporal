@@ -256,11 +256,11 @@ export function rejectTime(
   nanosecond: i32
 ): void {
   if (!(
-    checkRange(hour, 0, 23) ||
-    checkRange(minute, 0, 59) ||
-    checkRange(second, 0, 59) ||
-    checkRange(millisecond, 0, 999) ||
-    checkRange(microsecond, 0, 999) ||
+    checkRange(hour, 0, 23) &&
+    checkRange(minute, 0, 59) &&
+    checkRange(second, 0, 59) &&
+    checkRange(millisecond, 0, 999) &&
+    checkRange(microsecond, 0, 999) &&
     checkRange(nanosecond, 0, 999)
   )) throw new RangeError("time out of range");
 }
