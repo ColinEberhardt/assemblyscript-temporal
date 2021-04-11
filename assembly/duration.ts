@@ -71,10 +71,10 @@ export class Duration {
       toString(abs(this.minutes), "M") +
       toString(
         // sort in ascending order for better sum precision
-        f64(this.nanoseconds) / NANOS_PER_SECOND +
-          f64(this.microseconds) / MICROS_PER_SECOND +
-          f64(this.milliseconds) / MILLIS_PER_SECOND +
-          f64(this.seconds),
+        f64(this.nanoseconds)  / NANOS_PER_SECOND +
+        f64(this.microseconds) / MICROS_PER_SECOND +
+        f64(this.milliseconds) / MILLIS_PER_SECOND +
+        f64(this.seconds),
         "S"
       );
 
@@ -91,6 +91,8 @@ function toString<T extends number>(value: T, suffix: string): string {
     : "";
 }
 
+// @ts-ignore: decorator
+@inline
 function stringify(value: f64): string {
   return F64.isSafeInteger(value) ? i64(value).toString() : value.toString();
 }

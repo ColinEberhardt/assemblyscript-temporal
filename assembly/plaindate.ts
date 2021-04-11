@@ -150,10 +150,7 @@ export class PlainDate {
     );
   }
 
-  until(
-    date: PlainDate,
-    largestUnit: TimeComponent = TimeComponent.Days
-  ): Duration {
+  until(date: PlainDate, largestUnit: TimeComponent = TimeComponent.Days): Duration {
     return differenceDate(
       this.year,
       this.month,
@@ -165,10 +162,7 @@ export class PlainDate {
     );
   }
 
-  since(
-    date: PlainDate,
-    largestUnit: TimeComponent = TimeComponent.Days
-  ): Duration {
+  since(date: PlainDate, largestUnit: TimeComponent = TimeComponent.Days): Duration {
     return differenceDate(
       date.year,
       date.month,
@@ -193,7 +187,7 @@ export class PlainDate {
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
         // @ts-ignore TS2352
-        : (durationToAdd as Duration);
+        : durationToAdd as Duration;
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -252,7 +246,6 @@ export class PlainDate {
 
   static compare(a: PlainDate, b: PlainDate): i32 {
     if (a === b) return 0;
-
     return compareTemporalDate(a.year, a.month, a.day, b.year, b.month, b.day);
   }
 }

@@ -214,12 +214,7 @@ export class PlainTime {
     other: PlainTime,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
-    if (
-      largestUnit == TimeComponent.Years ||
-      largestUnit == TimeComponent.Months ||
-      largestUnit == TimeComponent.Weeks ||
-      largestUnit == TimeComponent.Days
-    ) {
+    if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
 
@@ -254,12 +249,7 @@ export class PlainTime {
     other: PlainTime,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
-    if (
-      largestUnit == TimeComponent.Years ||
-      largestUnit == TimeComponent.Months ||
-      largestUnit == TimeComponent.Weeks ||
-      largestUnit == TimeComponent.Days
-    ) {
+    if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
 

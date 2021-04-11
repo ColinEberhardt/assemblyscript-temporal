@@ -345,12 +345,12 @@ export function durationSign(
   months: i32,
   weeks: i32,
   days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32
+  hours: i32 = 0,
+  minutes: i32 = 0,
+  seconds: i32 = 0,
+  milliseconds: i32 = 0,
+  microseconds: i32 = 0,
+  nanoseconds: i32 = 0
 ): i32 {
   if (years) return sign(years);
   if (months) return sign(months);

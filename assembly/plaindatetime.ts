@@ -210,7 +210,6 @@ export class PlainDateTime {
 
   static compare(a: PlainDateTime, b: PlainDateTime): i32 {
     if (a === b) return 0;
-
     return compareTemporalDateTime(
       a.year,
       a.month,
