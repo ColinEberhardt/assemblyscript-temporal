@@ -217,7 +217,7 @@ export class PlainDate {
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
         // @ts-ignore TS2352
-        : (durationToSubtract as Duration);
+        : durationToSubtract as Duration;
 
     const balancedDuration = balanceDuration(
       duration.days,

@@ -671,7 +671,7 @@ export function differenceDate(
       );
 
       while (years > 0) {
-        days  += 365 + i32(leapYear(smallerYear + years - 1));
+        days  += daysInYear(smallerYear + years - 1);
         years -= 1;
       }
 

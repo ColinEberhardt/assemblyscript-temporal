@@ -253,7 +253,7 @@ export class PlainDateTime {
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
         // @ts-ignore TS2352
-        : (durationToAdd as Duration);
+        : durationToAdd as Duration;
 
     const newDate = addDateTime(
       this.year,
@@ -295,7 +295,7 @@ export class PlainDateTime {
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
         // @ts-ignore TS2352
-        : (durationToSubtract as Duration);
+        : durationToSubtract as Duration;
 
     const newDate = addDateTime(
       this.year,
