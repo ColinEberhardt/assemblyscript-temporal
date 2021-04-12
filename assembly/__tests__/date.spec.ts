@@ -218,3 +218,71 @@ describe("toString", () => {
     expect(date.toISOString()).toBe("2009-01-06T08:40:31.020Z");
   });
 });
+
+describe("Date.UTC", () => {
+  it("epoch", () => {
+    expect(Date.UTC(1970)).toBe(0);
+  });
+
+  describe("two digit years", () => {
+    it("0", () => {
+      expect(Date.UTC(0)).toBe(Date.UTC(1900));
+    });
+
+    it("99", () => {
+      expect(Date.UTC(99)).toBe(Date.UTC(1999));
+    });
+  });
+
+  it("defaults to month=0", () => {
+    expect(Date.UTC(2001)).toBe(Date.UTC(2001, 0));
+  });
+
+  it("defaults to date=1", () => {
+    expect(Date.UTC(2001, 0)).toBe(Date.UTC(2001, 0, 1));
+  });
+
+  it("defaults to hours=0", () => {
+    expect(Date.UTC(2001, 0, 1)).toBe(Date.UTC(2001, 0, 1, 0));
+  });
+
+  it("defaults to minutes=0", () => {
+    expect(Date.UTC(2001, 0, 1, 0)).toBe(Date.UTC(2001, 0, 1, 0, 0));
+  });
+
+  it("defaults to seconds=0", () => {
+    expect(Date.UTC(2001, 0, 1, 0, 0)).toBe(Date.UTC(2001, 0, 1, 0, 0, 0));
+  });
+
+  it("defaults to milliseconds=0", () => {
+    expect(Date.UTC(2001, 0, 1, 0, 0, 0)).toBe(
+      Date.UTC(2001, 0, 1, 0, 0, 0, 0)
+    );
+  });
+
+  // Taken from https://github.com/v8/v8/blob/master/test/mjsunit/date.js
+
+  it("8639999999999999", () => {
+    expect(Date.UTC(275760, 8, 12, 23, 59, 59, 999)).toBe(8639999999999999);
+  });
+
+  it("8640000000000000", () => {
+    expect(Date.UTC(275760, 8, 13)).toBe(8640000000000000);
+  });
+
+  it("-8639999999999999", () => {
+    expect(Date.UTC(-271821, 3, 20, 0, 0, 0, 1)).toBe(-8639999999999999);
+  });
+
+  it("-8640000000000000", () => {
+    expect(Date.UTC(-271821, 3, 20)).toBe(-8640000000000000);
+  });
+
+  it("obscure date values", () => {
+    expect(Date.UTC(1970, 0, 1 + 100000001, -24)).toBe(8640000000000000);
+  });
+
+  it("obscure date values", () => {
+    expect(Date.UTC(1970, 0, 1 - 100000001, 24)).toBe(-8640000000000000);
+  });
+});
