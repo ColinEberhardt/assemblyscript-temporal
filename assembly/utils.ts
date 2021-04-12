@@ -617,7 +617,7 @@ export function differenceDate(
       }
 
       mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-      midSign = compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
+      midSign = -compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
 
       if (midSign === 0) {
         return largestUnit === TimeComponent.Years
@@ -636,7 +636,7 @@ export function differenceDate(
         }
 
         mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-        midSign = compareTemporalDate(yr1, mo1, d1, mid.year, mid.month, mid.day);
+        midSign = -compareTemporalDate(yr1, mo1, d1, mid.year, mid.month, mid.day);
       }
 
       let days = 0; // If we get here, months and years are correct (no overflow), and `mid`
@@ -731,15 +731,14 @@ export function differenceTime(
     microseconds,
     nanoseconds
   );
-  hours *= sign;
-  minutes *= sign;
-  seconds *= sign;
-  milliseconds *= sign;
-  microseconds *= sign;
-  nanoseconds *= sign;
 
-  let balancedTime = balanceTime(
-    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
+  const balancedTime = balanceTime(
+    hours * sign,
+    minutes * sign,
+    seconds * sign,
+    milliseconds * sign,
+    microseconds * sign,
+    nanoseconds * sign
   );
 
   return new Duration(
@@ -753,8 +752,7 @@ export function differenceTime(
     balancedTime.millisecond * sign,
     balancedTime.microsecond * sign,
     balancedTime.nanosecond * sign
-  )
-
+  );
 }
 
 export function epochFromParts(
@@ -814,21 +812,18 @@ export function addDateTime(
   nanoseconds: i32,
   overflow: Overflow
 ): DT {
-  // Add the time part
-  let deltaDays = 0;
   const addedTime = addTime(
     hour, minute, second, millisecond, microsecond, nanosecond,
     hours, minutes, seconds, milliseconds, microseconds, nanoseconds
   );
 
-  deltaDays = addedTime.deltaDays;
   hour = addedTime.hour;
   minute = addedTime.minute;
   second = addedTime.second;
   millisecond = addedTime.millisecond;
   microsecond = addedTime.microsecond;
   nanosecond = addedTime.nanosecond;
-  days += deltaDays; // Delegate the date part addition to the calendar
+  days += addedTime.deltaDays; // Delegate the date part addition to the calendar
 
   const addedDate = addDate(year, month, day, years, months, weeks, days,overflow);
 
