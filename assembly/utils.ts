@@ -645,7 +645,7 @@ export function differenceDate(
       }
 
       mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-      midSign = compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
+      midSign = -compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
 
       if (midSign === 0) {
         return largestUnit === TimeComponent.Years
@@ -664,10 +664,9 @@ export function differenceDate(
         }
 
         mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-        midSign = compareTemporalDate(yr1, mo1, d1, mid.year, mid.month, mid.day);
       }
 
-      let days = 0; // If we get here, months and years are correct (no overflow), and `mid`
+      let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
       // is within the range from `start` to `end`. To count the days between
       // `mid` and `end`, there are 3 cases:
       // 1) same month: use simple subtraction
@@ -676,15 +675,14 @@ export function differenceDate(
 
       if (mid.month === endMonth && mid.year === endYear) {
         // 1) same month: use simple subtraction
-        days = endDay - mid.day;
       } else if (sign < 0) {
         // 2) end is previous month from intermediate (negative duration)
         // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
-        days = endDay - daysInMonth(endYear, endMonth) - mid.day;
+        days -= daysInMonth(endYear, endMonth);
       } else {
         // 3) end is next month from intermediate (positive duration)
         // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
-        days = endDay + daysInMonth(mid.year, mid.month) - mid.day;
+        days += daysInMonth(mid.year, mid.month);
       }
 
       if (largestUnit === TimeComponent.Months) {
@@ -759,15 +757,14 @@ export function differenceTime(
     microseconds,
     nanoseconds
   );
-  hours *= sign;
-  minutes *= sign;
-  seconds *= sign;
-  milliseconds *= sign;
-  microseconds *= sign;
-  nanoseconds *= sign;
 
-  let balancedTime = balanceTime(
-    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
+  const balancedTime = balanceTime(
+    hours * sign,
+    minutes * sign,
+    seconds * sign,
+    milliseconds * sign,
+    microseconds * sign,
+    nanoseconds * sign
   );
 
   return new Duration(
@@ -781,8 +778,7 @@ export function differenceTime(
     balancedTime.millisecond * sign,
     balancedTime.microsecond * sign,
     balancedTime.nanosecond * sign
-  )
-
+  );
 }
 
 export function epochFromParts(
@@ -842,21 +838,18 @@ export function addDateTime(
   nanoseconds: i32,
   overflow: Overflow
 ): DT {
-  // Add the time part
-  let deltaDays = 0;
   const addedTime = addTime(
     hour, minute, second, millisecond, microsecond, nanosecond,
     hours, minutes, seconds, milliseconds, microseconds, nanoseconds
   );
 
-  deltaDays = addedTime.deltaDays;
   hour = addedTime.hour;
   minute = addedTime.minute;
   second = addedTime.second;
   millisecond = addedTime.millisecond;
   microsecond = addedTime.microsecond;
   nanosecond = addedTime.nanosecond;
-  days += deltaDays; // Delegate the date part addition to the calendar
+  days += addedTime.deltaDays; // Delegate the date part addition to the calendar
 
   const addedDate = addDate(year, month, day, years, months, weeks, days,overflow);
 
