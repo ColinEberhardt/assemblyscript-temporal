@@ -74,12 +74,8 @@ export class BalancedTime {
 
 // @ts-ignore: decorator
 @inline
-export function floorDiv(a: i32, b: i32): i32 {
-  return (a >= 0 ? a : a - b + 1) / b;
-}
-
-export function floorDivI64(a: i64, b: i64): i64 {
-  return (a >= 0 ? a : a - b + 1) / b;
+export function floorDiv<T extends number>(a: T, b: T): T {
+  return (a >= 0 ? a : a - b + 1) / b as T;
 }
 
 // @ts-ignore: decorator
@@ -961,35 +957,35 @@ function balanceTime(
   nanosecond: i64
 ): BalancedTime {
 
-  let quotient = floorDivI64(nanosecond, 1000);
+  let quotient = floorDiv(nanosecond, 1000);
   microsecond += quotient;
   nanosecond  -= quotient * 1000;
 
-  quotient = floorDivI64(microsecond, 1000);
+  quotient = floorDiv(microsecond, 1000);
   millisecond += quotient;
   microsecond -= quotient * 1000;
 
-  quotient = floorDivI64(millisecond, 1000);
+  quotient = floorDiv(millisecond, 1000);
   second      += quotient;
   millisecond -= quotient * 1000;
 
-  quotient = floorDivI64(second, 60);
+  quotient = floorDiv(second, 60);
   minute += quotient;
   second -= quotient * 60;
 
-  quotient = floorDivI64(minute, 60);
+  quotient = floorDiv(minute, 60);
   hour   += quotient;
   minute -= quotient * 60;
 
-  let deltaDays = floorDivI64(hour, 24);
+  let deltaDays = floorDiv(hour, 24);
   hour -= deltaDays * 24;
 
   return {
     deltaDays: i32(deltaDays),
-    hour : i32(hour),
-    minute : i32(minute),
+    hour: i32(hour),
+    minute: i32(minute),
     second: i32(second),
-    millisecond : i32(millisecond),
+    millisecond: i32(millisecond),
     microsecond: i32(microsecond),
     nanosecond: i32(nanosecond)
   };
