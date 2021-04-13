@@ -49,7 +49,7 @@ const parseTime = (time) => {
       hour,
       minute,
       totalMinutes: hour * 60 + minute,
-      zone: parseTimeZone(parts[3]),
+      zone: parts[3] ? parseTimeZone(parts[3]) : "local",
     };
   } catch {
     throw new Error(`Unable to parse time [${time}]`);

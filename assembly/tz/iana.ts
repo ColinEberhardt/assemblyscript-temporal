@@ -2993,9 +2993,9 @@ zones.set(
 
 const rules = [
   // Rule    US	1918	1919	-	Mar	lastSun	2:00	1:00	D
-  new Rule("US", 1918, 1919, 3, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule("US", 1918, 1919, 3, new LastDay(7), 120, AtTimeZone.Local, 3600000),
   // Rule    US	1918	1919	-	Oct	lastSun	2:00	0	S
-  new Rule("US", 1918, 1919, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("US", 1918, 1919, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    US	1942	only	-	Feb	9	2:00	1:00	W # War
   new Rule(
     "US",
@@ -3004,7 +3004,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    US	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -3019,11 +3019,11 @@ const rules = [
     3600000
   ),
   // Rule    US	1945	only	-	Sep	30	2:00	0	S
-  new Rule("US", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule("US", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.Local, 0),
   // Rule    US	1967	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("US", 1967, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("US", 1967, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    US	1967	1973	-	Apr	lastSun	2:00	1:00	D
-  new Rule("US", 1967, 1973, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule("US", 1967, 1973, 4, new LastDay(7), 120, AtTimeZone.Local, 3600000),
   // Rule    US	1974	only	-	Jan	6	2:00	1:00	D
   new Rule(
     "US",
@@ -3032,13 +3032,13 @@ const rules = [
     1,
     new DayOfMonth(6),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    US	1975	only	-	Feb	lastSun	2:00	1:00	D
-  new Rule("US", 1975, 1975, 2, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule("US", 1975, 1975, 2, new LastDay(7), 120, AtTimeZone.Local, 3600000),
   // Rule    US	1976	1986	-	Apr	lastSun	2:00	1:00	D
-  new Rule("US", 1976, 1986, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule("US", 1976, 1986, 4, new LastDay(7), 120, AtTimeZone.Local, 3600000),
   // Rule    US	1987	2006	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "US",
@@ -3047,7 +3047,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    US	2007	max	-	Mar	Sun>=8	2:00	1:00	D
@@ -3058,21 +3058,48 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    US	2007	max	-	Nov	Sun>=1	2:00	0	S
-  new Rule("US", 2007, -1, 11, new NextDayAfter(7, 1), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "US",
+    2007,
+    -1,
+    11,
+    new NextDayAfter(7, 1),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    NYC	1920	only	-	Mar	lastSun	2:00	1:00	D
-  new Rule("NYC", 1920, 1920, 3, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "NYC",
+    1920,
+    1920,
+    3,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    NYC	1920	only	-	Oct	lastSun	2:00	0	S
-  new Rule("NYC", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("NYC", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    NYC	1921	1966	-	Apr	lastSun	2:00	1:00	D
-  new Rule("NYC", 1921, 1966, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "NYC",
+    1921,
+    1966,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    NYC	1921	1954	-	Sep	lastSun	2:00	0	S
-  new Rule("NYC", 1921, 1954, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("NYC", 1921, 1954, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    NYC	1955	1966	-	Oct	lastSun	2:00	0	S
-  new Rule("NYC", 1955, 1966, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("NYC", 1955, 1966, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Chicago	1920	only	-	Jun	13	2:00	1:00	D
   new Rule(
     "Chicago",
@@ -3081,11 +3108,11 @@ const rules = [
     6,
     new DayOfMonth(13),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Chicago	1920	1921	-	Oct	lastSun	2:00	0	S
-  new Rule("Chicago", 1920, 1921, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Chicago", 1920, 1921, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Chicago	1921	only	-	Mar	lastSun	2:00	1:00	D
   new Rule(
     "Chicago",
@@ -3094,7 +3121,7 @@ const rules = [
     3,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Chicago	1922	1966	-	Apr	lastSun	2:00	1:00	D
@@ -3105,13 +3132,13 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Chicago	1922	1954	-	Sep	lastSun	2:00	0	S
-  new Rule("Chicago", 1922, 1954, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Chicago", 1922, 1954, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Chicago	1955	1966	-	Oct	lastSun	2:00	0	S
-  new Rule("Chicago", 1955, 1966, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Chicago", 1955, 1966, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Denver	1920	1921	-	Mar	lastSun	2:00	1:00	D
   new Rule(
     "Denver",
@@ -3120,13 +3147,22 @@ const rules = [
     3,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Denver	1920	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Denver", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Denver", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Denver	1921	only	-	May	22	2:00	0	S
-  new Rule("Denver", 1921, 1921, 5, new DayOfMonth(22), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Denver",
+    1921,
+    1921,
+    5,
+    new DayOfMonth(22),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Denver	1965	1966	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Denver",
@@ -3135,11 +3171,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Denver	1965	1966	-	Oct	lastSun	2:00	0	S
-  new Rule("Denver", 1965, 1966, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Denver", 1965, 1966, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    CA	1948	only	-	Mar	14	2:01	1:00	D
   new Rule(
     "CA",
@@ -3148,17 +3184,17 @@ const rules = [
     3,
     new DayOfMonth(14),
     121,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    CA	1949	only	-	Jan	 1	2:00	0	S
-  new Rule("CA", 1949, 1949, 1, new DayOfMonth(1), 120, AtTimeZone.UTC, 0),
+  new Rule("CA", 1949, 1949, 1, new DayOfMonth(1), 120, AtTimeZone.Local, 0),
   // Rule    CA	1950	1966	-	Apr	lastSun	1:00	1:00	D
-  new Rule("CA", 1950, 1966, 4, new LastDay(7), 60, AtTimeZone.UTC, 3600000),
+  new Rule("CA", 1950, 1966, 4, new LastDay(7), 60, AtTimeZone.Local, 3600000),
   // Rule    CA	1950	1961	-	Sep	lastSun	2:00	0	S
-  new Rule("CA", 1950, 1961, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("CA", 1950, 1961, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    CA	1962	1966	-	Oct	lastSun	2:00	0	S
-  new Rule("CA", 1962, 1966, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("CA", 1962, 1966, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule Indianapolis 1941    only	-	Jun	22	2:00	1:00	D
   new Rule(
     "Indianapolis",
@@ -3167,7 +3203,7 @@ const rules = [
     6,
     new DayOfMonth(22),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Indianapolis 1941    1954	-	Sep	lastSun	2:00	0	S
@@ -3178,7 +3214,7 @@ const rules = [
     9,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule Indianapolis 1946    1954	-	Apr	lastSun	2:00	1:00	D
@@ -3189,7 +3225,7 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Marengo	1951	only	-	Apr	lastSun	2:00	1:00	D
@@ -3200,11 +3236,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Marengo	1951	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Marengo", 1951, 1951, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Marengo", 1951, 1951, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Marengo	1954	1960	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Marengo",
@@ -3213,11 +3249,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Marengo	1954	1960	-	Sep	lastSun	2:00	0	S
-  new Rule("Marengo", 1954, 1960, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Marengo", 1954, 1960, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule Vincennes    1946	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Vincennes",
@@ -3226,11 +3262,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Vincennes    1946	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Vincennes", 1946, 1946, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vincennes",
+    1946,
+    1946,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Vincennes    1953	1954	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Vincennes",
@@ -3239,11 +3284,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Vincennes    1953	1959	-	Sep	lastSun	2:00	0	S
-  new Rule("Vincennes", 1953, 1959, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vincennes",
+    1953,
+    1959,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Vincennes    1955	only	-	May	 1	0:00	1:00	D
   new Rule(
     "Vincennes",
@@ -3252,7 +3306,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Vincennes    1956	1963	-	Apr	lastSun	2:00	1:00	D
@@ -3263,15 +3317,42 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Vincennes    1960	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Vincennes", 1960, 1960, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vincennes",
+    1960,
+    1960,
+    10,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Vincennes    1961	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Vincennes", 1961, 1961, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vincennes",
+    1961,
+    1961,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Vincennes    1962	1963	-	Oct	lastSun	2:00	0	S
-  new Rule("Vincennes", 1962, 1963, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vincennes",
+    1962,
+    1963,
+    10,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Perry    1955	only	-	May	 1	0:00	1:00	D
   new Rule(
     "Perry",
@@ -3280,11 +3361,11 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Perry    1955	1960	-	Sep	lastSun	2:00	0	S
-  new Rule("Perry", 1955, 1960, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Perry", 1955, 1960, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule Perry    1956	1963	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Perry",
@@ -3293,11 +3374,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Perry    1961	1963	-	Oct	lastSun	2:00	0	S
-  new Rule("Perry", 1961, 1963, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Perry", 1961, 1963, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Pike	1955	only	-	May	 1	0:00	1:00	D
   new Rule(
     "Pike",
@@ -3306,15 +3387,24 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Pike	1955	1960	-	Sep	lastSun	2:00	0	S
-  new Rule("Pike", 1955, 1960, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Pike", 1955, 1960, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Pike	1956	1964	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Pike", 1956, 1964, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Pike",
+    1956,
+    1964,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Pike	1961	1964	-	Oct	lastSun	2:00	0	S
-  new Rule("Pike", 1961, 1964, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Pike", 1961, 1964, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Starke	1947	1961	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Starke",
@@ -3323,17 +3413,17 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Starke	1947	1954	-	Sep	lastSun	2:00	0	S
-  new Rule("Starke", 1947, 1954, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Starke", 1947, 1954, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Starke	1955	1956	-	Oct	lastSun	2:00	0	S
-  new Rule("Starke", 1955, 1956, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Starke", 1955, 1956, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Starke	1957	1958	-	Sep	lastSun	2:00	0	S
-  new Rule("Starke", 1957, 1958, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Starke", 1957, 1958, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Starke	1959	1961	-	Oct	lastSun	2:00	0	S
-  new Rule("Starke", 1959, 1961, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Starke", 1959, 1961, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Pulaski	1946	1960	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Pulaski",
@@ -3342,15 +3432,15 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Pulaski	1946	1954	-	Sep	lastSun	2:00	0	S
-  new Rule("Pulaski", 1946, 1954, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Pulaski", 1946, 1954, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Pulaski	1955	1956	-	Oct	lastSun	2:00	0	S
-  new Rule("Pulaski", 1955, 1956, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Pulaski", 1955, 1956, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Pulaski	1957	1960	-	Sep	lastSun	2:00	0	S
-  new Rule("Pulaski", 1957, 1960, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Pulaski", 1957, 1960, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule Louisville    1921	only	-	May	1	2:00	1:00	D
   new Rule(
     "Louisville",
@@ -3359,7 +3449,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Louisville    1921	only	-	Sep	1	2:00	0	S
@@ -3370,7 +3460,7 @@ const rules = [
     9,
     new DayOfMonth(1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule Louisville    1941	only	-	Apr	lastSun	2:00	1:00	D
@@ -3381,11 +3471,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Louisville    1941	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Louisville", 1941, 1941, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Louisville",
+    1941,
+    1941,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Louisville    1946	only	-	Apr	lastSun	0:01	1:00	D
   new Rule(
     "Louisville",
@@ -3394,7 +3493,7 @@ const rules = [
     4,
     new LastDay(7),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Louisville    1946	only	-	Jun	2	2:00	0	S
@@ -3405,7 +3504,7 @@ const rules = [
     6,
     new DayOfMonth(2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule Louisville    1950	1961	-	Apr	lastSun	2:00	1:00	D
@@ -3416,11 +3515,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Louisville    1950	1955	-	Sep	lastSun	2:00	0	S
-  new Rule("Louisville", 1950, 1955, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Louisville",
+    1950,
+    1955,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Louisville    1956	1961	-	Oct	lastSun	2:00	0	S
   new Rule(
     "Louisville",
@@ -3429,7 +3537,7 @@ const rules = [
     10,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Detroit	1948	only	-	Apr	lastSun	2:00	1:00	D
@@ -3440,11 +3548,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Detroit	1948	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Detroit", 1948, 1948, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Detroit", 1948, 1948, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule Menominee    1946	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Menominee",
@@ -3453,11 +3561,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Menominee    1946	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Menominee", 1946, 1946, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Menominee",
+    1946,
+    1946,
+    9,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule Menominee    1966	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Menominee",
@@ -3466,11 +3583,20 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule Menominee    1966	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Menominee", 1966, 1966, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Menominee",
+    1966,
+    1966,
+    10,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Canada	1918	only	-	Apr	14	2:00	1:00	D
   new Rule(
     "Canada",
@@ -3479,7 +3605,7 @@ const rules = [
     4,
     new DayOfMonth(14),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Canada	1918	only	-	Oct	27	2:00	0	S
@@ -3490,7 +3616,7 @@ const rules = [
     10,
     new DayOfMonth(27),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Canada	1942	only	-	Feb	 9	2:00	1:00	W # War
@@ -3501,7 +3627,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Canada	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -3516,7 +3642,16 @@ const rules = [
     3600000
   ),
   // Rule    Canada	1945	only	-	Sep	30	2:00	0	S
-  new Rule("Canada", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Canada",
+    1945,
+    1945,
+    9,
+    new DayOfMonth(30),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Canada	1974	1986	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Canada",
@@ -3525,11 +3660,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Canada	1974	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("Canada", 1974, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Canada", 1974, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Canada	1987	2006	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "Canada",
@@ -3538,7 +3673,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Canada	2007	max	-	Mar	Sun>=8	2:00	1:00	D
@@ -3549,7 +3684,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Canada	2007	max	-	Nov	Sun>=1	2:00	0	S
@@ -3560,7 +3695,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    StJohns	1917	only	-	Apr	 8	2:00	1:00	D
@@ -3571,7 +3706,7 @@ const rules = [
     4,
     new DayOfMonth(8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1917	only	-	Sep	17	2:00	0	S
@@ -3582,7 +3717,7 @@ const rules = [
     9,
     new DayOfMonth(17),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    StJohns	1919	only	-	May	 5	23:00	1:00	D
@@ -3593,7 +3728,7 @@ const rules = [
     5,
     new DayOfMonth(5),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1919	only	-	Aug	12	23:00	0	S
@@ -3604,7 +3739,7 @@ const rules = [
     8,
     new DayOfMonth(12),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    StJohns	1920	1935	-	May	Sun>=1	23:00	1:00	D
@@ -3615,11 +3750,20 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1920	1935	-	Oct	lastSun	23:00	0	S
-  new Rule("StJohns", 1920, 1935, 10, new LastDay(7), 1380, AtTimeZone.UTC, 0),
+  new Rule(
+    "StJohns",
+    1920,
+    1935,
+    10,
+    new LastDay(7),
+    1380,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    StJohns	1936	1941	-	May	Mon>=9	0:00	1:00	D
   new Rule(
     "StJohns",
@@ -3628,7 +3772,7 @@ const rules = [
     5,
     new NextDayAfter(1, 9),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1936	1941	-	Oct	Mon>=2	0:00	0	S
@@ -3639,7 +3783,7 @@ const rules = [
     10,
     new NextDayAfter(1, 2),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    StJohns	1946	1950	-	May	Sun>=8	2:00	1:00	D
@@ -3650,7 +3794,7 @@ const rules = [
     5,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1946	1950	-	Oct	Sun>=2	2:00	0	S
@@ -3661,7 +3805,7 @@ const rules = [
     10,
     new NextDayAfter(7, 2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    StJohns	1951	1986	-	Apr	lastSun	2:00	1:00	D
@@ -3672,13 +3816,13 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1951	1959	-	Sep	lastSun	2:00	0	S
-  new Rule("StJohns", 1951, 1959, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("StJohns", 1951, 1959, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    StJohns	1960	1986	-	Oct	lastSun	2:00	0	S
-  new Rule("StJohns", 1960, 1986, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("StJohns", 1960, 1986, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    StJohns	1987	only	-	Apr	Sun>=1	0:01	1:00	D
   new Rule(
     "StJohns",
@@ -3687,11 +3831,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	1987	2006	-	Oct	lastSun	0:01	0	S
-  new Rule("StJohns", 1987, 2006, 10, new LastDay(7), 1, AtTimeZone.UTC, 0),
+  new Rule("StJohns", 1987, 2006, 10, new LastDay(7), 1, AtTimeZone.Local, 0),
   // Rule    StJohns	1988	only	-	Apr	Sun>=1	0:01	2:00	DD
   new Rule(
     "StJohns",
@@ -3700,7 +3844,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    StJohns	1989	2006	-	Apr	Sun>=1	0:01	1:00	D
@@ -3711,7 +3855,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	2007	2011	-	Mar	Sun>=8	0:01	1:00	D
@@ -3722,7 +3866,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    StJohns	2007	2010	-	Nov	Sun>=1	0:01	0	S
@@ -3733,7 +3877,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Halifax	1916	only	-	Apr	 1	0:00	1:00	D
@@ -3744,11 +3888,20 @@ const rules = [
     4,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1916	only	-	Oct	 1	0:00	0	S
-  new Rule("Halifax", 1916, 1916, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1916,
+    1916,
+    10,
+    new DayOfMonth(1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1920	only	-	May	 9	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3757,11 +3910,20 @@ const rules = [
     5,
     new DayOfMonth(9),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1920	only	-	Aug	29	0:00	0	S
-  new Rule("Halifax", 1920, 1920, 8, new DayOfMonth(29), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1920,
+    1920,
+    8,
+    new DayOfMonth(29),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1921	only	-	May	 6	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3770,11 +3932,11 @@ const rules = [
     5,
     new DayOfMonth(6),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1921	1922	-	Sep	 5	0:00	0	S
-  new Rule("Halifax", 1921, 1922, 9, new DayOfMonth(5), 0, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1921, 1922, 9, new DayOfMonth(5), 0, AtTimeZone.Local, 0),
   // Rule    Halifax	1922	only	-	Apr	30	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3783,7 +3945,7 @@ const rules = [
     4,
     new DayOfMonth(30),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1923	1925	-	May	Sun>=1	0:00	1:00	D
@@ -3794,15 +3956,33 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1923	only	-	Sep	 4	0:00	0	S
-  new Rule("Halifax", 1923, 1923, 9, new DayOfMonth(4), 0, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1923, 1923, 9, new DayOfMonth(4), 0, AtTimeZone.Local, 0),
   // Rule    Halifax	1924	only	-	Sep	15	0:00	0	S
-  new Rule("Halifax", 1924, 1924, 9, new DayOfMonth(15), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1924,
+    1924,
+    9,
+    new DayOfMonth(15),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1925	only	-	Sep	28	0:00	0	S
-  new Rule("Halifax", 1925, 1925, 9, new DayOfMonth(28), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1925,
+    1925,
+    9,
+    new DayOfMonth(28),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1926	only	-	May	16	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3811,11 +3991,20 @@ const rules = [
     5,
     new DayOfMonth(16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1926	only	-	Sep	13	0:00	0	S
-  new Rule("Halifax", 1926, 1926, 9, new DayOfMonth(13), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1926,
+    1926,
+    9,
+    new DayOfMonth(13),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1927	only	-	May	 1	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3824,11 +4013,20 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1927	only	-	Sep	26	0:00	0	S
-  new Rule("Halifax", 1927, 1927, 9, new DayOfMonth(26), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1927,
+    1927,
+    9,
+    new DayOfMonth(26),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1928	1931	-	May	Sun>=8	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3837,15 +4035,24 @@ const rules = [
     5,
     new NextDayAfter(7, 8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1928	only	-	Sep	 9	0:00	0	S
-  new Rule("Halifax", 1928, 1928, 9, new DayOfMonth(9), 0, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1928, 1928, 9, new DayOfMonth(9), 0, AtTimeZone.Local, 0),
   // Rule    Halifax	1929	only	-	Sep	 3	0:00	0	S
-  new Rule("Halifax", 1929, 1929, 9, new DayOfMonth(3), 0, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1929, 1929, 9, new DayOfMonth(3), 0, AtTimeZone.Local, 0),
   // Rule    Halifax	1930	only	-	Sep	15	0:00	0	S
-  new Rule("Halifax", 1930, 1930, 9, new DayOfMonth(15), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1930,
+    1930,
+    9,
+    new DayOfMonth(15),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1931	1932	-	Sep	Mon>=24	0:00	0	S
   new Rule(
     "Halifax",
@@ -3854,7 +4061,7 @@ const rules = [
     9,
     new NextDayAfter(1, 24),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Halifax	1932	only	-	May	 1	0:00	1:00	D
@@ -3865,7 +4072,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1933	only	-	Apr	30	0:00	1:00	D
@@ -3876,11 +4083,20 @@ const rules = [
     4,
     new DayOfMonth(30),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1933	only	-	Oct	 2	0:00	0	S
-  new Rule("Halifax", 1933, 1933, 10, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1933,
+    1933,
+    10,
+    new DayOfMonth(2),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1934	only	-	May	20	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3889,11 +4105,20 @@ const rules = [
     5,
     new DayOfMonth(20),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1934	only	-	Sep	16	0:00	0	S
-  new Rule("Halifax", 1934, 1934, 9, new DayOfMonth(16), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1934,
+    1934,
+    9,
+    new DayOfMonth(16),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1935	only	-	Jun	 2	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3902,11 +4127,20 @@ const rules = [
     6,
     new DayOfMonth(2),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1935	only	-	Sep	30	0:00	0	S
-  new Rule("Halifax", 1935, 1935, 9, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1935,
+    1935,
+    9,
+    new DayOfMonth(30),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1936	only	-	Jun	 1	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3915,11 +4149,20 @@ const rules = [
     6,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1936	only	-	Sep	14	0:00	0	S
-  new Rule("Halifax", 1936, 1936, 9, new DayOfMonth(14), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Halifax",
+    1936,
+    1936,
+    9,
+    new DayOfMonth(14),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Halifax	1937	1938	-	May	Sun>=1	0:00	1:00	D
   new Rule(
     "Halifax",
@@ -3928,7 +4171,7 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1937	1941	-	Sep	Mon>=24	0:00	0	S
@@ -3939,7 +4182,7 @@ const rules = [
     9,
     new NextDayAfter(1, 24),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Halifax	1939	only	-	May	28	0:00	1:00	D
@@ -3950,7 +4193,7 @@ const rules = [
     5,
     new DayOfMonth(28),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1940	1941	-	May	Sun>=1	0:00	1:00	D
@@ -3961,7 +4204,7 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1946	1949	-	Apr	lastSun	2:00	1:00	D
@@ -3972,11 +4215,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1946	1949	-	Sep	lastSun	2:00	0	S
-  new Rule("Halifax", 1946, 1949, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1946, 1949, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Halifax	1951	1954	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Halifax",
@@ -3985,11 +4228,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1951	1954	-	Sep	lastSun	2:00	0	S
-  new Rule("Halifax", 1951, 1954, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1951, 1954, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Halifax	1956	1959	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Halifax",
@@ -3998,11 +4241,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1956	1959	-	Sep	lastSun	2:00	0	S
-  new Rule("Halifax", 1956, 1959, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1956, 1959, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Halifax	1962	1973	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Halifax",
@@ -4011,11 +4254,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Halifax	1962	1973	-	Oct	lastSun	2:00	0	S
-  new Rule("Halifax", 1962, 1973, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Halifax", 1962, 1973, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Moncton	1933	1935	-	Jun	Sun>=8	1:00	1:00	D
   new Rule(
     "Moncton",
@@ -4024,7 +4267,7 @@ const rules = [
     6,
     new NextDayAfter(7, 8),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1933	1935	-	Sep	Sun>=8	1:00	0	S
@@ -4035,7 +4278,7 @@ const rules = [
     9,
     new NextDayAfter(7, 8),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Moncton	1936	1938	-	Jun	Sun>=1	1:00	1:00	D
@@ -4046,7 +4289,7 @@ const rules = [
     6,
     new NextDayAfter(7, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1936	1938	-	Sep	Sun>=1	1:00	0	S
@@ -4057,7 +4300,7 @@ const rules = [
     9,
     new NextDayAfter(7, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Moncton	1939	only	-	May	27	1:00	1:00	D
@@ -4068,7 +4311,7 @@ const rules = [
     5,
     new DayOfMonth(27),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1939	1941	-	Sep	Sat>=21	1:00	0	S
@@ -4079,7 +4322,7 @@ const rules = [
     9,
     new NextDayAfter(6, 21),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Moncton	1940	only	-	May	19	1:00	1:00	D
@@ -4090,7 +4333,7 @@ const rules = [
     5,
     new DayOfMonth(19),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1941	only	-	May	 4	1:00	1:00	D
@@ -4101,7 +4344,7 @@ const rules = [
     5,
     new DayOfMonth(4),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1946	1972	-	Apr	lastSun	2:00	1:00	D
@@ -4112,13 +4355,13 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1946	1956	-	Sep	lastSun	2:00	0	S
-  new Rule("Moncton", 1946, 1956, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Moncton", 1946, 1956, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Moncton	1957	1972	-	Oct	lastSun	2:00	0	S
-  new Rule("Moncton", 1957, 1972, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Moncton", 1957, 1972, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Moncton	1993	2006	-	Apr	Sun>=1	0:01	1:00	D
   new Rule(
     "Moncton",
@@ -4127,11 +4370,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     1,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moncton	1993	2006	-	Oct	lastSun	0:01	0	S
-  new Rule("Moncton", 1993, 2006, 10, new LastDay(7), 1, AtTimeZone.UTC, 0),
+  new Rule("Moncton", 1993, 2006, 10, new LastDay(7), 1, AtTimeZone.Local, 0),
   // Rule    Toronto	1919	only	-	Mar	30	23:30	1:00	D
   new Rule(
     "Toronto",
@@ -4140,11 +4383,20 @@ const rules = [
     3,
     new DayOfMonth(30),
     1410,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1919	only	-	Oct	26	0:00	0	S
-  new Rule("Toronto", 1919, 1919, 10, new DayOfMonth(26), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Toronto",
+    1919,
+    1919,
+    10,
+    new DayOfMonth(26),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Toronto	1920	only	-	May	 2	2:00	1:00	D
   new Rule(
     "Toronto",
@@ -4153,11 +4405,20 @@ const rules = [
     5,
     new DayOfMonth(2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1920	only	-	Sep	26	0:00	0	S
-  new Rule("Toronto", 1920, 1920, 9, new DayOfMonth(26), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Toronto",
+    1920,
+    1920,
+    9,
+    new DayOfMonth(26),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Toronto	1921	only	-	May	15	2:00	1:00	D
   new Rule(
     "Toronto",
@@ -4166,7 +4427,7 @@ const rules = [
     5,
     new DayOfMonth(15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1921	only	-	Sep	15	2:00	0	S
@@ -4177,7 +4438,7 @@ const rules = [
     9,
     new DayOfMonth(15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Toronto	1922	1923	-	May	Sun>=8	2:00	1:00	D
@@ -4188,7 +4449,7 @@ const rules = [
     5,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1922	1926	-	Sep	Sun>=15	2:00	0	S
@@ -4199,7 +4460,7 @@ const rules = [
     9,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Toronto	1924	1927	-	May	Sun>=1	2:00	1:00	D
@@ -4210,7 +4471,7 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1927	1937	-	Sep	Sun>=25	2:00	0	S
@@ -4221,7 +4482,7 @@ const rules = [
     9,
     new NextDayAfter(7, 25),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Toronto	1928	1937	-	Apr	Sun>=25	2:00	1:00	D
@@ -4232,7 +4493,7 @@ const rules = [
     4,
     new NextDayAfter(7, 25),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1938	1940	-	Apr	lastSun	2:00	1:00	D
@@ -4243,13 +4504,13 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1938	1939	-	Sep	lastSun	2:00	0	S
-  new Rule("Toronto", 1938, 1939, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1938, 1939, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Toronto	1945	1946	-	Sep	lastSun	2:00	0	S
-  new Rule("Toronto", 1945, 1946, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1945, 1946, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Toronto	1946	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Toronto",
@@ -4258,7 +4519,7 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1947	1949	-	Apr	lastSun	0:00	1:00	D
@@ -4269,13 +4530,13 @@ const rules = [
     4,
     new LastDay(7),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1947	1948	-	Sep	lastSun	0:00	0	S
-  new Rule("Toronto", 1947, 1948, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1947, 1948, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Toronto	1949	only	-	Nov	lastSun	0:00	0	S
-  new Rule("Toronto", 1949, 1949, 11, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1949, 1949, 11, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Toronto	1950	1973	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Toronto",
@@ -4284,15 +4545,15 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Toronto	1950	only	-	Nov	lastSun	2:00	0	S
-  new Rule("Toronto", 1950, 1950, 11, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1950, 1950, 11, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Toronto	1951	1956	-	Sep	lastSun	2:00	0	S
-  new Rule("Toronto", 1951, 1956, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1951, 1956, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Toronto	1957	1973	-	Oct	lastSun	2:00	0	S
-  new Rule("Toronto", 1957, 1973, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Toronto", 1957, 1973, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1916	only	-	Apr	23	0:00	1:00	D
   new Rule(
     "Winn",
@@ -4301,11 +4562,11 @@ const rules = [
     4,
     new DayOfMonth(23),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1916	only	-	Sep	17	0:00	0	S
-  new Rule("Winn", 1916, 1916, 9, new DayOfMonth(17), 0, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1916, 1916, 9, new DayOfMonth(17), 0, AtTimeZone.Local, 0),
   // Rule    Winn	1918	only	-	Apr	14	2:00	1:00	D
   new Rule(
     "Winn",
@@ -4314,11 +4575,20 @@ const rules = [
     4,
     new DayOfMonth(14),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1918	only	-	Oct	27	2:00	0	S
-  new Rule("Winn", 1918, 1918, 10, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Winn",
+    1918,
+    1918,
+    10,
+    new DayOfMonth(27),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Winn	1937	only	-	May	16	2:00	1:00	D
   new Rule(
     "Winn",
@@ -4327,11 +4597,11 @@ const rules = [
     5,
     new DayOfMonth(16),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1937	only	-	Sep	26	2:00	0	S
-  new Rule("Winn", 1937, 1937, 9, new DayOfMonth(26), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1937, 1937, 9, new DayOfMonth(26), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1942	only	-	Feb	 9	2:00	1:00	W # War
   new Rule(
     "Winn",
@@ -4340,7 +4610,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4355,7 +4625,7 @@ const rules = [
     3600000
   ),
   // Rule    Winn	1945	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Winn", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1946	only	-	May	12	2:00	1:00	D
   new Rule(
     "Winn",
@@ -4364,15 +4634,33 @@ const rules = [
     5,
     new DayOfMonth(12),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1946	only	-	Oct	13	2:00	0	S
-  new Rule("Winn", 1946, 1946, 10, new DayOfMonth(13), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Winn",
+    1946,
+    1946,
+    10,
+    new DayOfMonth(13),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Winn	1947	1949	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Winn", 1947, 1949, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Winn",
+    1947,
+    1949,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Winn	1947	1949	-	Sep	lastSun	2:00	0	S
-  new Rule("Winn", 1947, 1949, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1947, 1949, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1950	only	-	May	 1	2:00	1:00	D
   new Rule(
     "Winn",
@@ -4381,23 +4669,41 @@ const rules = [
     5,
     new DayOfMonth(1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Winn	1950	only	-	Sep	30	2:00	0	S
-  new Rule("Winn", 1950, 1950, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1950, 1950, 9, new DayOfMonth(30), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1951	1960	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Winn", 1951, 1960, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Winn",
+    1951,
+    1960,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Winn	1951	1958	-	Sep	lastSun	2:00	0	S
-  new Rule("Winn", 1951, 1958, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1951, 1958, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1959	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Winn", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1960	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Winn", 1960, 1960, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1960, 1960, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1963	only	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Winn", 1963, 1963, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Winn",
+    1963,
+    1963,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Winn	1963	only	-	Sep	22	2:00	0	S
-  new Rule("Winn", 1963, 1963, 9, new DayOfMonth(22), 120, AtTimeZone.UTC, 0),
+  new Rule("Winn", 1963, 1963, 9, new DayOfMonth(22), 120, AtTimeZone.Local, 0),
   // Rule    Winn	1966	1986	-	Apr	lastSun	2:00s	1:00	D
   new Rule(
     "Winn",
@@ -4430,7 +4736,7 @@ const rules = [
     4,
     new DayOfMonth(14),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1918	only	-	Oct	27	2:00	0	S
@@ -4441,7 +4747,7 @@ const rules = [
     10,
     new DayOfMonth(27),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1930	1934	-	May	Sun>=1	0:00	1:00	D
@@ -4452,7 +4758,7 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1930	1934	-	Oct	Sun>=1	0:00	0	S
@@ -4463,7 +4769,7 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1937	1941	-	Apr	Sun>=8	0:00	1:00	D
@@ -4474,7 +4780,7 @@ const rules = [
     4,
     new NextDayAfter(7, 8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1937	only	-	Oct	Sun>=8	0:00	0	S
@@ -4485,7 +4791,7 @@ const rules = [
     10,
     new NextDayAfter(7, 8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1938	only	-	Oct	Sun>=1	0:00	0	S
@@ -4496,7 +4802,7 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1939	1941	-	Oct	Sun>=8	0:00	0	S
@@ -4507,7 +4813,7 @@ const rules = [
     10,
     new NextDayAfter(7, 8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1942	only	-	Feb	 9	2:00	1:00	W # War
@@ -4518,7 +4824,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4533,7 +4839,7 @@ const rules = [
     3600000
   ),
   // Rule    Regina	1945	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Regina", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Regina", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Regina	1946	only	-	Apr	Sun>=8	2:00	1:00	D
   new Rule(
     "Regina",
@@ -4542,7 +4848,7 @@ const rules = [
     4,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1946	only	-	Oct	Sun>=8	2:00	0	S
@@ -4553,7 +4859,7 @@ const rules = [
     10,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Regina	1947	1957	-	Apr	lastSun	2:00	1:00	D
@@ -4564,11 +4870,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1947	1957	-	Sep	lastSun	2:00	0	S
-  new Rule("Regina", 1947, 1957, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Regina", 1947, 1957, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Regina	1959	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Regina",
@@ -4577,11 +4883,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Regina	1959	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Regina", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Regina", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Swift	1957	only	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Swift",
@@ -4590,11 +4896,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Swift	1957	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Swift", 1957, 1957, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Swift", 1957, 1957, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Swift	1959	1961	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Swift",
@@ -4603,13 +4909,13 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Swift	1959	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Swift", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Swift", 1959, 1959, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Swift	1960	1961	-	Sep	lastSun	2:00	0	S
-  new Rule("Swift", 1960, 1961, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Swift", 1960, 1961, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1918	1919	-	Apr	Sun>=8	2:00	1:00	D
   new Rule(
     "Edm",
@@ -4618,19 +4924,28 @@ const rules = [
     4,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Edm	1918	only	-	Oct	27	2:00	0	S
-  new Rule("Edm", 1918, 1918, 10, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1918, 1918, 10, new DayOfMonth(27), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1919	only	-	May	27	2:00	0	S
-  new Rule("Edm", 1919, 1919, 5, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1919, 1919, 5, new DayOfMonth(27), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1920	1923	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Edm", 1920, 1923, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Edm",
+    1920,
+    1923,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Edm	1920	only	-	Oct	lastSun	2:00	0	S
-  new Rule("Edm", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1920, 1920, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1921	1923	-	Sep	lastSun	2:00	0	S
-  new Rule("Edm", 1921, 1923, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1921, 1923, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1942	only	-	Feb	 9	2:00	1:00	W # War
   new Rule(
     "Edm",
@@ -4639,7 +4954,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Edm	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4654,15 +4969,33 @@ const rules = [
     3600000
   ),
   // Rule    Edm	1945	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Edm", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1945, 1945, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1947	only	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Edm", 1947, 1947, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Edm",
+    1947,
+    1947,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Edm	1947	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Edm", 1947, 1947, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1947, 1947, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Edm	1972	1986	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Edm", 1972, 1986, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Edm",
+    1972,
+    1986,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Edm	1972	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("Edm", 1972, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Edm", 1972, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Vanc	1918	only	-	Apr	14	2:00	1:00	D
   new Rule(
     "Vanc",
@@ -4671,11 +5004,20 @@ const rules = [
     4,
     new DayOfMonth(14),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Vanc	1918	only	-	Oct	27	2:00	0	S
-  new Rule("Vanc", 1918, 1918, 10, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Vanc",
+    1918,
+    1918,
+    10,
+    new DayOfMonth(27),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Vanc	1942	only	-	Feb	 9	2:00	1:00	W # War
   new Rule(
     "Vanc",
@@ -4684,7 +5026,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Vanc	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4699,15 +5041,24 @@ const rules = [
     3600000
   ),
   // Rule    Vanc	1945	only	-	Sep	30	2:00	0	S
-  new Rule("Vanc", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule("Vanc", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.Local, 0),
   // Rule    Vanc	1946	1986	-	Apr	lastSun	2:00	1:00	D
-  new Rule("Vanc", 1946, 1986, 4, new LastDay(7), 120, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Vanc",
+    1946,
+    1986,
+    4,
+    new LastDay(7),
+    120,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Vanc	1946	only	-	Sep	29	2:00	0	S
-  new Rule("Vanc", 1946, 1946, 9, new DayOfMonth(29), 120, AtTimeZone.UTC, 0),
+  new Rule("Vanc", 1946, 1946, 9, new DayOfMonth(29), 120, AtTimeZone.Local, 0),
   // Rule    Vanc	1947	1961	-	Sep	lastSun	2:00	0	S
-  new Rule("Vanc", 1947, 1961, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Vanc", 1947, 1961, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Vanc	1962	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("Vanc", 1962, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Vanc", 1962, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    NT_YK	1918	only	-	Apr	14	2:00	1:00	D
   new Rule(
     "NT_YK",
@@ -4716,11 +5067,20 @@ const rules = [
     4,
     new DayOfMonth(14),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    NT_YK	1918	only	-	Oct	27	2:00	0	S
-  new Rule("NT_YK", 1918, 1918, 10, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "NT_YK",
+    1918,
+    1918,
+    10,
+    new DayOfMonth(27),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    NT_YK	1919	only	-	May	25	2:00	1:00	D
   new Rule(
     "NT_YK",
@@ -4729,11 +5089,11 @@ const rules = [
     5,
     new DayOfMonth(25),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    NT_YK	1919	only	-	Nov	 1	0:00	0	S
-  new Rule("NT_YK", 1919, 1919, 11, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("NT_YK", 1919, 1919, 11, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    NT_YK	1942	only	-	Feb	 9	2:00	1:00	W # War
   new Rule(
     "NT_YK",
@@ -4742,7 +5102,7 @@ const rules = [
     2,
     new DayOfMonth(9),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    NT_YK	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4757,11 +5117,29 @@ const rules = [
     3600000
   ),
   // Rule    NT_YK	1945	only	-	Sep	30	2:00	0	S
-  new Rule("NT_YK", 1945, 1945, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "NT_YK",
+    1945,
+    1945,
+    9,
+    new DayOfMonth(30),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    NT_YK	1965	only	-	Apr	lastSun	0:00	2:00	DD
-  new Rule("NT_YK", 1965, 1965, 4, new LastDay(7), 0, AtTimeZone.UTC, 7200000),
+  new Rule(
+    "NT_YK",
+    1965,
+    1965,
+    4,
+    new LastDay(7),
+    0,
+    AtTimeZone.Local,
+    7200000
+  ),
   // Rule    NT_YK	1965	only	-	Oct	lastSun	2:00	0	S
-  new Rule("NT_YK", 1965, 1965, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("NT_YK", 1965, 1965, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    NT_YK	1980	1986	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "NT_YK",
@@ -4770,11 +5148,11 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    NT_YK	1980	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("NT_YK", 1980, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("NT_YK", 1980, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    NT_YK	1987	2006	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "NT_YK",
@@ -4783,7 +5161,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1939	only	-	Feb	5	0:00	1:00	D
@@ -4794,11 +5172,11 @@ const rules = [
     2,
     new DayOfMonth(5),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1939	only	-	Jun	25	0:00	0	S
-  new Rule("Mexico", 1939, 1939, 6, new DayOfMonth(25), 0, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 1939, 1939, 6, new DayOfMonth(25), 0, AtTimeZone.Local, 0),
   // Rule    Mexico	1940	only	-	Dec	9	0:00	1:00	D
   new Rule(
     "Mexico",
@@ -4807,11 +5185,11 @@ const rules = [
     12,
     new DayOfMonth(9),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1941	only	-	Apr	1	0:00	0	S
-  new Rule("Mexico", 1941, 1941, 4, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 1941, 1941, 4, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Mexico	1943	only	-	Dec	16	0:00	1:00	W # War
   new Rule(
     "Mexico",
@@ -4820,11 +5198,11 @@ const rules = [
     12,
     new DayOfMonth(16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1944	only	-	May	1	0:00	0	S
-  new Rule("Mexico", 1944, 1944, 5, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 1944, 1944, 5, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Mexico	1950	only	-	Feb	12	0:00	1:00	D
   new Rule(
     "Mexico",
@@ -4833,11 +5211,11 @@ const rules = [
     2,
     new DayOfMonth(12),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1950	only	-	Jul	30	0:00	0	S
-  new Rule("Mexico", 1950, 1950, 7, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 1950, 1950, 7, new DayOfMonth(30), 0, AtTimeZone.Local, 0),
   // Rule    Mexico	1996	2000	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "Mexico",
@@ -4846,11 +5224,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	1996	2000	-	Oct	lastSun	2:00	0	S
-  new Rule("Mexico", 1996, 2000, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 1996, 2000, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Mexico	2001	only	-	May	Sun>=1	2:00	1:00	D
   new Rule(
     "Mexico",
@@ -4859,11 +5237,11 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	2001	only	-	Sep	lastSun	2:00	0	S
-  new Rule("Mexico", 2001, 2001, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 2001, 2001, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Mexico	2002	max	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "Mexico",
@@ -4872,11 +5250,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Mexico	2002	max	-	Oct	lastSun	2:00	0	S
-  new Rule("Mexico", 2002, -1, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Mexico", 2002, -1, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Bahamas	1942	only	-	May	 1	24:00	1:00	W
   new Rule(
     "Bahamas",
@@ -4885,7 +5263,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bahamas	1944	only	-	Dec	31	24:00	0	S
@@ -4896,7 +5274,7 @@ const rules = [
     12,
     new DayOfMonth(31),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bahamas	1945	only	-	Feb	 1	0:00	1:00	W
@@ -4907,7 +5285,7 @@ const rules = [
     2,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bahamas	1945	only	-	Aug	14	23:00u	1:00	P # Peace
@@ -4929,11 +5307,11 @@ const rules = [
     10,
     new DayOfMonth(17),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bahamas	1964	1975	-	Oct	lastSun	2:00	0	S
-  new Rule("Bahamas", 1964, 1975, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Bahamas", 1964, 1975, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Bahamas	1964	1975	-	Apr	lastSun	2:00	1:00	D
   new Rule(
     "Bahamas",
@@ -4942,7 +5320,7 @@ const rules = [
     4,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Barb	1977	only	-	Jun	12	2:00	1:00	D
@@ -4953,7 +5331,7 @@ const rules = [
     6,
     new DayOfMonth(12),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Barb	1977	1978	-	Oct	Sun>=1	2:00	0	S
@@ -4964,7 +5342,7 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Barb	1978	1980	-	Apr	Sun>=15	2:00	1:00	D
@@ -4975,13 +5353,13 @@ const rules = [
     4,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Barb	1979	only	-	Sep	30	2:00	0	S
-  new Rule("Barb", 1979, 1979, 9, new DayOfMonth(30), 120, AtTimeZone.UTC, 0),
+  new Rule("Barb", 1979, 1979, 9, new DayOfMonth(30), 120, AtTimeZone.Local, 0),
   // Rule    Barb	1980	only	-	Sep	25	2:00	0	S
-  new Rule("Barb", 1980, 1980, 9, new DayOfMonth(25), 120, AtTimeZone.UTC, 0),
+  new Rule("Barb", 1980, 1980, 9, new DayOfMonth(25), 120, AtTimeZone.Local, 0),
   // Rule    Belize	1918	1941	-	Oct	Sat>=1	24:00	0:30	-0530
   new Rule(
     "Belize",
@@ -4990,7 +5368,7 @@ const rules = [
     10,
     new NextDayAfter(6, 1),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     1800000
   ),
   // Rule    Belize	1919	1942	-	Feb	Sat>=8	24:00	0	CST
@@ -5001,7 +5379,7 @@ const rules = [
     2,
     new NextDayAfter(6, 8),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Belize	1942	only	-	Jun	27	24:00	1:00	CWT
@@ -5012,7 +5390,7 @@ const rules = [
     6,
     new DayOfMonth(27),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Belize	1945	only	-	Aug	14	23:00u	1:00	CPT
@@ -5034,7 +5412,7 @@ const rules = [
     12,
     new DayOfMonth(15),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Belize	1947	1967	-	Oct	Sat>=1	24:00	0:30	-0530
@@ -5045,7 +5423,7 @@ const rules = [
     10,
     new NextDayAfter(6, 1),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     1800000
   ),
   // Rule    Belize	1948	1968	-	Feb	Sat>=8	24:00	0	CST
@@ -5056,7 +5434,7 @@ const rules = [
     2,
     new NextDayAfter(6, 8),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Belize	1973	only	-	Dec	 5	0:00	1:00	CDT
@@ -5067,11 +5445,11 @@ const rules = [
     12,
     new DayOfMonth(5),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Belize	1974	only	-	Feb	 9	0:00	0	CST
-  new Rule("Belize", 1974, 1974, 2, new DayOfMonth(9), 0, AtTimeZone.UTC, 0),
+  new Rule("Belize", 1974, 1974, 2, new DayOfMonth(9), 0, AtTimeZone.Local, 0),
   // Rule    Belize	1982	only	-	Dec	18	0:00	1:00	CDT
   new Rule(
     "Belize",
@@ -5080,11 +5458,11 @@ const rules = [
     12,
     new DayOfMonth(18),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Belize	1983	only	-	Feb	12	0:00	0	CST
-  new Rule("Belize", 1983, 1983, 2, new DayOfMonth(12), 0, AtTimeZone.UTC, 0),
+  new Rule("Belize", 1983, 1983, 2, new DayOfMonth(12), 0, AtTimeZone.Local, 0),
   // Rule    Bermuda	1917	only	-	Apr	 5	24:00	1:00	-
   new Rule(
     "Bermuda",
@@ -5093,7 +5471,7 @@ const rules = [
     4,
     new DayOfMonth(5),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1917	only	-	Sep	30	24:00	0	-
@@ -5104,7 +5482,7 @@ const rules = [
     9,
     new DayOfMonth(30),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1918	only	-	Apr	13	24:00	1:00	-
@@ -5115,7 +5493,7 @@ const rules = [
     4,
     new DayOfMonth(13),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1918	only	-	Sep	15	24:00	0	S
@@ -5126,7 +5504,7 @@ const rules = [
     9,
     new DayOfMonth(15),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1942	only	-	Jan	11	 2:00	1:00	D
@@ -5137,7 +5515,7 @@ const rules = [
     1,
     new DayOfMonth(11),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1942	only	-	Oct	18	 2:00	0	S
@@ -5148,7 +5526,7 @@ const rules = [
     10,
     new DayOfMonth(18),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1943	only	-	Mar	21	 2:00	1:00	D
@@ -5159,7 +5537,7 @@ const rules = [
     3,
     new DayOfMonth(21),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1943	only	-	Oct	31	 2:00	0	S
@@ -5170,7 +5548,7 @@ const rules = [
     10,
     new DayOfMonth(31),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1944	1945	-	Mar	Sun>=8	 2:00	1:00	D
@@ -5181,7 +5559,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1944	1945	-	Nov	Sun>=1	 2:00	0	S
@@ -5192,7 +5570,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1947	only	-	May	Sun>=15	 2:00	1:00	D
@@ -5203,7 +5581,7 @@ const rules = [
     5,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1947	only	-	Sep	Sun>=8	 2:00	0	S
@@ -5214,7 +5592,7 @@ const rules = [
     9,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1948	1952	-	May	Sun>=22	 2:00	1:00	D
@@ -5225,7 +5603,7 @@ const rules = [
     5,
     new NextDayAfter(7, 22),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1948	1952	-	Sep	Sun>=1	 2:00	0	S
@@ -5236,7 +5614,7 @@ const rules = [
     9,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Bermuda	1956	only	-	May	Sun>=22	 2:00	1:00	D
@@ -5247,15 +5625,15 @@ const rules = [
     5,
     new NextDayAfter(7, 22),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bermuda	1956	only	-	Oct	lastSun	 2:00	0	S
-  new Rule("Bermuda", 1956, 1956, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Bermuda", 1956, 1956, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    CR	1979	1980	-	Feb	lastSun	0:00	1:00	D
-  new Rule("CR", 1979, 1980, 2, new LastDay(7), 0, AtTimeZone.UTC, 3600000),
+  new Rule("CR", 1979, 1980, 2, new LastDay(7), 0, AtTimeZone.Local, 3600000),
   // Rule    CR	1979	1980	-	Jun	Sun>=1	0:00	0	S
-  new Rule("CR", 1979, 1980, 6, new NextDayAfter(7, 1), 0, AtTimeZone.UTC, 0),
+  new Rule("CR", 1979, 1980, 6, new NextDayAfter(7, 1), 0, AtTimeZone.Local, 0),
   // Rule    CR	1991	1992	-	Jan	Sat>=15	0:00	1:00	D
   new Rule(
     "CR",
@@ -5264,13 +5642,13 @@ const rules = [
     1,
     new NextDayAfter(6, 15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    CR	1991	only	-	Jul	 1	0:00	0	S
-  new Rule("CR", 1991, 1991, 7, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("CR", 1991, 1991, 7, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    CR	1992	only	-	Mar	15	0:00	0	S
-  new Rule("CR", 1992, 1992, 3, new DayOfMonth(15), 0, AtTimeZone.UTC, 0),
+  new Rule("CR", 1992, 1992, 3, new DayOfMonth(15), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1928	only	-	Jun	10	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5279,11 +5657,11 @@ const rules = [
     6,
     new DayOfMonth(10),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1928	only	-	Oct	10	0:00	0	S
-  new Rule("Cuba", 1928, 1928, 10, new DayOfMonth(10), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1928, 1928, 10, new DayOfMonth(10), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1940	1942	-	Jun	Sun>=1	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5292,11 +5670,20 @@ const rules = [
     6,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1940	1942	-	Sep	Sun>=1	0:00	0	S
-  new Rule("Cuba", 1940, 1942, 9, new NextDayAfter(7, 1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Cuba",
+    1940,
+    1942,
+    9,
+    new NextDayAfter(7, 1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Cuba	1945	1946	-	Jun	Sun>=1	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5305,11 +5692,20 @@ const rules = [
     6,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1945	1946	-	Sep	Sun>=1	0:00	0	S
-  new Rule("Cuba", 1945, 1946, 9, new NextDayAfter(7, 1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Cuba",
+    1945,
+    1946,
+    9,
+    new NextDayAfter(7, 1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Cuba	1965	only	-	Jun	1	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5318,11 +5714,11 @@ const rules = [
     6,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1965	only	-	Sep	30	0:00	0	S
-  new Rule("Cuba", 1965, 1965, 9, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1965, 1965, 9, new DayOfMonth(30), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1966	only	-	May	29	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5331,11 +5727,11 @@ const rules = [
     5,
     new DayOfMonth(29),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1966	only	-	Oct	2	0:00	0	S
-  new Rule("Cuba", 1966, 1966, 10, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1966, 1966, 10, new DayOfMonth(2), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1967	only	-	Apr	8	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5344,11 +5740,20 @@ const rules = [
     4,
     new DayOfMonth(8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1967	1968	-	Sep	Sun>=8	0:00	0	S
-  new Rule("Cuba", 1967, 1968, 9, new NextDayAfter(7, 8), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Cuba",
+    1967,
+    1968,
+    9,
+    new NextDayAfter(7, 8),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Cuba	1968	only	-	Apr	14	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5357,17 +5762,17 @@ const rules = [
     4,
     new DayOfMonth(14),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1969	1977	-	Apr	lastSun	0:00	1:00	D
-  new Rule("Cuba", 1969, 1977, 4, new LastDay(7), 0, AtTimeZone.UTC, 3600000),
+  new Rule("Cuba", 1969, 1977, 4, new LastDay(7), 0, AtTimeZone.Local, 3600000),
   // Rule    Cuba	1969	1971	-	Oct	lastSun	0:00	0	S
-  new Rule("Cuba", 1969, 1971, 10, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1969, 1971, 10, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1972	1974	-	Oct	8	0:00	0	S
-  new Rule("Cuba", 1972, 1974, 10, new DayOfMonth(8), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1972, 1974, 10, new DayOfMonth(8), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1975	1977	-	Oct	lastSun	0:00	0	S
-  new Rule("Cuba", 1975, 1977, 10, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Cuba", 1975, 1977, 10, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Cuba	1978	only	-	May	7	0:00	1:00	D
   new Rule(
     "Cuba",
@@ -5376,7 +5781,7 @@ const rules = [
     5,
     new DayOfMonth(7),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1978	1990	-	Oct	Sun>=8	0:00	0	S
@@ -5387,7 +5792,7 @@ const rules = [
     10,
     new NextDayAfter(7, 8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Cuba	1979	1980	-	Mar	Sun>=15	0:00	1:00	D
@@ -5398,7 +5803,7 @@ const rules = [
     3,
     new NextDayAfter(7, 15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1981	1985	-	May	Sun>=5	0:00	1:00	D
@@ -5409,7 +5814,7 @@ const rules = [
     5,
     new NextDayAfter(7, 5),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1986	1989	-	Mar	Sun>=14	0:00	1:00	D
@@ -5420,7 +5825,7 @@ const rules = [
     3,
     new NextDayAfter(7, 14),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1990	1997	-	Apr	Sun>=1	0:00	1:00	D
@@ -5431,7 +5836,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Cuba	1991	1995	-	Oct	Sun>=8	0:00s	0	S
@@ -5555,19 +5960,19 @@ const rules = [
     10,
     new DayOfMonth(30),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    DR	1967	only	-	Feb	28	0:00	0	EST
-  new Rule("DR", 1967, 1967, 2, new DayOfMonth(28), 0, AtTimeZone.UTC, 0),
+  new Rule("DR", 1967, 1967, 2, new DayOfMonth(28), 0, AtTimeZone.Local, 0),
   // Rule    DR	1969	1973	-	Oct	lastSun	0:00	0:30	-0430
-  new Rule("DR", 1969, 1973, 10, new LastDay(7), 0, AtTimeZone.UTC, 1800000),
+  new Rule("DR", 1969, 1973, 10, new LastDay(7), 0, AtTimeZone.Local, 1800000),
   // Rule    DR	1970	only	-	Feb	21	0:00	0	EST
-  new Rule("DR", 1970, 1970, 2, new DayOfMonth(21), 0, AtTimeZone.UTC, 0),
+  new Rule("DR", 1970, 1970, 2, new DayOfMonth(21), 0, AtTimeZone.Local, 0),
   // Rule    DR	1971	only	-	Jan	20	0:00	0	EST
-  new Rule("DR", 1971, 1971, 1, new DayOfMonth(20), 0, AtTimeZone.UTC, 0),
+  new Rule("DR", 1971, 1971, 1, new DayOfMonth(20), 0, AtTimeZone.Local, 0),
   // Rule    DR	1972	1974	-	Jan	21	0:00	0	EST
-  new Rule("DR", 1972, 1974, 1, new DayOfMonth(21), 0, AtTimeZone.UTC, 0),
+  new Rule("DR", 1972, 1974, 1, new DayOfMonth(21), 0, AtTimeZone.Local, 0),
   // Rule    Salv	1987	1988	-	May	Sun>=1	0:00	1:00	D
   new Rule(
     "Salv",
@@ -5576,11 +5981,11 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Salv	1987	1988	-	Sep	lastSun	0:00	0	S
-  new Rule("Salv", 1987, 1988, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Salv", 1987, 1988, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Guat	1973	only	-	Nov	25	0:00	1:00	D
   new Rule(
     "Guat",
@@ -5589,11 +5994,11 @@ const rules = [
     11,
     new DayOfMonth(25),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Guat	1974	only	-	Feb	24	0:00	0	S
-  new Rule("Guat", 1974, 1974, 2, new DayOfMonth(24), 0, AtTimeZone.UTC, 0),
+  new Rule("Guat", 1974, 1974, 2, new DayOfMonth(24), 0, AtTimeZone.Local, 0),
   // Rule    Guat	1983	only	-	May	21	0:00	1:00	D
   new Rule(
     "Guat",
@@ -5602,11 +6007,11 @@ const rules = [
     5,
     new DayOfMonth(21),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Guat	1983	only	-	Sep	22	0:00	0	S
-  new Rule("Guat", 1983, 1983, 9, new DayOfMonth(22), 0, AtTimeZone.UTC, 0),
+  new Rule("Guat", 1983, 1983, 9, new DayOfMonth(22), 0, AtTimeZone.Local, 0),
   // Rule    Guat	1991	only	-	Mar	23	0:00	1:00	D
   new Rule(
     "Guat",
@@ -5615,11 +6020,11 @@ const rules = [
     3,
     new DayOfMonth(23),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Guat	1991	only	-	Sep	 7	0:00	0	S
-  new Rule("Guat", 1991, 1991, 9, new DayOfMonth(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Guat", 1991, 1991, 9, new DayOfMonth(7), 0, AtTimeZone.Local, 0),
   // Rule    Guat	2006	only	-	Apr	30	0:00	1:00	D
   new Rule(
     "Guat",
@@ -5628,11 +6033,11 @@ const rules = [
     4,
     new DayOfMonth(30),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Guat	2006	only	-	Oct	 1	0:00	0	S
-  new Rule("Guat", 2006, 2006, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Guat", 2006, 2006, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Haiti	1983	only	-	May	8	0:00	1:00	D
   new Rule(
     "Haiti",
@@ -5641,13 +6046,22 @@ const rules = [
     5,
     new DayOfMonth(8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Haiti	1984	1987	-	Apr	lastSun	0:00	1:00	D
-  new Rule("Haiti", 1984, 1987, 4, new LastDay(7), 0, AtTimeZone.UTC, 3600000),
+  new Rule(
+    "Haiti",
+    1984,
+    1987,
+    4,
+    new LastDay(7),
+    0,
+    AtTimeZone.Local,
+    3600000
+  ),
   // Rule    Haiti	1983	1987	-	Oct	lastSun	0:00	0	S
-  new Rule("Haiti", 1983, 1987, 10, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Haiti", 1983, 1987, 10, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Haiti	1988	1997	-	Apr	Sun>=1	1:00s	1:00	D
   new Rule(
     "Haiti",
@@ -5669,11 +6083,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Haiti	2005	2006	-	Oct	lastSun	0:00	0	S
-  new Rule("Haiti", 2005, 2006, 10, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Haiti", 2005, 2006, 10, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Haiti	2012	2015	-	Mar	Sun>=8	2:00	1:00	D
   new Rule(
     "Haiti",
@@ -5682,7 +6096,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Haiti	2012	2015	-	Nov	Sun>=1	2:00	0	S
@@ -5693,7 +6107,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Haiti	2017	max	-	Mar	Sun>=8	2:00	1:00	D
@@ -5704,7 +6118,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Haiti	2017	max	-	Nov	Sun>=1	2:00	0	S
@@ -5715,7 +6129,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Hond	1987	1988	-	May	Sun>=1	0:00	1:00	D
@@ -5726,11 +6140,11 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hond	1987	1988	-	Sep	lastSun	0:00	0	S
-  new Rule("Hond", 1987, 1988, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Hond", 1987, 1988, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Hond	2006	only	-	May	Sun>=1	0:00	1:00	D
   new Rule(
     "Hond",
@@ -5739,11 +6153,20 @@ const rules = [
     5,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hond	2006	only	-	Aug	Mon>=1	0:00	0	S
-  new Rule("Hond", 2006, 2006, 8, new NextDayAfter(1, 1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Hond",
+    2006,
+    2006,
+    8,
+    new NextDayAfter(1, 1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Nic	1979	1980	-	Mar	Sun>=16	0:00	1:00	D
   new Rule(
     "Nic",
@@ -5752,11 +6175,20 @@ const rules = [
     3,
     new NextDayAfter(7, 16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Nic	1979	1980	-	Jun	Mon>=23	0:00	0	S
-  new Rule("Nic", 1979, 1980, 6, new NextDayAfter(1, 23), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Nic",
+    1979,
+    1980,
+    6,
+    new NextDayAfter(1, 23),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Nic	2005	only	-	Apr	10	0:00	1:00	D
   new Rule(
     "Nic",
@@ -5765,11 +6197,20 @@ const rules = [
     4,
     new DayOfMonth(10),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Nic	2005	only	-	Oct	Sun>=1	0:00	0	S
-  new Rule("Nic", 2005, 2005, 10, new NextDayAfter(7, 1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Nic",
+    2005,
+    2005,
+    10,
+    new NextDayAfter(7, 1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Nic	2006	only	-	Apr	30	2:00	1:00	D
   new Rule(
     "Nic",
@@ -5778,7 +6219,7 @@ const rules = [
     4,
     new DayOfMonth(30),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Nic	2006	only	-	Oct	Sun>=1	1:00	0	S
@@ -5789,7 +6230,7 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    GB-Eire	1916	only	-	May	21	2:00s	1:00	BST
@@ -6616,11 +7057,11 @@ const rules = [
     4,
     new DayOfMonth(30),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    C-Eur	1916	only	-	Oct	 1	 1:00	0	-
-  new Rule("C-Eur", 1916, 1916, 10, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule("C-Eur", 1916, 1916, 10, new DayOfMonth(1), 60, AtTimeZone.Local, 0),
   // Rule    C-Eur	1917	1918	-	Apr	Mon>=15	 2:00s	1:00	S
   new Rule(
     "C-Eur",
@@ -6767,19 +7208,19 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    E-Eur	1977	only	-	Sep	lastSun	 0:00	0	-
-  new Rule("E-Eur", 1977, 1977, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("E-Eur", 1977, 1977, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    E-Eur	1978	only	-	Oct	 1	 0:00	0	-
-  new Rule("E-Eur", 1978, 1978, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("E-Eur", 1978, 1978, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    E-Eur	1979	1995	-	Sep	lastSun	 0:00	0	-
-  new Rule("E-Eur", 1979, 1995, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("E-Eur", 1979, 1995, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    E-Eur	1981	max	-	Mar	lastSun	 0:00	1:00	S
-  new Rule("E-Eur", 1981, -1, 3, new LastDay(7), 0, AtTimeZone.UTC, 3600000),
+  new Rule("E-Eur", 1981, -1, 3, new LastDay(7), 0, AtTimeZone.Local, 3600000),
   // Rule    E-Eur	1996	max	-	Oct	lastSun	 0:00	0	-
-  new Rule("E-Eur", 1996, -1, 10, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("E-Eur", 1996, -1, 10, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Russia	1917	only	-	Jul	 1	23:00	1:00	MST  # Moscow Summer Time
   new Rule(
     "Russia",
@@ -6788,11 +7229,20 @@ const rules = [
     7,
     new DayOfMonth(1),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Russia	1917	only	-	Dec	28	 0:00	0	MMT  # Moscow Mean Time
-  new Rule("Russia", 1917, 1917, 12, new DayOfMonth(28), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Russia",
+    1917,
+    1917,
+    12,
+    new DayOfMonth(28),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Russia	1918	only	-	May	31	22:00	2:00	MDST # Moscow Double Summer Time
   new Rule(
     "Russia",
@@ -6801,7 +7251,7 @@ const rules = [
     5,
     new DayOfMonth(31),
     1320,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    Russia	1918	only	-	Sep	16	 1:00	1:00	MST
@@ -6812,7 +7262,7 @@ const rules = [
     9,
     new DayOfMonth(16),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Russia	1919	only	-	May	31	23:00	2:00	MDST
@@ -6823,7 +7273,7 @@ const rules = [
     5,
     new DayOfMonth(31),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    Russia	1919	only	-	Jul	 1	 0:00u	1:00	MSD
@@ -6838,7 +7288,7 @@ const rules = [
     3600000
   ),
   // Rule    Russia	1919	only	-	Aug	16	 0:00	0	MSK
-  new Rule("Russia", 1919, 1919, 8, new DayOfMonth(16), 0, AtTimeZone.UTC, 0),
+  new Rule("Russia", 1919, 1919, 8, new DayOfMonth(16), 0, AtTimeZone.Local, 0),
   // Rule    Russia	1921	only	-	Feb	14	23:00	1:00	MSD
   new Rule(
     "Russia",
@@ -6847,7 +7297,7 @@ const rules = [
     2,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Russia	1921	only	-	Mar	20	23:00	2:00	+05
@@ -6858,7 +7308,7 @@ const rules = [
     3,
     new DayOfMonth(20),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    Russia	1921	only	-	Sep	 1	 0:00	1:00	MSD
@@ -6869,11 +7319,11 @@ const rules = [
     9,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Russia	1921	only	-	Oct	 1	 0:00	0	-
-  new Rule("Russia", 1921, 1921, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Russia", 1921, 1921, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Russia	1981	1984	-	Apr	 1	 0:00	1:00	S
   new Rule(
     "Russia",
@@ -6882,11 +7332,11 @@ const rules = [
     4,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Russia	1981	1983	-	Oct	 1	 0:00	0	-
-  new Rule("Russia", 1981, 1983, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Russia", 1981, 1983, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Russia	1984	1995	-	Sep	lastSun	 2:00s	0	-
   new Rule("Russia", 1984, 1995, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Russia	1985	2010	-	Mar	lastSun	 2:00s	1:00	S
@@ -6910,7 +7360,7 @@ const rules = [
     6,
     new DayOfMonth(16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1942	only	-	Nov	 2	3:00	0	-
@@ -6921,7 +7371,7 @@ const rules = [
     11,
     new DayOfMonth(2),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Albania	1943	only	-	Mar	29	2:00	1:00	S
@@ -6932,7 +7382,7 @@ const rules = [
     3,
     new DayOfMonth(29),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1943	only	-	Apr	10	3:00	0	-
@@ -6943,7 +7393,7 @@ const rules = [
     4,
     new DayOfMonth(10),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Albania	1974	only	-	May	 4	0:00	1:00	S
@@ -6954,11 +7404,20 @@ const rules = [
     5,
     new DayOfMonth(4),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1974	only	-	Oct	 2	0:00	0	-
-  new Rule("Albania", 1974, 1974, 10, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1974,
+    1974,
+    10,
+    new DayOfMonth(2),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1975	only	-	May	 1	0:00	1:00	S
   new Rule(
     "Albania",
@@ -6967,11 +7426,20 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1975	only	-	Oct	 2	0:00	0	-
-  new Rule("Albania", 1975, 1975, 10, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1975,
+    1975,
+    10,
+    new DayOfMonth(2),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1976	only	-	May	 2	0:00	1:00	S
   new Rule(
     "Albania",
@@ -6980,11 +7448,20 @@ const rules = [
     5,
     new DayOfMonth(2),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1976	only	-	Oct	 3	0:00	0	-
-  new Rule("Albania", 1976, 1976, 10, new DayOfMonth(3), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1976,
+    1976,
+    10,
+    new DayOfMonth(3),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1977	only	-	May	 8	0:00	1:00	S
   new Rule(
     "Albania",
@@ -6993,11 +7470,20 @@ const rules = [
     5,
     new DayOfMonth(8),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1977	only	-	Oct	 2	0:00	0	-
-  new Rule("Albania", 1977, 1977, 10, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1977,
+    1977,
+    10,
+    new DayOfMonth(2),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1978	only	-	May	 6	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7006,11 +7492,20 @@ const rules = [
     5,
     new DayOfMonth(6),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1978	only	-	Oct	 1	0:00	0	-
-  new Rule("Albania", 1978, 1978, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1978,
+    1978,
+    10,
+    new DayOfMonth(1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1979	only	-	May	 5	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7019,11 +7514,20 @@ const rules = [
     5,
     new DayOfMonth(5),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1979	only	-	Sep	30	0:00	0	-
-  new Rule("Albania", 1979, 1979, 9, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1979,
+    1979,
+    9,
+    new DayOfMonth(30),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1980	only	-	May	 3	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7032,11 +7536,20 @@ const rules = [
     5,
     new DayOfMonth(3),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1980	only	-	Oct	 4	0:00	0	-
-  new Rule("Albania", 1980, 1980, 10, new DayOfMonth(4), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1980,
+    1980,
+    10,
+    new DayOfMonth(4),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1981	only	-	Apr	26	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7045,11 +7558,20 @@ const rules = [
     4,
     new DayOfMonth(26),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1981	only	-	Sep	27	0:00	0	-
-  new Rule("Albania", 1981, 1981, 9, new DayOfMonth(27), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1981,
+    1981,
+    9,
+    new DayOfMonth(27),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1982	only	-	May	 2	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7058,11 +7580,20 @@ const rules = [
     5,
     new DayOfMonth(2),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1982	only	-	Oct	 3	0:00	0	-
-  new Rule("Albania", 1982, 1982, 10, new DayOfMonth(3), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1982,
+    1982,
+    10,
+    new DayOfMonth(3),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1983	only	-	Apr	18	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7071,11 +7602,20 @@ const rules = [
     4,
     new DayOfMonth(18),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Albania	1983	only	-	Oct	 1	0:00	0	-
-  new Rule("Albania", 1983, 1983, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Albania",
+    1983,
+    1983,
+    10,
+    new DayOfMonth(1),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Albania	1984	only	-	Apr	 1	0:00	1:00	S
   new Rule(
     "Albania",
@@ -7084,7 +7624,7 @@ const rules = [
     4,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Austria	1920	only	-	Apr	 5	2:00s	1:00	S
@@ -7172,11 +7712,20 @@ const rules = [
     4,
     new DayOfMonth(6),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Austria	1980	only	-	Sep	28	0:00	0	-
-  new Rule("Austria", 1980, 1980, 9, new DayOfMonth(28), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Austria",
+    1980,
+    1980,
+    9,
+    new DayOfMonth(28),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Belgium	1918	only	-	Mar	 9	 0:00s	1:00	S
   new Rule(
     "Belgium",
@@ -7559,11 +8108,11 @@ const rules = [
     3,
     new DayOfMonth(31),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bulg	1979	only	-	Oct	 1	 1:00	0	-
-  new Rule("Bulg", 1979, 1979, 10, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule("Bulg", 1979, 1979, 10, new DayOfMonth(1), 60, AtTimeZone.Local, 0),
   // Rule    Bulg	1980	1982	-	Apr	Sat>=1	23:00	1:00	S
   new Rule(
     "Bulg",
@@ -7572,13 +8121,13 @@ const rules = [
     4,
     new NextDayAfter(6, 1),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Bulg	1980	only	-	Sep	29	 1:00	0	-
-  new Rule("Bulg", 1980, 1980, 9, new DayOfMonth(29), 60, AtTimeZone.UTC, 0),
+  new Rule("Bulg", 1980, 1980, 9, new DayOfMonth(29), 60, AtTimeZone.Local, 0),
   // Rule    Bulg	1981	only	-	Sep	27	 2:00	0	-
-  new Rule("Bulg", 1981, 1981, 9, new DayOfMonth(27), 120, AtTimeZone.UTC, 0),
+  new Rule("Bulg", 1981, 1981, 9, new DayOfMonth(27), 120, AtTimeZone.Local, 0),
   // Rule    Czech	1945	only	-	Apr	Mon>=1	2:00s	1:00	S
   new Rule(
     "Czech",
@@ -7653,7 +8202,7 @@ const rules = [
     5,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Denmark	1916	only	-	Sep	30	23:00	0	-
@@ -7664,7 +8213,7 @@ const rules = [
     9,
     new DayOfMonth(30),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Denmark	1940	only	-	May	15	 0:00	1:00	S
@@ -7675,7 +8224,7 @@ const rules = [
     5,
     new DayOfMonth(15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Denmark	1945	only	-	Apr	 2	 2:00s	1:00	S
@@ -7774,11 +8323,11 @@ const rules = [
     3,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Thule	1991	1992	-	Sep	lastSun	2:00	0	S
-  new Rule("Thule", 1991, 1992, 9, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Thule", 1991, 1992, 9, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Thule	1993	2006	-	Apr	Sun>=1	2:00	1:00	D
   new Rule(
     "Thule",
@@ -7787,11 +8336,11 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Thule	1993	2006	-	Oct	lastSun	2:00	0	S
-  new Rule("Thule", 1993, 2006, 10, new LastDay(7), 120, AtTimeZone.UTC, 0),
+  new Rule("Thule", 1993, 2006, 10, new LastDay(7), 120, AtTimeZone.Local, 0),
   // Rule    Thule	2007	max	-	Mar	Sun>=8	2:00	1:00	D
   new Rule(
     "Thule",
@@ -7800,7 +8349,7 @@ const rules = [
     3,
     new NextDayAfter(7, 8),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Thule	2007	max	-	Nov	Sun>=1	2:00	0	S
@@ -7811,7 +8360,7 @@ const rules = [
     11,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Finland	1942	only	-	Apr	2	24:00	1:00	S
@@ -7822,11 +8371,20 @@ const rules = [
     4,
     new DayOfMonth(2),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Finland	1942	only	-	Oct	4	1:00	0	-
-  new Rule("Finland", 1942, 1942, 10, new DayOfMonth(4), 60, AtTimeZone.UTC, 0),
+  new Rule(
+    "Finland",
+    1942,
+    1942,
+    10,
+    new DayOfMonth(4),
+    60,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Finland	1981	1982	-	Mar	lastSun	2:00	1:00	S
   new Rule(
     "Finland",
@@ -7835,11 +8393,11 @@ const rules = [
     3,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Finland	1981	1982	-	Sep	lastSun	3:00	0	-
-  new Rule("Finland", 1981, 1982, 9, new LastDay(7), 180, AtTimeZone.UTC, 0),
+  new Rule("Finland", 1981, 1982, 9, new LastDay(7), 180, AtTimeZone.Local, 0),
   // Rule    France	1916	only	-	Jun	14	23:00s	1:00	S
   new Rule(
     "France",
@@ -8167,7 +8725,7 @@ const rules = [
     2,
     new DayOfMonth(25),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1941	only	-	May	 5	 0:00	2:00	M # Midsummer
@@ -8178,7 +8736,7 @@ const rules = [
     5,
     new DayOfMonth(5),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    France	1941	only	-	Oct	 6	 0:00	1:00	S
@@ -8189,7 +8747,7 @@ const rules = [
     10,
     new DayOfMonth(6),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1942	only	-	Mar	 9	 0:00	2:00	M
@@ -8200,7 +8758,7 @@ const rules = [
     3,
     new DayOfMonth(9),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    France	1942	only	-	Nov	 2	 3:00	1:00	S
@@ -8211,7 +8769,7 @@ const rules = [
     11,
     new DayOfMonth(2),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1943	only	-	Mar	29	 2:00	2:00	M
@@ -8222,7 +8780,7 @@ const rules = [
     3,
     new DayOfMonth(29),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    France	1943	only	-	Oct	 4	 3:00	1:00	S
@@ -8233,7 +8791,7 @@ const rules = [
     10,
     new DayOfMonth(4),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1944	only	-	Apr	 3	 2:00	2:00	M
@@ -8244,7 +8802,7 @@ const rules = [
     4,
     new DayOfMonth(3),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    France	1944	only	-	Oct	 8	 1:00	1:00	S
@@ -8255,7 +8813,7 @@ const rules = [
     10,
     new DayOfMonth(8),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1945	only	-	Apr	 2	 2:00	2:00	M
@@ -8266,11 +8824,20 @@ const rules = [
     4,
     new DayOfMonth(2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    France	1945	only	-	Sep	16	 3:00	0	-
-  new Rule("France", 1945, 1945, 9, new DayOfMonth(16), 180, AtTimeZone.UTC, 0),
+  new Rule(
+    "France",
+    1945,
+    1945,
+    9,
+    new DayOfMonth(16),
+    180,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    France	1976	only	-	Mar	28	 1:00	1:00	S
   new Rule(
     "France",
@@ -8279,11 +8846,20 @@ const rules = [
     3,
     new DayOfMonth(28),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    France	1976	only	-	Sep	26	 1:00	0	-
-  new Rule("France", 1976, 1976, 9, new DayOfMonth(26), 60, AtTimeZone.UTC, 0),
+  new Rule(
+    "France",
+    1976,
+    1976,
+    9,
+    new DayOfMonth(26),
+    60,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Germany	1946	only	-	Apr	14	2:00s	1:00	S
   new Rule(
     "Germany",
@@ -8347,7 +8923,7 @@ const rules = [
     6,
     new DayOfMonth(29),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Germany	1948	only	-	Apr	18	2:00s	1:00	S
@@ -8380,7 +8956,7 @@ const rules = [
     5,
     new DayOfMonth(24),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule SovietZone    1945	only	-	Sep	24	3:00	1:00	S
@@ -8391,7 +8967,7 @@ const rules = [
     9,
     new DayOfMonth(24),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule SovietZone    1945	only	-	Nov	18	2:00s	0	-
@@ -8413,11 +8989,11 @@ const rules = [
     7,
     new DayOfMonth(7),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1932	only	-	Sep	 1	0:00	0	-
-  new Rule("Greece", 1932, 1932, 9, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Greece", 1932, 1932, 9, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Greece	1941	only	-	Apr	 7	0:00	1:00	S
   new Rule(
     "Greece",
@@ -8426,11 +9002,20 @@ const rules = [
     4,
     new DayOfMonth(7),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1942	only	-	Nov	 2	3:00	0	-
-  new Rule("Greece", 1942, 1942, 11, new DayOfMonth(2), 180, AtTimeZone.UTC, 0),
+  new Rule(
+    "Greece",
+    1942,
+    1942,
+    11,
+    new DayOfMonth(2),
+    180,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Greece	1943	only	-	Mar	30	0:00	1:00	S
   new Rule(
     "Greece",
@@ -8439,11 +9024,11 @@ const rules = [
     3,
     new DayOfMonth(30),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1943	only	-	Oct	 4	0:00	0	-
-  new Rule("Greece", 1943, 1943, 10, new DayOfMonth(4), 0, AtTimeZone.UTC, 0),
+  new Rule("Greece", 1943, 1943, 10, new DayOfMonth(4), 0, AtTimeZone.Local, 0),
   // Rule    Greece	1952	only	-	Jul	 1	0:00	1:00	S
   new Rule(
     "Greece",
@@ -8452,11 +9037,11 @@ const rules = [
     7,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1952	only	-	Nov	 2	0:00	0	-
-  new Rule("Greece", 1952, 1952, 11, new DayOfMonth(2), 0, AtTimeZone.UTC, 0),
+  new Rule("Greece", 1952, 1952, 11, new DayOfMonth(2), 0, AtTimeZone.Local, 0),
   // Rule    Greece	1975	only	-	Apr	12	0:00s	1:00	S
   new Rule(
     "Greece",
@@ -8524,7 +9109,16 @@ const rules = [
     0
   ),
   // Rule    Greece	1978	only	-	Sep	24	4:00	0	-
-  new Rule("Greece", 1978, 1978, 9, new DayOfMonth(24), 240, AtTimeZone.UTC, 0),
+  new Rule(
+    "Greece",
+    1978,
+    1978,
+    9,
+    new DayOfMonth(24),
+    240,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Greece	1979	only	-	Apr	 1	9:00	1:00	S
   new Rule(
     "Greece",
@@ -8533,11 +9127,20 @@ const rules = [
     4,
     new DayOfMonth(1),
     540,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1979	only	-	Sep	29	2:00	0	-
-  new Rule("Greece", 1979, 1979, 9, new DayOfMonth(29), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Greece",
+    1979,
+    1979,
+    9,
+    new DayOfMonth(29),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Greece	1980	only	-	Apr	 1	0:00	1:00	S
   new Rule(
     "Greece",
@@ -8546,11 +9149,11 @@ const rules = [
     4,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Greece	1980	only	-	Sep	28	0:00	0	-
-  new Rule("Greece", 1980, 1980, 9, new DayOfMonth(28), 0, AtTimeZone.UTC, 0),
+  new Rule("Greece", 1980, 1980, 9, new DayOfMonth(28), 0, AtTimeZone.Local, 0),
   // Rule    Hungary	1918	1919	-	Apr	15	 2:00	1:00	S
   new Rule(
     "Hungary",
@@ -8559,7 +9162,7 @@ const rules = [
     4,
     new DayOfMonth(15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1918	1920	-	Sep	Mon>=15	 3:00	0	-
@@ -8570,7 +9173,7 @@ const rules = [
     9,
     new NextDayAfter(1, 15),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Hungary	1920	only	-	Apr	 5	 2:00	1:00	S
@@ -8581,7 +9184,7 @@ const rules = [
     4,
     new DayOfMonth(5),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1945	only	-	May	 1	23:00	1:00	S
@@ -8592,11 +9195,20 @@ const rules = [
     5,
     new DayOfMonth(1),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1945	only	-	Nov	 1	 1:00	0	-
-  new Rule("Hungary", 1945, 1945, 11, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule(
+    "Hungary",
+    1945,
+    1945,
+    11,
+    new DayOfMonth(1),
+    60,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Hungary	1946	only	-	Mar	31	 2:00s	1:00	S
   new Rule(
     "Hungary",
@@ -8616,7 +9228,7 @@ const rules = [
     10,
     new DayOfMonth(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Hungary	1947	1949	-	Apr	Sun>=4	 2:00s	1:00	S
@@ -8649,11 +9261,20 @@ const rules = [
     5,
     new DayOfMonth(23),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1954	only	-	Oct	 3	 0:00	0	-
-  new Rule("Hungary", 1954, 1954, 10, new DayOfMonth(3), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Hungary",
+    1954,
+    1954,
+    10,
+    new DayOfMonth(3),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Hungary	1955	only	-	May	22	 2:00	1:00	S
   new Rule(
     "Hungary",
@@ -8662,7 +9283,7 @@ const rules = [
     5,
     new DayOfMonth(22),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1955	only	-	Oct	 2	 3:00	0	-
@@ -8673,7 +9294,7 @@ const rules = [
     10,
     new DayOfMonth(2),
     180,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Hungary	1956	1957	-	Jun	Sun>=1	 2:00	1:00	S
@@ -8684,11 +9305,11 @@ const rules = [
     6,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1956	1957	-	Sep	lastSun	 3:00	0	-
-  new Rule("Hungary", 1956, 1957, 9, new LastDay(7), 180, AtTimeZone.UTC, 0),
+  new Rule("Hungary", 1956, 1957, 9, new LastDay(7), 180, AtTimeZone.Local, 0),
   // Rule    Hungary	1980	only	-	Apr	 6	 0:00	1:00	S
   new Rule(
     "Hungary",
@@ -8697,11 +9318,20 @@ const rules = [
     4,
     new DayOfMonth(6),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1980	only	-	Sep	28	 1:00	0	-
-  new Rule("Hungary", 1980, 1980, 9, new DayOfMonth(28), 60, AtTimeZone.UTC, 0),
+  new Rule(
+    "Hungary",
+    1980,
+    1980,
+    9,
+    new DayOfMonth(28),
+    60,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Hungary	1981	1983	-	Mar	lastSun	 0:00	1:00	S
   new Rule(
     "Hungary",
@@ -8710,11 +9340,11 @@ const rules = [
     3,
     new LastDay(7),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Hungary	1981	1983	-	Sep	lastSun	 1:00	0	-
-  new Rule("Hungary", 1981, 1983, 9, new LastDay(7), 60, AtTimeZone.UTC, 0),
+  new Rule("Hungary", 1981, 1983, 9, new LastDay(7), 60, AtTimeZone.Local, 0),
   // Rule    Iceland	1917	1919	-	Feb	19	23:00	1:00	-
   new Rule(
     "Iceland",
@@ -8723,7 +9353,7 @@ const rules = [
     2,
     new DayOfMonth(19),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Iceland	1917	only	-	Oct	21	 1:00	0	-
@@ -8734,7 +9364,7 @@ const rules = [
     10,
     new DayOfMonth(21),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Iceland	1918	1919	-	Nov	16	 1:00	0	-
@@ -8745,7 +9375,7 @@ const rules = [
     11,
     new DayOfMonth(16),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Iceland	1921	only	-	Mar	19	23:00	1:00	-
@@ -8756,11 +9386,20 @@ const rules = [
     3,
     new DayOfMonth(19),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Iceland	1921	only	-	Jun	23	 1:00	0	-
-  new Rule("Iceland", 1921, 1921, 6, new DayOfMonth(23), 60, AtTimeZone.UTC, 0),
+  new Rule(
+    "Iceland",
+    1921,
+    1921,
+    6,
+    new DayOfMonth(23),
+    60,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Iceland	1939	only	-	Apr	29	23:00	1:00	-
   new Rule(
     "Iceland",
@@ -8769,7 +9408,7 @@ const rules = [
     4,
     new DayOfMonth(29),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Iceland	1939	only	-	Oct	29	 2:00	0	-
@@ -8780,7 +9419,7 @@ const rules = [
     10,
     new DayOfMonth(29),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Iceland	1940	only	-	Feb	25	 2:00	1:00	-
@@ -8791,7 +9430,7 @@ const rules = [
     2,
     new DayOfMonth(25),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Iceland	1940	1941	-	Nov	Sun>=2	 1:00s	0	-
@@ -8890,11 +9529,20 @@ const rules = [
     6,
     new DayOfMonth(3),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1916	1917	-	Sep	30	24:00	0	-
-  new Rule("Italy", 1916, 1917, 9, new DayOfMonth(30), 1440, AtTimeZone.UTC, 0),
+  new Rule(
+    "Italy",
+    1916,
+    1917,
+    9,
+    new DayOfMonth(30),
+    1440,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Italy	1917	only	-	Mar	31	24:00	1:00	S
   new Rule(
     "Italy",
@@ -8903,7 +9551,7 @@ const rules = [
     3,
     new DayOfMonth(31),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1918	only	-	Mar	 9	24:00	1:00	S
@@ -8914,11 +9562,20 @@ const rules = [
     3,
     new DayOfMonth(9),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1918	only	-	Oct	 6	24:00	0	-
-  new Rule("Italy", 1918, 1918, 10, new DayOfMonth(6), 1440, AtTimeZone.UTC, 0),
+  new Rule(
+    "Italy",
+    1918,
+    1918,
+    10,
+    new DayOfMonth(6),
+    1440,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Italy	1919	only	-	Mar	 1	24:00	1:00	S
   new Rule(
     "Italy",
@@ -8927,11 +9584,20 @@ const rules = [
     3,
     new DayOfMonth(1),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1919	only	-	Oct	 4	24:00	0	-
-  new Rule("Italy", 1919, 1919, 10, new DayOfMonth(4), 1440, AtTimeZone.UTC, 0),
+  new Rule(
+    "Italy",
+    1919,
+    1919,
+    10,
+    new DayOfMonth(4),
+    1440,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Italy	1920	only	-	Mar	20	24:00	1:00	S
   new Rule(
     "Italy",
@@ -8940,11 +9606,20 @@ const rules = [
     3,
     new DayOfMonth(20),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1920	only	-	Sep	18	24:00	0	-
-  new Rule("Italy", 1920, 1920, 9, new DayOfMonth(18), 1440, AtTimeZone.UTC, 0),
+  new Rule(
+    "Italy",
+    1920,
+    1920,
+    9,
+    new DayOfMonth(18),
+    1440,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Italy	1940	only	-	Jun	14	24:00	1:00	S
   new Rule(
     "Italy",
@@ -8953,7 +9628,7 @@ const rules = [
     6,
     new DayOfMonth(14),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1942	only	-	Nov	 2	 2:00s	0	-
@@ -9019,11 +9694,11 @@ const rules = [
     4,
     new DayOfMonth(2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Italy	1945	only	-	Sep	15	 1:00	0	-
-  new Rule("Italy", 1945, 1945, 9, new DayOfMonth(15), 60, AtTimeZone.UTC, 0),
+  new Rule("Italy", 1945, 1945, 9, new DayOfMonth(15), 60, AtTimeZone.Local, 0),
   // Rule    Italy	1946	only	-	Mar	17	 2:00s	1:00	S
   new Rule(
     "Italy",
@@ -9093,7 +9768,16 @@ const rules = [
     3600000
   ),
   // Rule    Italy	1966	only	-	Sep	24	24:00	0	-
-  new Rule("Italy", 1966, 1966, 9, new DayOfMonth(24), 1440, AtTimeZone.UTC, 0),
+  new Rule(
+    "Italy",
+    1966,
+    1966,
+    9,
+    new DayOfMonth(24),
+    1440,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Italy	1967	1969	-	Sep	Sun>=22	 0:00s	0	-
   new Rule(
     "Italy",
@@ -9228,11 +9912,11 @@ const rules = [
     5,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1916	only	-	Oct	 1	 1:00	0	-
-  new Rule("Lux", 1916, 1916, 10, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule("Lux", 1916, 1916, 10, new DayOfMonth(1), 60, AtTimeZone.Local, 0),
   // Rule    Lux	1917	only	-	Apr	28	23:00	1:00	S
   new Rule(
     "Lux",
@@ -9241,11 +9925,11 @@ const rules = [
     4,
     new DayOfMonth(28),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1917	only	-	Sep	17	 1:00	0	-
-  new Rule("Lux", 1917, 1917, 9, new DayOfMonth(17), 60, AtTimeZone.UTC, 0),
+  new Rule("Lux", 1917, 1917, 9, new DayOfMonth(17), 60, AtTimeZone.Local, 0),
   // Rule    Lux	1918	only	-	Apr	Mon>=15	 2:00s	1:00	S
   new Rule(
     "Lux",
@@ -9276,11 +9960,11 @@ const rules = [
     3,
     new DayOfMonth(1),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1919	only	-	Oct	 5	 3:00	0	-
-  new Rule("Lux", 1919, 1919, 10, new DayOfMonth(5), 180, AtTimeZone.UTC, 0),
+  new Rule("Lux", 1919, 1919, 10, new DayOfMonth(5), 180, AtTimeZone.Local, 0),
   // Rule    Lux	1920	only	-	Feb	14	23:00	1:00	S
   new Rule(
     "Lux",
@@ -9289,11 +9973,11 @@ const rules = [
     2,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1920	only	-	Oct	24	 2:00	0	-
-  new Rule("Lux", 1920, 1920, 10, new DayOfMonth(24), 120, AtTimeZone.UTC, 0),
+  new Rule("Lux", 1920, 1920, 10, new DayOfMonth(24), 120, AtTimeZone.Local, 0),
   // Rule    Lux	1921	only	-	Mar	14	23:00	1:00	S
   new Rule(
     "Lux",
@@ -9302,11 +9986,11 @@ const rules = [
     3,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1921	only	-	Oct	26	 2:00	0	-
-  new Rule("Lux", 1921, 1921, 10, new DayOfMonth(26), 120, AtTimeZone.UTC, 0),
+  new Rule("Lux", 1921, 1921, 10, new DayOfMonth(26), 120, AtTimeZone.Local, 0),
   // Rule    Lux	1922	only	-	Mar	25	23:00	1:00	S
   new Rule(
     "Lux",
@@ -9315,7 +9999,7 @@ const rules = [
     3,
     new DayOfMonth(25),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1922	only	-	Oct	Sun>=2	 1:00	0	-
@@ -9326,7 +10010,7 @@ const rules = [
     10,
     new NextDayAfter(7, 2),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Lux	1923	only	-	Apr	21	23:00	1:00	S
@@ -9337,7 +10021,7 @@ const rules = [
     4,
     new DayOfMonth(21),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1923	only	-	Oct	Sun>=2	 2:00	0	-
@@ -9348,7 +10032,7 @@ const rules = [
     10,
     new NextDayAfter(7, 2),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Lux	1924	only	-	Mar	29	23:00	1:00	S
@@ -9359,7 +10043,7 @@ const rules = [
     3,
     new DayOfMonth(29),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1924	1928	-	Oct	Sun>=2	 1:00	0	-
@@ -9370,7 +10054,7 @@ const rules = [
     10,
     new NextDayAfter(7, 2),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Lux	1925	only	-	Apr	 5	23:00	1:00	S
@@ -9381,7 +10065,7 @@ const rules = [
     4,
     new DayOfMonth(5),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1926	only	-	Apr	17	23:00	1:00	S
@@ -9392,7 +10076,7 @@ const rules = [
     4,
     new DayOfMonth(17),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1927	only	-	Apr	 9	23:00	1:00	S
@@ -9403,7 +10087,7 @@ const rules = [
     4,
     new DayOfMonth(9),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1928	only	-	Apr	14	23:00	1:00	S
@@ -9414,7 +10098,7 @@ const rules = [
     4,
     new DayOfMonth(14),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Lux	1929	only	-	Apr	20	23:00	1:00	S
@@ -9425,7 +10109,7 @@ const rules = [
     4,
     new DayOfMonth(20),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Malta	1973	only	-	Mar	31	0:00s	1:00	S
@@ -9462,7 +10146,7 @@ const rules = [
     4,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Malta	1975	1980	-	Sep	Sun>=15	2:00	0	-
@@ -9473,7 +10157,7 @@ const rules = [
     9,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Malta	1980	only	-	Mar	31	2:00	1:00	S
@@ -9484,7 +10168,7 @@ const rules = [
     3,
     new DayOfMonth(31),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moldova	1997	max	-	Mar	lastSun	 2:00	1:00	S
@@ -9495,11 +10179,11 @@ const rules = [
     3,
     new LastDay(7),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Moldova	1997	max	-	Oct	lastSun	 3:00	0	-
-  new Rule("Moldova", 1997, -1, 10, new LastDay(7), 180, AtTimeZone.UTC, 0),
+  new Rule("Moldova", 1997, -1, 10, new LastDay(7), 180, AtTimeZone.Local, 0),
   // Rule    Neth	1916	only	-	May	 1	0:00	1:00	NST	# Netherlands Summer Time
   new Rule(
     "Neth",
@@ -9508,11 +10192,11 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Neth	1916	only	-	Oct	 1	0:00	0	AMT	# Amsterdam Mean Time
-  new Rule("Neth", 1916, 1916, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Neth", 1916, 1916, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Neth	1917	only	-	Apr	16	2:00s	1:00	NST
   new Rule(
     "Neth",
@@ -9646,7 +10330,7 @@ const rules = [
     7,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Neth	1937	1939	-	Oct	Sun>=2	2:00s	0	-
@@ -9692,11 +10376,11 @@ const rules = [
     5,
     new DayOfMonth(22),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Norway	1916	only	-	Sep	30	0:00	0	-
-  new Rule("Norway", 1916, 1916, 9, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule("Norway", 1916, 1916, 9, new DayOfMonth(30), 0, AtTimeZone.Local, 0),
   // Rule    Norway	1945	only	-	Apr	 2	2:00s	1:00	S
   new Rule(
     "Norway",
@@ -9786,7 +10470,16 @@ const rules = [
     3600000
   ),
   // Rule    Poland	1944	only	-	Oct	 4	2:00	0	-
-  new Rule("Poland", 1944, 1944, 10, new DayOfMonth(4), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Poland",
+    1944,
+    1944,
+    10,
+    new DayOfMonth(4),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Poland	1945	only	-	Apr	29	0:00	1:00	S
   new Rule(
     "Poland",
@@ -9795,11 +10488,11 @@ const rules = [
     4,
     new DayOfMonth(29),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Poland	1945	only	-	Nov	 1	0:00	0	-
-  new Rule("Poland", 1945, 1945, 11, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Poland", 1945, 1945, 11, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Poland	1946	only	-	Apr	14	0:00s	1:00	S
   new Rule(
     "Poland",
@@ -9944,11 +10637,11 @@ const rules = [
     6,
     new DayOfMonth(17),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Port	1916	only	-	Nov	 1	 1:00	0	-
-  new Rule("Port", 1916, 1916, 11, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule("Port", 1916, 1916, 11, new DayOfMonth(1), 60, AtTimeZone.Local, 0),
   // Rule    Port	1917	only	-	Feb	28	23:00s	1:00	S
   new Rule(
     "Port",
@@ -10482,11 +11175,11 @@ const rules = [
     5,
     new DayOfMonth(27),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Romania	1979	only	-	Sep	lastSun	 0:00	0	-
-  new Rule("Romania", 1979, 1979, 9, new LastDay(7), 0, AtTimeZone.UTC, 0),
+  new Rule("Romania", 1979, 1979, 9, new LastDay(7), 0, AtTimeZone.Local, 0),
   // Rule    Romania	1980	only	-	Apr	 5	23:00	1:00	S
   new Rule(
     "Romania",
@@ -10495,11 +11188,11 @@ const rules = [
     4,
     new DayOfMonth(5),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Romania	1980	only	-	Sep	lastSun	 1:00	0	-
-  new Rule("Romania", 1980, 1980, 9, new LastDay(7), 60, AtTimeZone.UTC, 0),
+  new Rule("Romania", 1980, 1980, 9, new LastDay(7), 60, AtTimeZone.Local, 0),
   // Rule    Romania	1991	1993	-	Mar	lastSun	 0:00s	1:00	S
   new Rule(
     "Romania",
@@ -10521,7 +11214,7 @@ const rules = [
     4,
     new DayOfMonth(15),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1918	1919	-	Oct	 6	24:00s	0	-
@@ -10543,7 +11236,7 @@ const rules = [
     4,
     new DayOfMonth(6),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1924	only	-	Apr	16	23:00	1:00	S
@@ -10554,7 +11247,7 @@ const rules = [
     4,
     new DayOfMonth(16),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1924	only	-	Oct	 4	24:00s	0	-
@@ -10576,7 +11269,7 @@ const rules = [
     4,
     new DayOfMonth(17),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1926	1929	-	Oct	Sat>=1	24:00s	0	-
@@ -10598,7 +11291,7 @@ const rules = [
     4,
     new DayOfMonth(9),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1928	only	-	Apr	15	 0:00	1:00	S
@@ -10609,7 +11302,7 @@ const rules = [
     4,
     new DayOfMonth(15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1929	only	-	Apr	20	23:00	1:00	S
@@ -10620,7 +11313,7 @@ const rules = [
     4,
     new DayOfMonth(20),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1937	only	-	Jun	16	23:00	1:00	S
@@ -10631,7 +11324,7 @@ const rules = [
     6,
     new DayOfMonth(16),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1937	only	-	Oct	 2	24:00s	0	-
@@ -10653,7 +11346,7 @@ const rules = [
     4,
     new DayOfMonth(2),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1938	only	-	Apr	30	23:00	2:00	M
@@ -10664,7 +11357,7 @@ const rules = [
     4,
     new DayOfMonth(30),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     7200000
   ),
   // Rule    Spain	1938	only	-	Oct	 2	24:00	1:00	S
@@ -10675,7 +11368,7 @@ const rules = [
     10,
     new DayOfMonth(2),
     1440,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1939	only	-	Oct	 7	24:00s	0	-
@@ -10697,11 +11390,11 @@ const rules = [
     5,
     new DayOfMonth(2),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1942	only	-	Sep	 1	 1:00	0	-
-  new Rule("Spain", 1942, 1942, 9, new DayOfMonth(1), 60, AtTimeZone.UTC, 0),
+  new Rule("Spain", 1942, 1942, 9, new DayOfMonth(1), 60, AtTimeZone.Local, 0),
   // Rule    Spain	1943	1946	-	Apr	Sat>=13	23:00	1:00	S
   new Rule(
     "Spain",
@@ -10710,7 +11403,7 @@ const rules = [
     4,
     new NextDayAfter(6, 13),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1943	1944	-	Oct	Sun>=1	 1:00	0	-
@@ -10721,11 +11414,11 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Spain	1945	1946	-	Sep	lastSun	 1:00	0	-
-  new Rule("Spain", 1945, 1946, 9, new LastDay(7), 60, AtTimeZone.UTC, 0),
+  new Rule("Spain", 1945, 1946, 9, new LastDay(7), 60, AtTimeZone.Local, 0),
   // Rule    Spain	1949	only	-	Apr	30	23:00	1:00	S
   new Rule(
     "Spain",
@@ -10734,11 +11427,11 @@ const rules = [
     4,
     new DayOfMonth(30),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1949	only	-	Oct	 2	 1:00	0	-
-  new Rule("Spain", 1949, 1949, 10, new DayOfMonth(2), 60, AtTimeZone.UTC, 0),
+  new Rule("Spain", 1949, 1949, 10, new DayOfMonth(2), 60, AtTimeZone.Local, 0),
   // Rule    Spain	1974	1975	-	Apr	Sat>=12	23:00	1:00	S
   new Rule(
     "Spain",
@@ -10747,7 +11440,7 @@ const rules = [
     4,
     new NextDayAfter(6, 12),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1974	1975	-	Oct	Sun>=1	 1:00	0	-
@@ -10758,7 +11451,7 @@ const rules = [
     10,
     new NextDayAfter(7, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Spain	1976	only	-	Mar	27	23:00	1:00	S
@@ -10769,11 +11462,11 @@ const rules = [
     3,
     new DayOfMonth(27),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1976	1977	-	Sep	lastSun	 1:00	0	-
-  new Rule("Spain", 1976, 1977, 9, new LastDay(7), 60, AtTimeZone.UTC, 0),
+  new Rule("Spain", 1976, 1977, 9, new LastDay(7), 60, AtTimeZone.Local, 0),
   // Rule    Spain	1977	only	-	Apr	 2	23:00	1:00	S
   new Rule(
     "Spain",
@@ -10782,7 +11475,7 @@ const rules = [
     4,
     new DayOfMonth(2),
     1380,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Spain	1978	only	-	Apr	 2	 2:00s	1:00	S
@@ -10815,7 +11508,7 @@ const rules = [
     6,
     new DayOfMonth(3),
     720,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule SpainAfrica 1967    only	-	Oct	 1	 0:00	0	-
@@ -10826,7 +11519,7 @@ const rules = [
     10,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule SpainAfrica 1974    only	-	Jun	24	 0:00	1:00	S
@@ -10837,7 +11530,7 @@ const rules = [
     6,
     new DayOfMonth(24),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule SpainAfrica 1974    only	-	Sep	 1	 0:00	0	-
@@ -10848,7 +11541,7 @@ const rules = [
     9,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule SpainAfrica 1976    1977	-	May	 1	 0:00	1:00	S
@@ -10859,7 +11552,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule SpainAfrica 1976    only	-	Aug	 1	 0:00	0	-
@@ -10870,7 +11563,7 @@ const rules = [
     8,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule SpainAfrica 1977    only	-	Sep	28	 0:00	0	-
@@ -10881,7 +11574,7 @@ const rules = [
     9,
     new DayOfMonth(28),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule SpainAfrica 1978    only	-	Jun	 1	 0:00	1:00	S
@@ -10892,7 +11585,7 @@ const rules = [
     6,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule SpainAfrica 1978    only	-	Aug	 4	 0:00	0	-
@@ -10903,7 +11596,7 @@ const rules = [
     8,
     new DayOfMonth(4),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Swiss	1941	1942	-	May	Mon>=1	1:00	1:00	S
@@ -10914,7 +11607,7 @@ const rules = [
     5,
     new NextDayAfter(1, 1),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Swiss	1941	1942	-	Oct	Mon>=1	2:00	0	-
@@ -10925,7 +11618,7 @@ const rules = [
     10,
     new NextDayAfter(1, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Turkey	1916	only	-	May	 1	0:00	1:00	S
@@ -10936,11 +11629,11 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1916	only	-	Oct	 1	0:00	0	-
-  new Rule("Turkey", 1916, 1916, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1916, 1916, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1920	only	-	Mar	28	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -10949,11 +11642,20 @@ const rules = [
     3,
     new DayOfMonth(28),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1920	only	-	Oct	25	0:00	0	-
-  new Rule("Turkey", 1920, 1920, 10, new DayOfMonth(25), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Turkey",
+    1920,
+    1920,
+    10,
+    new DayOfMonth(25),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Turkey	1921	only	-	Apr	 3	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -10962,11 +11664,11 @@ const rules = [
     4,
     new DayOfMonth(3),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1921	only	-	Oct	 3	0:00	0	-
-  new Rule("Turkey", 1921, 1921, 10, new DayOfMonth(3), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1921, 1921, 10, new DayOfMonth(3), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1922	only	-	Mar	26	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -10975,11 +11677,11 @@ const rules = [
     3,
     new DayOfMonth(26),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1922	only	-	Oct	 8	0:00	0	-
-  new Rule("Turkey", 1922, 1922, 10, new DayOfMonth(8), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1922, 1922, 10, new DayOfMonth(8), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1924	only	-	May	13	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -10988,11 +11690,11 @@ const rules = [
     5,
     new DayOfMonth(13),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1924	1925	-	Oct	 1	0:00	0	-
-  new Rule("Turkey", 1924, 1925, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1924, 1925, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1925	only	-	May	 1	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11001,7 +11703,7 @@ const rules = [
     5,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1940	only	-	Jul	 1	0:00	1:00	S
@@ -11012,11 +11714,11 @@ const rules = [
     7,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1940	only	-	Oct	 6	0:00	0	-
-  new Rule("Turkey", 1940, 1940, 10, new DayOfMonth(6), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1940, 1940, 10, new DayOfMonth(6), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1940	only	-	Dec	 1	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11025,11 +11727,11 @@ const rules = [
     12,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1941	only	-	Sep	21	0:00	0	-
-  new Rule("Turkey", 1941, 1941, 9, new DayOfMonth(21), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1941, 1941, 9, new DayOfMonth(21), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1942	only	-	Apr	 1	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11038,11 +11740,11 @@ const rules = [
     4,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1945	only	-	Oct	 8	0:00	0	-
-  new Rule("Turkey", 1945, 1945, 10, new DayOfMonth(8), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1945, 1945, 10, new DayOfMonth(8), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1946	only	-	Jun	 1	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11051,11 +11753,11 @@ const rules = [
     6,
     new DayOfMonth(1),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1946	only	-	Oct	 1	0:00	0	-
-  new Rule("Turkey", 1946, 1946, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1946, 1946, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1947	1948	-	Apr	Sun>=16	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11064,7 +11766,7 @@ const rules = [
     4,
     new NextDayAfter(7, 16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1947	1951	-	Oct	Sun>=2	0:00	0	-
@@ -11075,7 +11777,7 @@ const rules = [
     10,
     new NextDayAfter(7, 2),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Turkey	1949	only	-	Apr	10	0:00	1:00	S
@@ -11086,7 +11788,7 @@ const rules = [
     4,
     new DayOfMonth(10),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1950	only	-	Apr	16	0:00	1:00	S
@@ -11097,7 +11799,7 @@ const rules = [
     4,
     new DayOfMonth(16),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1951	only	-	Apr	22	0:00	1:00	S
@@ -11108,7 +11810,7 @@ const rules = [
     4,
     new DayOfMonth(22),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1962	only	-	Jul	15	0:00	1:00	S
@@ -11119,11 +11821,20 @@ const rules = [
     7,
     new DayOfMonth(15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1963	only	-	Oct	30	0:00	0	-
-  new Rule("Turkey", 1963, 1963, 10, new DayOfMonth(30), 0, AtTimeZone.UTC, 0),
+  new Rule(
+    "Turkey",
+    1963,
+    1963,
+    10,
+    new DayOfMonth(30),
+    0,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Turkey	1964	only	-	May	15	0:00	1:00	S
   new Rule(
     "Turkey",
@@ -11132,11 +11843,11 @@ const rules = [
     5,
     new DayOfMonth(15),
     0,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1964	only	-	Oct	 1	0:00	0	-
-  new Rule("Turkey", 1964, 1964, 10, new DayOfMonth(1), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1964, 1964, 10, new DayOfMonth(1), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1973	only	-	Jun	 3	1:00	1:00	S
   new Rule(
     "Turkey",
@@ -11145,7 +11856,7 @@ const rules = [
     6,
     new DayOfMonth(3),
     60,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1973	1976	-	Oct	Sun>=31	2:00	0	-
@@ -11156,7 +11867,7 @@ const rules = [
     10,
     new NextDayAfter(7, 31),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Turkey	1974	only	-	Mar	31	2:00	1:00	S
@@ -11167,7 +11878,7 @@ const rules = [
     3,
     new DayOfMonth(31),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1975	only	-	Mar	22	2:00	1:00	S
@@ -11178,7 +11889,7 @@ const rules = [
     3,
     new DayOfMonth(22),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1976	only	-	Mar	21	2:00	1:00	S
@@ -11189,7 +11900,7 @@ const rules = [
     3,
     new DayOfMonth(21),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1977	1978	-	Apr	Sun>=1	2:00	1:00	S
@@ -11200,7 +11911,7 @@ const rules = [
     4,
     new NextDayAfter(7, 1),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1977	1978	-	Oct	Sun>=15	2:00	0	-
@@ -11211,11 +11922,11 @@ const rules = [
     10,
     new NextDayAfter(7, 15),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     0
   ),
   // Rule    Turkey	1978	only	-	Jun	29	0:00	0	-
-  new Rule("Turkey", 1978, 1978, 6, new DayOfMonth(29), 0, AtTimeZone.UTC, 0),
+  new Rule("Turkey", 1978, 1978, 6, new DayOfMonth(29), 0, AtTimeZone.Local, 0),
   // Rule    Turkey	1983	only	-	Jul	31	2:00	1:00	S
   new Rule(
     "Turkey",
@@ -11224,11 +11935,20 @@ const rules = [
     7,
     new DayOfMonth(31),
     120,
-    AtTimeZone.UTC,
+    AtTimeZone.Local,
     3600000
   ),
   // Rule    Turkey	1983	only	-	Oct	 2	2:00	0	-
-  new Rule("Turkey", 1983, 1983, 10, new DayOfMonth(2), 120, AtTimeZone.UTC, 0),
+  new Rule(
+    "Turkey",
+    1983,
+    1983,
+    10,
+    new DayOfMonth(2),
+    120,
+    AtTimeZone.Local,
+    0
+  ),
   // Rule    Turkey	1985	only	-	Apr	20	1:00s	1:00	S
   new Rule(
     "Turkey",

@@ -4,6 +4,7 @@
   "description": "An implementation of temporal within AssemblyScript, with an initial focus on non-timezone-aware classes and functionality.",
   "main": "index.js",
   "ascMain": "assembly/index.ts",
+  "types": "assembly/index.ts",
   "scripts": {
     "test": "asp --verbose --nologo",
     "test:ci": "asp --summary",
