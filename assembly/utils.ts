@@ -1032,8 +1032,6 @@ export function isoYearString(year: i32): string {
 
 export function formatTimeZoneOffsetString(offsetNanoseconds: i64): string {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
-  offsetNanoseconds = abs(offsetNanoseconds);
-  const balanced = balanceTime(0, 0, 0, 0, 0, offsetNanoseconds);
-  return sign + toPaddedString(balanced.hour) + ":" +
-    toPaddedString(balanced.minute);
+  const balanced = balanceTime(0, 0, 0, 0, 0, abs(offsetNanoseconds));
+  return sign + toPaddedString(balanced.hour) + ":" + toPaddedString(balanced.minute);
 }
