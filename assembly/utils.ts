@@ -636,7 +636,6 @@ export function differenceDate(
         }
 
         mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-        midSign = -compareTemporalDate(yr1, mo1, d1, mid.year, mid.month, mid.day);
       }
 
       let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
