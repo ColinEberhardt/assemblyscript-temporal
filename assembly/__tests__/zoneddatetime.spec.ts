@@ -10,29 +10,29 @@ const epochNanos: i64 = epochMillis * 1_000_000 + 456_789;
 let zdt: ZonedDateTime;
 
 describe("Construction and properties", () => {
-  // it("works", () => {
-  //   zdt = new ZonedDateTime(epochNanos, tz);
-  //   expect(zdt.toInstant().epochSeconds).toBe(epochMillis / 1_000);
-  //   expect(zdt.toInstant().epochMilliseconds).toBe(epochMillis);
-  // });
+  it("works", () => {
+    zdt = new ZonedDateTime(epochNanos, tz);
+    expect(zdt.toInstant().epochSeconds).toBe(epochMillis / 1_000);
+    expect(zdt.toInstant().epochMilliseconds).toBe(epochMillis);
+  });
 
   describe("ZonedDateTime for (1976, 11, 18, 15, 23, 30, 123, 456, 789)", () => {
-    // zdt = new ZonedDateTime(epochNanos, new TimeZone("UTC"));
-    // it("can be constructed", () => {
-    //   assert(zdt);
-    // });
-    // it("zdt components are correct", () => {
-    //   expect(zdt.year).toBe(1976);
-    //   expect(zdt.month).toBe(11);
-    //   expect(zdt.day).toBe(18);
-    //   expect(zdt.hour).toBe(15);
-    //   expect(zdt.minute).toBe(23);
-    //   expect(zdt.second).toBe(30);
-    //   expect(zdt.millisecond).toBe(123);
-    //   expect(zdt.microsecond).toBe(456);
-    //   expect(zdt.nanosecond).toBe(789);
-    //   expect(zdt.offset).toBe("+00:00");
-    // });
+    zdt = new ZonedDateTime(epochNanos, new TimeZone("UTC"));
+    it("can be constructed", () => {
+      assert(zdt);
+    });
+    it("zdt components are correct", () => {
+      expect(zdt.year).toBe(1976);
+      expect(zdt.month).toBe(11);
+      expect(zdt.day).toBe(18);
+      expect(zdt.hour).toBe(15);
+      expect(zdt.minute).toBe(23);
+      expect(zdt.second).toBe(30);
+      expect(zdt.millisecond).toBe(123);
+      expect(zdt.microsecond).toBe(456);
+      expect(zdt.nanosecond).toBe(789);
+      expect(zdt.offset).toBe("+00:00");
+    });
     
     //     it("zdt.epochSeconds is 217178610", () =>
     //       expect(zdt.epochSeconds).toBe(217178610));
@@ -124,23 +124,36 @@ describe("Construction and properties", () => {
   //     assert(zdt.calendar instanceof Temporal.Calendar);
   //     expect(zdt.calendar.id).toBe("japanese");
   //   });
+
+  it('parses with an IANA zone but no offset', () => {
+    const zdt = ZonedDateTime.from('2020-03-08T01:00[America/Los_Angeles]');
+    expect(zdt.toString()).toBe('2020-03-08T01:00:00-08:00[America/Los_Angeles]');
+  });
+  it('parses with an IANA zone but no offset', () => {
+    const zdt = ZonedDateTime.from('2020-03-08T01:00[America/Los_Angeles]');
+    expect(zdt.toString()).toBe('2020-03-08T01:00:00-08:00[America/Los_Angeles]');
+  });
+  it('throws if no brackets', () => {
+    expect(() => {
+      ZonedDateTime.from('2020-03-08T01:00-08:00');
+    }).toThrow();
+    expect(() => {
+      ZonedDateTime.from('2020-03-08T01:00Z');
+    }).toThrow();
+  });
 });
 
 describe("handles timezones (a mixed bag of tests that verify some of the gnarly issues in TZ support)", () => {
   it("handles end of daylight saving transition", () => {
     // half an hour before daylight saving ends
     zdt = new ZonedDateTime(1636277400000000000, new TimeZone("America/Los_Angeles"));
-    expect(zdt.toString()).toBe("2021-11-07T01:30:00-08:00");
+    expect(zdt.toString()).toBe("2021-11-07T01:30:00-08:00[America/Los_Angeles]");
     // half an hour afterwards - the clock shows the same wall-time, but a different offset
     zdt = new ZonedDateTime(1636273800000000000, new TimeZone("America/Los_Angeles"));
-    expect(zdt.toString()).toBe("2021-11-07T01:30:00-07:00");
+    expect(zdt.toString()).toBe("2021-11-07T01:30:00-07:00[America/Los_Angeles]");
   })
 })
 
-//      it('parses with an IANA zone but no offset', () => {
-//        const zdt = ZonedDateTime.from('2020-03-08T01:00[America/Los_Angeles]');
-//        expect(zdt.toString()).toBe('2020-03-08T01:00:00-08:00[America/Los_Angeles]');
-//      });
 //      it('parses with an IANA zone but no offset (with disambiguation)', () => {
 //        const zdt = ZonedDateTime.from('2020-03-08T02:30[America/Los_Angeles]', { disambiguation: 'earlier' });
 //        expect(zdt.toString()).toBe('2020-03-08T01:30:00-08:00[America/Los_Angeles]');

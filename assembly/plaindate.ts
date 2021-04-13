@@ -17,6 +17,7 @@ import {
   compareTemporalDate,
   differenceDate,
   coalesce,
+  parseISOString,
 } from "./utils";
 
 export class DateLike {
@@ -57,24 +58,12 @@ export class PlainDate {
   }
 
   private static fromString(date: string): PlainDate {
-    const dateRegex = new RegExp(
-      "^((?:[+-]\\d{6}|\\d{4}))(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))(?:(?:T|\\s+)(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?)?(?:([zZ])|(?:([+-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|_[-A-Za-z._]{0,13}|[a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,12})?|[a-zA-Z]-(?:[-._][-A-Za-z._]{0,11})?|[a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,10})?|[a-zA-Z]-[a-zA-Z][a-zA-Z](?:[A-Za-z._][-A-Za-z._]{0,9})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-(?:[-._][-A-Za-z._]{0,8})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z](?:[-._][-A-Za-z._]{0,7})?|[a-zA-Z]-[a-zA-Z][a-zA-Z]-[a-zA-Z][a-zA-Z](?:[-._][-A-Za-z._]{0,6})?)(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?(?:\\[u-ca-((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
-      "i"
+    const parsed = parseISOString(date);
+    return new PlainDate(
+      parsed.year,
+      parsed.month,
+      parsed.day
     );
-    const match = dateRegex.exec(date);
-    if (match != null) {
-      return new PlainDate(
-        I32.parseInt(match.matches[1]),
-        // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
-        I32.parseInt(
-          match.matches[2] != "" ? match.matches[2] : match.matches[19]
-        ),
-        I32.parseInt(
-          match.matches[3] != "" ? match.matches[3] : match.matches[20]
-        )
-      );
-    }
-    throw new RangeError("invalid ISO 8601 string: " + date);
   }
 
   constructor(readonly year: i32, readonly month: i32, readonly day: i32) {

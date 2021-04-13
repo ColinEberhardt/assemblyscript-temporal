@@ -1,14 +1,47 @@
-import {
-  MICROS_PER_SECOND,
-  MILLIS_PER_SECOND,
-  NANOS_PER_SECOND,
-} from "./constants";
+import { RegExp } from "assemblyscript-regex";
+
 import { Instant } from "./instant";
-import { PlainDateTime } from "./plaindatetime";
+import { DateTimeLike, PlainDateTime } from "./plaindatetime";
 import { TimeZone } from "./timezone";
-import { toPaddedString } from "./utils";
+import { JsDate } from "./date";
+import { parseISOString } from "./utils";
 
 export class ZonedDateTime {
+  @inline
+  static from<T = DateTimeLike>(date: T): ZonedDateTime {
+    if (isString<T>()) {
+      // @ts-ignore: cast
+      return this.fromString(<string>date);
+    } else {
+      throw new TypeError("invalid date type");
+    }
+  }
+
+  private static fromString(date: string): ZonedDateTime {
+    const parsed = parseISOString(date);
+    if (parsed.timezone == "") {
+      throw new RangeError("time zone ID required in brackets");
+    }
+    const epochMillis = JsDate.UTC(
+      parsed.year,
+      parsed.month - 1,
+      parsed.day,
+      parsed.hour,
+      parsed.minute,
+      parsed.second,
+      parsed.millisecond
+    );
+    const epochNanos =
+      i64(epochMillis) * 1_000_000 +
+      i64(parsed.microsecond) * 1_000 +
+      i64(parsed.nanosecond);
+    const timezone = new TimeZone(parsed.timezone);
+    return new ZonedDateTime(
+      epochNanos - timezone.getOffsetNanosecondsFor(new Instant(epochNanos)),
+      timezone
+    );
+  }
+
   private plainDateTime: PlainDateTime;
 
   constructor(public epochNanos: i64, public tz: TimeZone) {
@@ -17,6 +50,10 @@ export class ZonedDateTime {
 
   toInstant(): Instant {
     return new Instant(this.epochNanos);
+  }
+
+  toPlainDateTime(): PlainDateTime {
+    return this.plainDateTime;
   }
 
   get year(): i32 {
@@ -60,30 +97,12 @@ export class ZonedDateTime {
   }
 
   toString(): string {
-    // TODO: refactor from PlainDateTime
-    // 1976-11-18T00:00:00
     return (
-      this.year.toString() +
-      "-" +
-      toPaddedString(this.month) +
-      "-" +
-      toPaddedString(this.day) +
-      "T" +
-      toPaddedString(this.hour) +
-      ":" +
-      toPaddedString(this.minute) +
-      ":" +
-      toPaddedString(this.second) +
-      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
-        ? (
-            f64(this.nanosecond) / NANOS_PER_SECOND +
-            f64(this.microsecond) / MICROS_PER_SECOND +
-            f64(this.millisecond) / MILLIS_PER_SECOND
-          )
-            .toString()
-            .substring(1)
-        : "") +
-      this.offset
+      this.toPlainDateTime().toString() +
+      this.offset +
+      "[" +
+      this.tz.timezone +
+      "]"
     );
   }
 }
