@@ -1,8 +1,13 @@
 // TODO: This functionality will likely be moved into the AssemblyScript Standard Library
 // https://github.com/AssemblyScript/assemblyscript/pull/1768
 
-import { YMD } from "./utils";
-import { MILLIS_PER_DAY, MILLIS_PER_HOUR, MILLIS_PER_MINUTE, MILLIS_PER_SECOND } from "./constants";
+import { checkRange, YMD } from "./utils";
+import {
+  MILLIS_PER_DAY,
+  MILLIS_PER_HOUR,
+  MILLIS_PER_MINUTE,
+  MILLIS_PER_SECOND
+} from "./constants";
 
 export class JsDate {
   epochMilliseconds: i64;
@@ -48,6 +53,28 @@ export class JsDate {
         minute * MILLIS_PER_MINUTE +
         second * MILLIS_PER_SECOND +
         millisecond
+    );
+  }
+
+  // https://tc39.es/ecma262/#sec-date.utc
+  static UTC(
+    year: i32,
+    month: i32 = 0,
+    date: i32 = 1,
+    hours: i32 = 0,
+    minutes: i32 = 0,
+    seconds: i32 = 0,
+    ms: i32 = 0
+  ): i64 {
+    if (checkRange(year, 0, 99)) {
+      year += 1900;
+    }
+    return (
+      <i64>days_from_civil(year, month + 1, date) * MILLIS_PER_DAY +
+      hours * MILLIS_PER_HOUR +
+      minutes * MILLIS_PER_MINUTE +
+      seconds * MILLIS_PER_SECOND +
+      ms
     );
   }
 

@@ -11,9 +11,16 @@ import { Overflow, TimeComponent } from "./enums";
 import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { JsDate } from "./date";
 
+// @ts-ignore
+@lazy
 const YEAR_MIN = -271821;
+
+// @ts-ignore
+@lazy
 const YEAR_MAX =  275760;
 
+// @ts-ignore
+@lazy
 let __null = false;
 
 // value objects - used in place of object literals
