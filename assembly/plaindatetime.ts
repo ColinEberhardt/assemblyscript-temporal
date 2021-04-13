@@ -14,6 +14,7 @@ import {
   coalesce,
   compareTemporalDateTime,
   addDateTime,
+  parseISOString,
 } from "./utils";
 
 export class DateTimeLike {
@@ -80,33 +81,18 @@ export class PlainDateTime {
   }
 
   private static fromString(date: string): PlainDateTime {
-    const dateRegex = new RegExp(
-      "^((?:[+\u2212-]\\d{6}|\\d{4}))(?:-(\\d{2})-(\\d{2})|(\\d{2})(\\d{2}))(?:(?:T|\\s+)(\\d{2})(?::(\\d{2})(?::(\\d{2})(?:[.,](\\d{1,9}))?)?|(\\d{2})(?:(\\d{2})(?:[.,](\\d{1,9}))?)?)?)?(?:(?:([zZ])|(?:([+\u2212-])([01][0-9]|2[0-3])(?::?([0-5][0-9])(?::?([0-5][0-9])(?:[.,](\\d{1,9}))?)?)?)?)(?:\\[((?:(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13})(?:\\/(?:\\.[-A-Za-z_]|\\.\\.[-A-Za-z._]{1,12}|\\.[-A-Za-z_][-A-Za-z._]{0,12}|[A-Za-z_][-A-Za-z._]{0,13}))*|Etc\\/GMT[-+]\\d{1,2}|(?:[+\u2212-][0-2][0-9](?::?[0-5][0-9](?::?[0-5][0-9](?:[.,]\\d{1,9})?)?)?)))\\])?)?(?:\\[u-ca=((?:[A-Za-z0-9]{3,8}(?:-[A-Za-z0-9]{3,8})*))\\])?$",
-      "i"
+    const parsed = parseISOString(date);
+    return new PlainDateTime(
+      parsed.year,
+      parsed.month,
+      parsed.day,
+      parsed.hour,
+      parsed.minute,
+      parsed.second,
+      parsed.millisecond,
+      parsed.microsecond,
+      parsed.nanosecond
     );
-    const match = dateRegex.exec(date);
-    if (match != null) {
-      // see https://github.com/ColinEberhardt/assemblyscript-regex/issues/38
-      const fraction = (
-        match.matches[7] != "" ? match.matches[7] : match.matches[18]
-      ) + "000000000";
-      return new PlainDateTime(
-        I32.parseInt(match.matches[1]),
-        I32.parseInt(
-          match.matches[2] != "" ? match.matches[2] : match.matches[19]
-        ),
-        I32.parseInt(
-          match.matches[3] != "" ? match.matches[3] : match.matches[20]
-        ),
-        I32.parseInt(match.matches[4]),
-        I32.parseInt(match.matches[5] != "" ? match.matches[5]: match.matches[16]),
-        I32.parseInt(match.matches[6] != "" ? match.matches[6]: match.matches[17]),
-        I32.parseInt(fraction.substring(0, 3)),
-        I32.parseInt(fraction.substring(3, 6)),
-        I32.parseInt(fraction.substring(6, 9))
-      );
-    }
-    throw new RangeError("invalid ISO 8601 string: " + date);
   }
 
   constructor(

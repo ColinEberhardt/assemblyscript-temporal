@@ -1,16 +1,24 @@
 import { Instant } from "./instant";
 import { PlainDateTime } from "./plaindatetime";
-import { getPartsFromEpoch, balanceDateTime, formatTimeZoneOffsetString } from "./utils";
+import {
+  getPartsFromEpoch,
+  balanceDateTime,
+  formatTimeZoneOffsetString,
+} from "./utils";
 import { offsetForTimezone } from "./tz/index";
 
 export class TimeZone {
   constructor(public timezone: string) {}
 
+  getOffsetNanosecondsFor(instant: Instant): i64 {
+    return this.timezone == "UTC"
+      ? 0
+      : i64(offsetForTimezone(this.timezone, instant.epochMilliseconds)) *
+          1_000_000;
+  }
+
   getPlainDateTimeFor(instant: Instant): PlainDateTime {
-    const offsetNs: i64 =
-      this.timezone == "UTC"
-        ? 0
-        : i64(offsetForTimezone(this.timezone, instant.epochMilliseconds)) * 1_000_000;
+    const offsetNs = this.getOffsetNanosecondsFor(instant);
     const parts = getPartsFromEpoch(instant.epochNanoseconds);
 
     const balancedDateTime = balanceDateTime(
@@ -39,9 +47,7 @@ export class TimeZone {
   }
 
   getOffsetStringFor(instant: Instant): string {
-    const offsetNs: i64 = this.timezone == "UTC"
-      ? 0
-      : i64(offsetForTimezone(this.timezone, instant.epochMilliseconds)) * 1_000_000;
+    const offsetNs = this.getOffsetNanosecondsFor(instant);
     return formatTimeZoneOffsetString(offsetNs);
   }
 }

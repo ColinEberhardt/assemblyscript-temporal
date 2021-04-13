@@ -888,93 +888,14 @@ zones.set(
   ])
 );
 zones.set(
-  "America/Pangnirtung",
-  new Zone("America/Pangnirtung", [
-    // Zone America/Pangnirtung 0    -	-00	1921 # trading post est.
-    new ZoneOffset(0, "-", "-00", -1543622400000),
-    //     		-5:00	Canada	E%sT	1999 Oct 31  2:00
-    new ZoneOffset(-18000000, "Canada", "E%sT", 944013600000),
-    //     		-6:00	Canada	C%sT	2000 Oct 29  2:00
-    new ZoneOffset(-21600000, "Canada", "C%sT", 975463200000),
-    //     		-5:00	Canada	E%sT
-    new ZoneOffset(-18000000, "Canada", "E%sT", -1),
-  ])
-);
-zones.set(
-  "America/Iqaluit",
-  new Zone("America/Iqaluit", [
-    // Zone America/Iqaluit    0	-	-00	1942 Aug # Frobisher Bay est.
-    new ZoneOffset(0, "-", "-00", -862617600000),
-    //     		-6:00	Canada	C%sT	2000 Oct 29  2:00
-    new ZoneOffset(-21600000, "Canada", "C%sT", 975463200000),
-    //     		-5:00	Canada	E%sT
-    new ZoneOffset(-18000000, "Canada", "E%sT", -1),
-  ])
-);
-zones.set(
-  "America/Resolute",
-  new Zone("America/Resolute", [
-    // Zone America/Resolute    0	-	-00	1947 Aug 31 # Resolute founded
-    new ZoneOffset(0, "-", "-00", -702259200000),
-    //     		-5:00	-	EST	2001 Apr  1  3:00
-    new ZoneOffset(-18000000, "-", "EST", 988686000000),
-    //     		-6:00	Canada	C%sT	2006 Oct 29  2:00
-    new ZoneOffset(-21600000, "Canada", "C%sT", 1164765600000),
-    //     		-5:00	-	EST	2007 Mar 11  3:00
-    new ZoneOffset(-18000000, "-", "EST", 1176260400000),
-    //     		-6:00	Canada	C%sT
-    new ZoneOffset(-21600000, "Canada", "C%sT", -1),
-  ])
-);
-zones.set(
-  "America/Rankin_Inlet",
-  new Zone("America/Rankin_Inlet", [
-    // Zone America/Rankin_Inlet 0    -	-00	1957 # Rankin Inlet founded
-    new ZoneOffset(0, "-", "-00", -407548800000),
-    //     		-5:00	-	EST	2001 Apr  1  3:00
-    new ZoneOffset(-18000000, "-", "EST", 988686000000),
-    //     		-6:00	Canada	C%sT
-    new ZoneOffset(-21600000, "Canada", "C%sT", -1),
-  ])
-);
-zones.set(
-  "America/Cambridge_Bay",
-  new Zone("America/Cambridge_Bay", [
-    // Zone America/Cambridge_Bay 0    -	-00	1920 # trading post est.?
-    new ZoneOffset(0, "-", "-00", -1575244800000),
-    //     		-6:00	Canada	C%sT	2000 Oct 29  2:00
-    new ZoneOffset(-21600000, "Canada", "C%sT", 975463200000),
-    //     		-5:00	-	EST	2000 Nov  5  0:00
-    new ZoneOffset(-18000000, "-", "EST", 975974400000),
-    //     		-6:00	-	CST	2001 Apr  1  3:00
-    new ZoneOffset(-21600000, "-", "CST", 988686000000),
-    //     		-7:00	Canada	M%sT
-    new ZoneOffset(-25200000, "Canada", "M%sT", -1),
-  ])
-);
-zones.set(
-  "America/Yellowknife",
-  new Zone("America/Yellowknife", [
-    // Zone America/Yellowknife 0    -	-00	1935 # Yellowknife founded?
-    new ZoneOffset(0, "-", "-00", -1101859200000),
-    //     		-7:00	Canada	M%sT
-    new ZoneOffset(-25200000, "Canada", "M%sT", -1),
-  ])
-);
-zones.set(
-  "America/Inuvik",
-  new Zone("America/Inuvik", [
-    // Zone America/Inuvik    0	-	-00	1953 # Inuvik founded
-    new ZoneOffset(0, "-", "-00", -533779200000),
-    //     		-7:00	Canada	M%sT
-    new ZoneOffset(-25200000, "Canada", "M%sT", -1),
-  ])
-);
-zones.set(
   "America/Whitehorse",
   new Zone("America/Whitehorse", [
     // Zone America/Whitehorse    -9:00:12 -	LMT	1900 Aug 20
     new ZoneOffset(-32412000, "-", "LMT", -2186352000000),
+    //     		-9:00	NT_YK	Y%sT	1967 May 28  0:00
+    new ZoneOffset(-32400000, "NT_YK", "Y%sT", -79315200000),
+    //     		-8:00	NT_YK	P%sT	1980
+    new ZoneOffset(-28800000, "NT_YK", "P%sT", 318211200000),
     //     		-8:00	Canada	P%sT	2020 Nov  1
     new ZoneOffset(-28800000, "Canada", "P%sT", 1606780800000),
     //     		-7:00	-	MST
@@ -986,6 +907,10 @@ zones.set(
   new Zone("America/Dawson", [
     // Zone America/Dawson    -9:17:40 -	LMT	1900 Aug 20
     new ZoneOffset(-33460000, "-", "LMT", -2186352000000),
+    //     		-9:00	NT_YK	Y%sT	1973 Oct 28  0:00
+    new ZoneOffset(-32400000, "NT_YK", "Y%sT", 123292800000),
+    //     		-8:00	NT_YK	P%sT	1980
+    new ZoneOffset(-28800000, "NT_YK", "P%sT", 318211200000),
     //     		-8:00	Canada	P%sT	2020 Nov  1
     new ZoneOffset(-28800000, "Canada", "P%sT", 1606780800000),
     //     		-7:00	-	MST
@@ -1665,7 +1590,7 @@ zones.set(
     //     		1:00	Czech	CE%sT	1946 Dec  1  3:00
     new ZoneOffset(3600000, "Czech", "CE%sT", -725835600000),
     //     		1:00	-1:00	GMT	1947 Feb 23  2:00
-    // new ZoneOffset(NaN, "1:00", "-", -2174774400000),
+    new ZoneOffset(3600000, "-1:00", "GMT", -718840800000),
     //     		1:00	Czech	CE%sT	1979
     new ZoneOffset(3600000, "Czech", "CE%sT", 286675200000),
     //     		1:00	EU	CE%sT

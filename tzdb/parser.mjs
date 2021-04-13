@@ -144,7 +144,7 @@ const parseRule = (line) => {
 const parseZone = (line) => {
   try {
     const match = line.match(
-      /^(Zone)?\s+(?<name>[0-9a-z_A-Z-\/]*)?\s+(?<offset>-?[0-9:]*)\s+(?<rules>[A-Za-z-]*|[0-9]{1,2}:[0-9]{1,2})\s+(?<format>[A-Z%a-z+-0-9\/]+)\s*(?<until>.*)$/
+      /^(Zone)?\s+(?<name>[0-9a-z_A-Z-\/]*)?\s+(?<offset>-?[0-9]{1,2}:[0-9]{1,2}(:[0-9]{1,2})?)\s+(?<rules>[_A-Za-z-]*|-?[0-9]{1,2}:[0-9]{1,2})\s+(?<format>[A-Z%a-z+-0-9\/]+)\s*(?<until>.*)$/
     );
 
     return {
