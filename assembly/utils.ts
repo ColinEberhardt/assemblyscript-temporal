@@ -74,15 +74,31 @@ export class BalancedTime {
 
 // @ts-ignore: decorator
 @inline
+export function sign<T extends number>(x: T): T {
+  // optimized variant of x < 0 ? -1 : 1
+  // i32: x >> 31 | 1
+  // i64: x >> 63 | 1
+  // @ts-ignore
+  return (x >> (sizeof<T>() * 8 - 1)) | 1;
+}
+
+// @ts-ignore: decorator
+@inline
+export function ord<T extends number>(x: T, y: T): i32 {
+  return i32(x > y) - i32(x < y);
+}
+
+// @ts-ignore: decorator
+@inline
 export function floorDiv<T extends number>(a: T, b: T): T {
   return (a >= 0 ? a : a - b + 1) / b as T;
 }
 
 // @ts-ignore: decorator
 @inline
-export function nonNegativeModulo(x: i32, y: i32): i32 {
-  x %= y;
-  return x < 0 ? x + y : x;
+export function nonNegativeModulo<T extends number>(x: T, y: T): T {
+  x = x % y as T;
+  return (x < 0 ? x + y : x) as T;
 }
 
 // modified of
@@ -217,22 +233,6 @@ export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
     microsecond: balancedTime.microsecond,
     nanosecond: balancedTime.nanosecond
   };
-}
-
-// @ts-ignore: decorator
-@inline
-export function sign<T extends number>(x: T): T {
-  // optimized variant of x < 0 ? -1 : 1
-  // i32: x >> 31 | 1
-  // i64: x >> 63 | 1
-  // @ts-ignore
-  return (x >> (sizeof<T>() * 8 - 1)) | 1;
-}
-
-// @ts-ignore: decorator
-@inline
-export function ord<T extends number>(x: T, y: T): i32 {
-  return i32(x > y) - i32(x < y);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
@@ -431,17 +431,6 @@ function totalDurationNanoseconds(
   return nanoseconds + microseconds * 1000;
 }
 
-function nanosecondsToDays(ns: i64): NanoDays {
-  const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
-  return ns == 0
-    ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
-    : {
-        days: i32(ns / oneDayNs),
-        nanoseconds: i32(ns % oneDayNs),
-        dayLengthNs: oneDayNs * sign(ns)
-      };
-}
-
 export function balanceDuration(
   days: i32,
   hours: i32,
@@ -475,12 +464,14 @@ export function balanceDuration(
     largestUnit >= TimeComponent.Years &&
     largestUnit <= TimeComponent.Days
   ) {
-    const nanoDays = nanosecondsToDays(durationNs);
-    daysI64        = nanoDays.days;
-    nanosecondsI64 = nanoDays.nanoseconds;
+    // inlined nanosecondsToDays
+    const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
+    if (durationNs != 0) {
+      daysI64        = durationNs / oneDayNs;
+      nanosecondsI64 = durationNs % oneDayNs;
+    }
   } else {
-    daysI64 = 0;
-    nanosecondsI64 = durationNs
+    nanosecondsI64 = durationNs;
   }
 
   const sig = i32(sign(nanosecondsI64));
