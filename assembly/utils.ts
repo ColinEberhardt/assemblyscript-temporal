@@ -1025,15 +1025,12 @@ export function coalesce(a: i32, b: i32, nill: i32 = -1):i32 {
 }
 
 export function isoYearString(year: i32): string {
-  let yearString: string;
   if (year < 1000 || year > 9999) {
     let sign = year < 0 ? '-' : '+';
-    let yearNumber = abs(year);
-    yearString = sign + `000000${yearNumber}`.slice(-6);
+    return sign + `000000${abs(year)}`.slice(-6);
   } else {
-    yearString = year.toString();
+    return year.toString();
   }
-  return yearString;
 }
 
 export function formatTimeZoneOffsetString(offsetNanoseconds: i64): string {
@@ -1055,7 +1052,8 @@ export function parseISOString(date: string): DTZ {
   const fraction = (
     match.matches[7] != "" ? match.matches[7] : match.matches[18]
   ) + "000000000";
-  return  {
+
+  return {
     year: I32.parseInt(match.matches[1]),
     month: I32.parseInt(
       match.matches[2] != "" ? match.matches[2] : match.matches[19]
@@ -1064,8 +1062,8 @@ export function parseISOString(date: string): DTZ {
       match.matches[3] != "" ? match.matches[3] : match.matches[20]
     ),
     hour: I32.parseInt(match.matches[4]),
-    minute: I32.parseInt(match.matches[5] != "" ? match.matches[5]: match.matches[16]),
-    second: I32.parseInt(match.matches[6] != "" ? match.matches[6]: match.matches[17]),
+    minute: I32.parseInt(match.matches[5] != "" ? match.matches[5] : match.matches[16]),
+    second: I32.parseInt(match.matches[6] != "" ? match.matches[6] : match.matches[17]),
     millisecond: I32.parseInt(fraction.substring(0, 3)),
     microsecond: I32.parseInt(fraction.substring(3, 6)),
     nanosecond: I32.parseInt(fraction.substring(6, 9)),
