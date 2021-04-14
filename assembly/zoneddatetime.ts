@@ -4,7 +4,7 @@ import { Instant } from "./instant";
 import { DateTimeLike, PlainDateTime } from "./plaindatetime";
 import { TimeZone } from "./timezone";
 import { JsDate } from "./date";
-import { parseISOString } from "./utils";
+import { dayOfWeek, dayOfYear, daysInMonth, daysInYear, leapYear, parseISOString, weekOfYear } from "./utils";
 
 export class ZonedDateTime {
   @inline
@@ -94,6 +94,67 @@ export class ZonedDateTime {
 
   get offset(): string {
     return this.tz.getOffsetStringFor(this.toInstant());
+  }
+
+  get epochSeconds(): i32 {
+    return i32(this.epochNanos / 1_000_000_000);
+  }
+
+  get epochMilliseconds(): i32 {
+    return i32(this.epochNanos / 1_000_000);
+  }
+
+  get epochMicroseconds(): i64 {
+    return this.epochNanos / 1_000;
+  }
+
+  get epochNanoseconds(): i64 {
+    return this.epochNanos;
+  }
+
+  @inline
+  get dayOfWeek(): i32 {
+    return dayOfWeek(this.year, this.month, this.day);
+  }
+
+  @inline
+  get dayOfYear(): i32 {
+    return dayOfYear(this.year, this.month, this.day);
+  }
+
+  @inline
+  get weekOfYear(): i32 {
+    return weekOfYear(this.year, this.month, this.day);
+  }
+
+  @inline
+  get daysInWeek(): i32 {
+    return 7;
+  }
+
+  @inline
+  get daysInMonth(): i32 {
+    return daysInMonth(this.year, this.month);
+  }
+
+  @inline
+  get daysInYear(): i32 {
+    return daysInYear(this.year);
+  }
+
+  @inline
+  get monthsInYear(): i32 {
+    return 12;
+  }
+
+  @inline
+  get inLeapYear(): bool {
+    return leapYear(this.year);
+  }
+
+  @inline
+  get offsetNanoseconds(): i64 {
+    return this.tz.getOffsetNanosecondsFor(this.toInstant());
   }
 
   toString(): string {

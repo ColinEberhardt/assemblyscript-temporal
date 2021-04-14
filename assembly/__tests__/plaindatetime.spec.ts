@@ -57,6 +57,9 @@ describe("Construction", () => {
   it("datetime.monthsInYear is 12", () => {
     expect(datetime.monthsInYear).toBe(12);
   });
+  it("datetime.inLeapYear is true", () => {
+    expect(datetime.inLeapYear).toBe(true);
+  });
   it("`${datetime}` is 1976-11-18T15:23:30.123456789", () => {
     expect(datetime.toString()).toBe("1976-11-18T15:23:30.123456789");
   });

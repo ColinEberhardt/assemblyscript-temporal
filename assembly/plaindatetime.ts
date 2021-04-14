@@ -15,6 +15,7 @@ import {
   compareTemporalDateTime,
   addDateTime,
   parseISOString,
+  leapYear,
 } from "./utils";
 
 export class DateTimeLike {
@@ -140,6 +141,11 @@ export class PlainDateTime {
   @inline
   get monthsInYear(): i32 {
     return 12;
+  }
+
+  @inline
+  get inLeapYear(): bool {
+    return leapYear(this.year);
   }
 
   with(dateTimeLike: DateTimeLike): PlainDateTime {
