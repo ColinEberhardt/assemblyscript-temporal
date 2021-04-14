@@ -21,3 +21,7 @@ export const MICROS_PER_SECOND = 1_000_000;
 // @ts-ignore
 @lazy
 export const NANOS_PER_SECOND = 1_000_000_000;
+
+// @ts-ignore
+@lazy
+export const NANOS_PER_DAY = i64(MILLIS_PER_DAY) * 1_000_000;

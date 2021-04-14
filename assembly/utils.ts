@@ -12,6 +12,10 @@ import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { JsDate } from "./date";
+import { TimeZone } from "./timezone";
+import { Instant } from "./instant";
+import { PlainDate } from "./plaindate";
+import { PlainDateTime } from "./plaindatetime";
 
 // @ts-ignore
 @lazy
@@ -800,29 +804,9 @@ export function epochFromParts(
   millisecond: i32,
   microsecond: i32,
   nanosecond: i32
-): u64 {
-  // Note: Date.UTC() interprets one and two-digit years as being in the
-  // 20th century, so don't use it
-
-  // TODO: need implementation
-
-  // const legacyDate = new Date();
-  // legacyDate.setUTCHours(hour, minute, second, millisecond);
-  // legacyDate.setUTCFullYear(year, month - 1, day);
-  // const ms = legacyDate.getTime();
-  // if (NumberIsNaN(ms)) return null;
-  // let ns = bigInt(ms).multiply(1e6);
-  // ns = ns.plus(bigInt(microsecond).multiply(1000));
-  // ns = ns.plus(bigInt(nanosecond));
-  // if (ns.lesser(NS_MIN) || ns.greater(NS_MAX)) {
-  //   __null = true;
-  //   return 0;
-  // }
-  // __null = false;
-  // return ns;
-
-  __null = false;
-  return 0;
+): i64 {
+  const millis = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
+  return millis * 1_000_000 + microsecond * 1_000 + nanosecond;
 }
 
 export function addDateTime(
@@ -1083,3 +1067,50 @@ export function parseISOString(date: string): DTZ {
     timezone: match.matches[9]
   }
 }
+
+function addInstant(epochNanoseconds: i64, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): i64 {
+  return epochNanoseconds + ns + µs * 1_000 + ms * 1_000_000 + s * 1_000_000_000 * min * 60_000_000_000 + h * 3_600_000_000_000;
+}
+
+// export function addZonedDateTime (instant: Instant, timeZone: TimeZone, years: i32, months: i32, weeks: i32, days: i32, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32)  {
+//   // If only time is to be added, then use Instant math. It's not OK to fall
+//   // through to the date/time code below because compatible disambiguation in
+//   // the PlainDateTime=>Instant conversion will change the offset of any
+//   // ZonedDateTime in the repeated clock time after a backwards transition.
+//   // When adding/subtracting time units and not dates, this disambiguation is
+//   // not expected and so is avoided below via a fast path for time-only
+//   // arithmetic.
+//   // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+
+//   if (durationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
+//     return addInstant(instant.epochNanoseconds, h, min, s, ms, µs, ns);
+//   }
+
+//   // RFC 5545 requires the date portion to be added in calendar days and the
+//   // time portion to be added in exact time.
+//   let dt = timeZone.getPlainDateTimeFor(instant);
+//   // const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
+
+//   const datePart = new PlainDate(dt.year, dt.month, dt.day);
+
+//   const addedDate = datePart.add({ years, months, weeks, days });
+  
+//   // const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+
+//   const dtIntermediate = new PlainDateTime(
+//     addedDate.year,
+//     addedDate.month,
+//     addedDate.day,
+//     dt.hour,
+//     dt.minute,
+//     dt.second,
+//     dt.millisecond,
+//     dt.microsecond,
+//     dt.nanosecond
+//   );
+
+//   // Note that 'compatible' is used below because this disambiguation behavior
+//   // is required by RFC 5545.
+//   const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
+//   return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
+// }

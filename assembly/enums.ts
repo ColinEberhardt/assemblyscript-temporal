@@ -3,6 +3,13 @@ export const enum Overflow {
   Constrain,
 }
 
+export const enum Disambiguation {
+  Compatible,
+  Earlier,
+  Later,
+  Reject,
+}
+
 export const enum TimeComponent {
   Years,
   Months,

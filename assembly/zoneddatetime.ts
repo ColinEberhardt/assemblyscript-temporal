@@ -1,5 +1,7 @@
 import { RegExp } from "assemblyscript-regex";
 
+import { DurationLike } from "./duration";
+import { Overflow } from "./enums";
 import { Instant } from "./instant";
 import { DateTimeLike, PlainDateTime } from "./plaindatetime";
 import { TimeZone } from "./timezone";
@@ -162,8 +164,20 @@ export class ZonedDateTime {
       this.toPlainDateTime().toString() +
       this.offset +
       "[" +
-      this.tz.timezone +
+      this.tz.id +
       "]"
     );
   }
+
+  // add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): ZonedDateTime {
+  //   const duration =
+  //     durationToAdd instanceof DurationLike
+  //       ? durationToAdd.toDuration()
+  //       // @ts-ignore TS2352
+  //       : durationToAdd as Duration;
+
+   
+  // }
+
+
 }

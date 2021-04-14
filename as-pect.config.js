@@ -2,7 +2,7 @@ module.exports = {
   /**
    * A set of globs passed to the glob package that qualify typescript files for testing.
    */
-  include: ["assembly/**/__tests__/**/zoned*.spec.ts"],
+  include: ["assembly/**/__tests__/**/timez*.spec.ts"],
   /**
    * A set of globs passed to the glob package that quality files to be added to each test.
    */

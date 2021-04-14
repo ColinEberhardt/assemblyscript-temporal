@@ -16,6 +16,7 @@ import {
   addDateTime,
   parseISOString,
   leapYear,
+  epochFromParts,
 } from "./utils";
 
 export class DateTimeLike {
@@ -146,6 +147,12 @@ export class PlainDateTime {
   @inline
   get inLeapYear(): bool {
     return leapYear(this.year);
+  }
+
+  @inline
+  get epochNanoseconds(): i64 {
+    return epochFromParts(this.year, this.month, this.day, this.hour, this.minute,
+      this.second, this.millisecond, this.microsecond, this.nanosecond)
   }
 
   with(dateTimeLike: DateTimeLike): PlainDateTime {

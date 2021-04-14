@@ -9,6 +9,17 @@ const epochNanos: i64 = epochMillis * 1_000_000 + 456_789;
 
 let zdt: ZonedDateTime;
 
+describe("handles timezones (a mixed bag of tests that verify some of the gnarly issues in TZ support)", () => {
+  it("handles end of daylight saving transition", () => {
+    // half an hour before daylight saving ends
+    zdt = new ZonedDateTime(1636277400000000000, new TimeZone("America/Los_Angeles"));
+    expect(zdt.toString()).toBe("2021-11-07T01:30:00-08:00[America/Los_Angeles]");
+    // half an hour afterwards - the clock shows the same wall-time, but a different offset
+    zdt = new ZonedDateTime(1636273800000000000, new TimeZone("America/Los_Angeles"));
+    expect(zdt.toString()).toBe("2021-11-07T01:30:00-07:00[America/Los_Angeles]");
+  })
+})
+
 describe("Construction and properties", () => {
   it("works", () => {
     zdt = new ZonedDateTime(epochNanos, tz);
@@ -32,27 +43,21 @@ describe("Construction and properties", () => {
       expect(zdt.microsecond).toBe(456);
       expect(zdt.nanosecond).toBe(789);
       expect(zdt.offset).toBe("+00:00");
+      expect(zdt.epochSeconds).toBe(217178610);
+      expect(zdt.epochMilliseconds).toBe(217178610123 as i32);
+      expect(zdt.epochMicroseconds).toBe(217178610123456);
+      expect(zdt.epochNanoseconds).toBe(217178610123456789);
+      expect(zdt.dayOfWeek).toBe(4);
+      expect(zdt.dayOfYear).toBe(323);
+      expect(zdt.weekOfYear).toBe(47);
+      expect(zdt.daysInWeek).toBe(7);
+      expect(zdt.daysInMonth).toBe(30);
+      expect(zdt.daysInYear).toBe(366);
+      expect(zdt.monthsInYear).toBe(12);
+      expect(zdt.inLeapYear).toBe(true);
+      expect(zdt.offsetNanoseconds).toBe(0);
+      expect(zdt.toString()).toBe("1976-11-18T15:23:30.123456789+00:00[UTC]");
     });
-    
-    //     it("zdt.epochSeconds is 217178610", () =>
-    //       expect(zdt.epochSeconds).toBe(217178610));
-    //     it("zdt.epochMilliseconds is 217178610123", () =>
-    //       expect(zdt.epochMilliseconds).toBe(217178610123));
-    //     it("zdt.epochMicroseconds is 217178610123456n", () =>
-    //       expect(zdt.epochMicroseconds).toBe(217178610123456n));
-    //     it("zdt.epochNanoseconds is 217178610123456789n", () =>
-    //       expect(zdt.epochNanoseconds).toBe(217178610123456789n));
-    //     it("zdt.dayOfWeek is 4", () => expect(zdt.dayOfWeek).toBe(4));
-    //     it("zdt.dayOfYear is 323", () => expect(zdt.dayOfYear).toBe(323));
-    //     it("zdt.weekOfYear is 47", () => expect(zdt.weekOfYear).toBe(47));
-    //     it("zdt.daysInWeek is 7", () => expect(zdt.daysInWeek).toBe(7));
-    //     it("zdt.daysInMonth is 30", () => expect(zdt.daysInMonth).toBe(30));
-    //     it("zdt.daysInYear is 366", () => expect(zdt.daysInYear).toBe(366));
-    //     it("zdt.monthsInYear is 12", () => expect(zdt.monthsInYear).toBe(12));
-    //     it("zdt.inLeapYear is true", () => expect(zdt.inLeapYear).toBe(true));
-    //     it("zdt.offsetNanoseconds is 0", () => expect(zdt.offsetNanoseconds).toBe(0));
-    //     it("string output is 1976-11-18T15:23:30.123456789+00:00[UTC]", () =>
-    //       expect(`${zdt}`).toBe("1976-11-18T15:23:30.123456789+00:00[UTC]"));
   });
 
   //   describe("ZonedDateTime with non-UTC time zone and non-ISO calendar", () => {
@@ -141,20 +146,7 @@ describe("Construction and properties", () => {
       ZonedDateTime.from('2020-03-08T01:00Z');
     }).toThrow();
   });
-});
-
-describe("handles timezones (a mixed bag of tests that verify some of the gnarly issues in TZ support)", () => {
-  it("handles end of daylight saving transition", () => {
-    // half an hour before daylight saving ends
-    zdt = new ZonedDateTime(1636277400000000000, new TimeZone("America/Los_Angeles"));
-    expect(zdt.toString()).toBe("2021-11-07T01:30:00-08:00[America/Los_Angeles]");
-    // half an hour afterwards - the clock shows the same wall-time, but a different offset
-    zdt = new ZonedDateTime(1636273800000000000, new TimeZone("America/Los_Angeles"));
-    expect(zdt.toString()).toBe("2021-11-07T01:30:00-07:00[America/Los_Angeles]");
-  })
-})
-
-//      it('parses with an IANA zone but no offset (with disambiguation)', () => {
+  //      it('parses with an IANA zone but no offset (with disambiguation)', () => {
 //        const zdt = ZonedDateTime.from('2020-03-08T02:30[America/Los_Angeles]', { disambiguation: 'earlier' });
 //        expect(zdt.toString()).toBe('2020-03-08T01:30:00-08:00[America/Los_Angeles]');
 //      });
@@ -268,6 +260,10 @@ describe("handles timezones (a mixed bag of tests that verify some of the gnarly
 //      it('constrain has no effect on invalid ISO string', () => {
 //        throws(() => ZonedDateTime.from('2020-13-34T24:60[America/Los_Angeles]', { overflow: 'constrain' }), RangeError);
 //      });
+});
+
+
+
 //      describe('Offset option', () => {
 //        it("{ offset: 'reject' } throws if offset does not match offset time zone", () => {
 //          throws(() => ZonedDateTime.from('2020-03-08T01:00-04:00[-08:00]'), RangeError);

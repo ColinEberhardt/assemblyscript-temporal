@@ -34,3 +34,7 @@ export function offsetForTimezone(tz: string, epochMillis: i64): i32 {
 
   return offset.standardOffsetMillis + currentRuleOffset;
 }
+
+export function offsetForTimezoneNanos(tz: string, epochNanos: i64): i64 {
+  return i64(offsetForTimezone(tz, epochNanos / 1_000_000)) * 1_000_000;
+}
