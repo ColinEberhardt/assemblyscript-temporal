@@ -349,66 +349,77 @@ describe("min/max values", () => {
   });
 });
 
-// describe('Duration.with()', () => {
-//   const duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
-//   it('duration.with({ years: 1 } works', () => {
-//     expect(`${duration.with({ years: 1 })}`).toBe('P1Y5M5W5DT5H5M5.005005005S');
-//   });
-//   it('duration.with({ months: 1 } works', () => {
-//     expect(`${duration.with({ months: 1 })}`).toBe('P5Y1M5W5DT5H5M5.005005005S');
-//   });
-//   it('duration.with({ weeks: 1 } works', () => {
-//     expect(`${duration.with({ weeks: 1 })}`).toBe('P5Y5M1W5DT5H5M5.005005005S');
-//   });
-//   it('duration.with({ days: 1 } works', () => {
-//     expect(`${duration.with({ days: 1 })}`).toBe('P5Y5M5W1DT5H5M5.005005005S');
-//   });
-//   it('duration.with({ hours: 1 } works', () => {
-//     expect(`${duration.with({ hours: 1 })}`).toBe('P5Y5M5W5DT1H5M5.005005005S');
-//   });
-//   it('duration.with({ minutes: 1 } works', () => {
-//     expect(`${duration.with({ minutes: 1 })}`).toBe('P5Y5M5W5DT5H1M5.005005005S');
-//   });
-//   it('duration.with({ seconds: 1 } works', () => {
-//     expect(`${duration.with({ seconds: 1 })}`).toBe('P5Y5M5W5DT5H5M1.005005005S');
-//   });
-//   it('duration.with({ milliseconds: 1 } works', () => {
-//     expect(`${duration.with({ milliseconds: 1 })}`).toBe('P5Y5M5W5DT5H5M5.001005005S');
-//   });
-//   it('duration.with({ microseconds: 1 } works', () => {
-//     expect(`${duration.with({ microseconds: 1 })}`).toBe('P5Y5M5W5DT5H5M5.005001005S');
-//   });
-//   it('duration.with({ nanoseconds: 1 } works', () => {
-//     expect(`${duration.with({ nanoseconds: 1 })}`).toBe('P5Y5M5W5DT5H5M5.005005001S');
-//   });
-//   it('duration.with({ months: 1, seconds: 15 } works', () => {
-//     expect(`${duration.with({ months: 1).toBe(seconds: 15 })}`, 'P5Y1M5W5DT5H5M15.005005005S');
-//   });
-//   it('mixed positive and negative values throw', () => {
-//     throws(() => duration.with({ hours: 1, minutes: -1 }), RangeError);
-//   });
-//   it('can reverse the sign if all the fields are replaced', () => {
-//     const d = Duration.from({ years: 5, days: 1 });
-//     const d2 = d.with({ years: -1, days: -1, minutes: 0 });
-//     expect(`${d2}`).toBe('-P1Y1D');
-//     notexpect(d.sign).toBe(d2.sign);
-//   });
-//   it('throws if new fields have a different sign from the old fields', () => {
-//     const d = Duration.from({ years: 5, days: 1 });
-//     throws(() => d.with({ months: -5, minutes: 0 }), RangeError);
-//   });
-//   it('sign cannot be manipulated independently', () => {
-//     throws(() => duration.with({ sign: -1 }), TypeError);
-//   });
-//   it('object must contain at least one correctly-spelled property', () => {
-//     throws(() => duration.with({}), TypeError);
-//     throws(() => duration.with({ month: 12 }), TypeError);
-//   });
-//   it('incorrectly-spelled properties are ignored', () => {
-//     expect(`${duration.with({ month: 1).toBe(days: 1 })}`, 'P5Y5M5W1DT5H5M5.005005005S');
-//   });
-// });
-// describe('Duration.add()', () => {
+let duration: Duration;
+
+describe("Duration.with()", () => {
+  duration = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+  it("duration.with({ years: 1 } works", () => {
+    expect(`${duration.with({ years: 1 })}`).toBe("P1Y5M5W5DT5H5M5.005005005S");
+  });
+  it("duration.with({ months: 1 } works", () => {
+    expect(`${duration.with({ months: 1 })}`).toBe(
+      "P5Y1M5W5DT5H5M5.005005005S"
+    );
+  });
+  it("duration.with({ weeks: 1 } works", () => {
+    expect(`${duration.with({ weeks: 1 })}`).toBe("P5Y5M1W5DT5H5M5.005005005S");
+  });
+  it("duration.with({ days: 1 } works", () => {
+    expect(`${duration.with({ days: 1 })}`).toBe("P5Y5M5W1DT5H5M5.005005005S");
+  });
+  it("duration.with({ hours: 1 } works", () => {
+    expect(`${duration.with({ hours: 1 })}`).toBe("P5Y5M5W5DT1H5M5.005005005S");
+  });
+  it("duration.with({ minutes: 1 } works", () => {
+    expect(`${duration.with({ minutes: 1 })}`).toBe(
+      "P5Y5M5W5DT5H1M5.005005005S"
+    );
+  });
+  it("duration.with({ seconds: 1 } works", () => {
+    expect(`${duration.with({ seconds: 1 })}`).toBe(
+      "P5Y5M5W5DT5H5M1.005005005S"
+    );
+  });
+  it("duration.with({ milliseconds: 1 } works", () => {
+    expect(`${duration.with({ milliseconds: 1 })}`).toBe(
+      "P5Y5M5W5DT5H5M5.001005005S"
+    );
+  });
+  it("duration.with({ microseconds: 1 } works", () => {
+    expect(`${duration.with({ microseconds: 1 })}`).toBe(
+      "P5Y5M5W5DT5H5M5.005001005S"
+    );
+  });
+  it("duration.with({ nanoseconds: 1 } works", () => {
+    expect(`${duration.with({ nanoseconds: 1 })}`).toBe(
+      "P5Y5M5W5DT5H5M5.005005001S"
+    );
+  });
+  it("duration.with({ months: 1, seconds: 15 } works", () => {
+    expect(`${duration.with({ months: 1, seconds: 15 })}`).toBe(
+      "P5Y1M5W5DT5H5M15.005005005S"
+    );
+  });
+  it("mixed positive and negative values throw", () => {
+    expect(() => {
+      duration.with({ hours: 1, minutes: -1 });
+    }).toThrow();
+  });
+  it("can reverse the sign if all the fields are replaced", () => {
+    duration = Duration.from({ years: 5, days: 1 });
+    duration = duration.with({ years: -1, days: -1, minutes: 0 });
+    expect(`${duration}`).toBe("-P1Y1D");
+  });
+  it("throws if new fields have a different sign from the old fields", () => {
+    duration = Duration.from({ years: 5, days: 1 });
+    expect(() => {
+      duration.with({ months: -5, minutes: 0 });
+    }).toThrow();
+  });
+});
+
+describe('Duration.add()', () => {
+});
 //   const duration = Duration.from({ days: 1, minutes: 5 });
 //   it('adds same units', () => {
 //     expect(`${duration.add({ days: 2).toBe(minutes: 5 })}`, 'P3DT10M');

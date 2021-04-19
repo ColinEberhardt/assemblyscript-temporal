@@ -284,7 +284,7 @@ Properties
 
 Methods
 
-- [ ] with
+- [x] with
 - [ ] add
 - [ ] subtract
 - [ ] negated

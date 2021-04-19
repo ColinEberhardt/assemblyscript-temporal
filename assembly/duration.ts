@@ -1,32 +1,34 @@
 import { RegExp } from "assemblyscript-regex";
 
-import { durationSign, sign } from "./utils";
+import { coalesce, durationSign, sign } from "./utils";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 
+const NULL = i32.MAX_VALUE;
+
 export class DurationLike {
-  years: i32 = 0;
-  months: i32 = 0;
-  weeks: i32 = 0;
-  days: i32 = 0;
-  hours: i32 = 0;
-  minutes: i32 = 0;
-  seconds: i32 = 0;
-  milliseconds: i32 = 0;
-  microseconds: i32 = 0;
-  nanoseconds: i32 = 0;
+  years: i32 = NULL;
+  months: i32 = NULL;
+  weeks: i32 = NULL;
+  days: i32 = NULL;
+  hours: i32 = NULL;
+  minutes: i32 = NULL;
+  seconds: i32 = NULL;
+  milliseconds: i32 = NULL;
+  microseconds: i32 = NULL;
+  nanoseconds: i32 = NULL;
 
   toDuration(): Duration {
     return new Duration(
-      this.years,
-      this.months,
-      this.weeks,
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds,
-      this.microseconds,
-      this.nanoseconds
+      this.years == NULL ? 0 : this.years,
+      this.months == NULL ? 0 : this.months,
+      this.weeks == NULL ? 0 : this.weeks,
+      this.days == NULL ? 0 : this.days,
+      this.hours == NULL ? 0 : this.hours,
+      this.minutes == NULL ? 0 : this.minutes,
+      this.seconds == NULL ? 0 : this.seconds,
+      this.milliseconds == NULL ? 0 : this.milliseconds,
+      this.microseconds == NULL ? 0 : this.microseconds,
+      this.nanoseconds == NULL ? 0 : this.nanoseconds
     );
   }
 }
@@ -71,8 +73,7 @@ export class Duration {
   }
 
   private static fromDurationLike(d: DurationLike): Duration {
-    return new Duration(d.years, d.months, d.weeks, d.days, d.hours, d.minutes,
-       d.seconds, d.milliseconds, d.microseconds, d.nanoseconds);
+    return d.toDuration();
   }
 
   constructor(
@@ -102,6 +103,21 @@ export class Duration {
     ) {
       throw new RangeError("mixed-sign values not allowed as duration fields");
     }
+  }
+
+  with(durationLike: DurationLike): Duration {
+    return new Duration(
+      coalesce(durationLike.years, this.years, NULL),
+      coalesce(durationLike.months, this.months, NULL),
+      coalesce(durationLike.weeks, this.weeks, NULL),
+      coalesce(durationLike.days, this.days, NULL),
+      coalesce(durationLike.hours, this.hours, NULL),
+      coalesce(durationLike.minutes, this.minutes, NULL),
+      coalesce(durationLike.seconds, this.seconds, NULL),
+      coalesce(durationLike.milliseconds, this.milliseconds, NULL),
+      coalesce(durationLike.microseconds, this.microseconds, NULL),
+      coalesce(durationLike.nanoseconds, this.nanoseconds, NULL)
+    );
   }
 
   get sign(): i32 {
@@ -146,6 +162,7 @@ export class Duration {
     );
   }
 }
+
 
 function toString<T extends number>(value: T, suffix: string): string {
   return value
