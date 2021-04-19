@@ -18,6 +18,7 @@ import {
   leapYear,
   epochFromParts,
 } from "./utils";
+import { PlainDate } from "./plaindate";
 
 export class DateTimeLike {
   year: i32 = -1;
@@ -204,6 +205,14 @@ export class PlainDateTime {
       this.millisecond,
       this.microsecond,
       this.nanosecond
+    );
+  }
+
+  toPlainDate(): PlainDate {
+    return new PlainDate(
+      this.year,
+      this.month,
+      this.day
     );
   }
 

@@ -68,7 +68,7 @@ export class DTZ extends DT {
 
 export class NanoDays {
   days: i32;
-  nanoseconds: i32;
+  nanoseconds: i64;
   dayLengthNs: i64;
 }
 
@@ -447,7 +447,7 @@ function nanosecondsToDays(ns: i64): NanoDays {
     ? { days: 0, nanoseconds: 0, dayLengthNs: oneDayNs }
     : {
         days: i32(ns / oneDayNs),
-        nanoseconds: i32(ns % oneDayNs),
+        nanoseconds: i64(ns % oneDayNs),
         dayLengthNs: oneDayNs * sign(ns)
       };
 }
@@ -495,7 +495,7 @@ export function balanceDuration(
 
   const sig = i32(sign(nanosecondsI64));
   nanosecondsI64 = abs(nanosecondsI64);
-
+  
   switch (largestUnit) {
     case TimeComponent.Years:
     case TimeComponent.Months:
@@ -1072,45 +1072,67 @@ function addInstant(epochNanoseconds: i64, h: i32, min: i32, s: i32, ms: i32, µ
   return epochNanoseconds + ns + µs * 1_000 + ms * 1_000_000 + s * 1_000_000_000 * min * 60_000_000_000 + h * 3_600_000_000_000;
 }
 
-// export function addZonedDateTime (instant: Instant, timeZone: TimeZone, years: i32, months: i32, weeks: i32, days: i32, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32)  {
-//   // If only time is to be added, then use Instant math. It's not OK to fall
-//   // through to the date/time code below because compatible disambiguation in
-//   // the PlainDateTime=>Instant conversion will change the offset of any
-//   // ZonedDateTime in the repeated clock time after a backwards transition.
-//   // When adding/subtracting time units and not dates, this disambiguation is
-//   // not expected and so is avoided below via a fast path for time-only
-//   // arithmetic.
-//   // BTW, this behavior is similar in spirit to offset: 'prefer' in `with`.
+function largestDurationUnit(y: i32, mon: i32, w: i32, d: i32, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): TimeComponent {
+  if (y != 0) return TimeComponent.Years;
+  if (mon != 0) return TimeComponent.Months;
+  if (w != 0) return TimeComponent.Weeks;
+  if (d != 0) return TimeComponent.Days;
+  if (h != 0) return TimeComponent.Hours;
+  if (min != 0) return TimeComponent.Minutes;
+  if (s != 0) return TimeComponent.Seconds;
+  if (ms != 0) return TimeComponent.Milliseconds;
+  if (µs != 0) return TimeComponent.Microseconds;
+  return TimeComponent.Nanoseconds;
+}
 
-//   if (durationSign(years, months, weeks, days, 0, 0, 0, 0, 0, 0) === 0) {
-//     return addInstant(instant.epochNanoseconds, h, min, s, ms, µs, ns);
-//   }
+export function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  y2: i32, mon2: i32, w2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32,
+  relativeTo: PlainDateTime | null
+): Duration  {
+  const largestUnit1 = largestDurationUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
+  const largestUnit2 = largestDurationUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
+  const largestUnit = min(largestUnit1, largestUnit2) as TimeComponent;
 
-//   // RFC 5545 requires the date portion to be added in calendar days and the
-//   // time portion to be added in exact time.
-//   let dt = timeZone.getPlainDateTimeFor(instant);
-//   // const TemporalDate = GetIntrinsic('%Temporal.PlainDate%');
+  if (!relativeTo) {
+    if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
+      throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
+    }
+    // years = months = weeks = 0;
+    const balanced = balanceDuration(
+      d1 + d2,
+      h1 + h2,
+      min1 + min2,
+      s1 + s2,
+      ms1 + ms2,
+      µs1 + µs2,
+      ns1 + ns2,
+      largestUnit
+    );
+    return balanced;
+  } else {
+    const datePart = relativeTo.toPlainDate();
 
-//   const datePart = new PlainDate(dt.year, dt.month, dt.day);
+    const dateDuration1 = new Duration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
+    const dateDuration2 = new Duration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
+    
+    const intermediate = datePart.add(dateDuration1);
+    const end = intermediate.add(dateDuration2);
 
-//   const addedDate = datePart.add({ years, months, weeks, days });
-  
-//   // const TemporalDateTime = GetIntrinsic('%Temporal.PlainDateTime%');
+    const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
+    const dateDiff = datePart.until(end, dateLargestUnit);
+    
+    const dur =  balanceDuration(
+      dateDiff.days,
+      h1 + h2,
+      min1 + min2,
+      s1 + s2,
+      ms1 + ms2,
+      µs1 + µs2,
+      ns1 + ns2,
+      largestUnit
+    );
 
-//   const dtIntermediate = new PlainDateTime(
-//     addedDate.year,
-//     addedDate.month,
-//     addedDate.day,
-//     dt.hour,
-//     dt.minute,
-//     dt.second,
-//     dt.millisecond,
-//     dt.microsecond,
-//     dt.nanosecond
-//   );
-
-//   // Note that 'compatible' is used below because this disambiguation behavior
-//   // is required by RFC 5545.
-//   const instantIntermediate = ES.GetTemporalInstantFor(timeZone, dtIntermediate, 'compatible');
-//   return ES.AddInstant(GetSlot(instantIntermediate, EPOCHNANOSECONDS), h, min, s, ms, µs, ns);
-// }
+    return new Duration(dateDiff.years, dateDiff.months, dateDiff.weeks, dur.days, dur.hours, dur.minutes,
+      dur.seconds, dur.milliseconds, dur.microseconds, dur.nanoseconds);
+  }
+}

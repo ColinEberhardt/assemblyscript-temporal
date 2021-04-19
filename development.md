@@ -246,7 +246,8 @@ Methods
 - [ ] toJSON
 - [ ] valueOf
 - [ ] toZonedDateTime
-- [ ] toPlainDateTime
+- [x] toPlainDate
+- [x] toPlainTime
 - [ ] toPlainYearMonth
 - [ ] toPlainMonthDay
 - [ ] getISOFields
@@ -285,7 +286,7 @@ Properties
 Methods
 
 - [x] with
-- [ ] add
+- [x] add
 - [ ] subtract
 - [ ] negated
 - [ ] abs

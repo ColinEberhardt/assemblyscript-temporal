@@ -1,7 +1,8 @@
 import { RegExp } from "assemblyscript-regex";
 
-import { coalesce, durationSign, sign } from "./utils";
+import { addDuration, coalesce, durationSign, sign } from "./utils";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
+import { PlainDateTime } from "./plaindatetime";
 
 const NULL = i32.MAX_VALUE;
 
@@ -19,16 +20,16 @@ export class DurationLike {
 
   toDuration(): Duration {
     return new Duration(
-      this.years == NULL ? 0 : this.years,
-      this.months == NULL ? 0 : this.months,
-      this.weeks == NULL ? 0 : this.weeks,
-      this.days == NULL ? 0 : this.days,
-      this.hours == NULL ? 0 : this.hours,
-      this.minutes == NULL ? 0 : this.minutes,
-      this.seconds == NULL ? 0 : this.seconds,
-      this.milliseconds == NULL ? 0 : this.milliseconds,
-      this.microseconds == NULL ? 0 : this.microseconds,
-      this.nanoseconds == NULL ? 0 : this.nanoseconds
+      this.years != NULL ? this.years : 0,
+      this.months != NULL ? this.months : 0,
+      this.weeks != NULL ? this.weeks : 0,
+      this.days != NULL ? this.days : 0,
+      this.hours != NULL ? this.hours : 0,
+      this.minutes != NULL ? this.minutes : 0,
+      this.seconds != NULL ? this.seconds : 0,
+      this.milliseconds != NULL ? this.milliseconds : 0,
+      this.microseconds != NULL ? this.microseconds : 0,
+      this.nanoseconds != NULL ? this.nanoseconds : 0,
     );
   }
 }
@@ -159,6 +160,37 @@ export class Duration {
     if (!date.length && !time.length) return "PT0S";
     return (
       (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "")
+    );
+  }
+
+  add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        // @ts-ignore TS2352
+        : durationToAdd as Duration;
+
+    return addDuration(this.years,
+      this.months,
+      this.weeks,
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds,
+      duration.years,
+      duration.months,
+      duration.weeks,
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      relativeTo
     );
   }
 }
