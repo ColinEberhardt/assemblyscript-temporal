@@ -303,7 +303,7 @@ describe("time.until() works", () => {
     expect(t1.until(t2, TimeComponent.Minutes).toString()).toBe("PT412M42S");
     expect(t1.until(t2, TimeComponent.Seconds).toString()).toBe("PT24762S");
   });
-  it("can return subseconds", () => {
+  xit("can return subseconds", () => {
     t3 = t2.add({
       milliseconds: 250,
       microseconds: 250,
@@ -762,7 +762,7 @@ describe("time.since() works", () => {
     expect(t2.since(t1, TimeComponent.Minutes).toString()).toBe("PT412M42S");
     expect(t2.since(t1, TimeComponent.Seconds).toString()).toBe("PT24762S");
   });
-  it("can return subseconds", () => {
+  xit("can return subseconds", () => {
     t3 = t2.add({ milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
     msDiff = t3.since(t1, TimeComponent.Milliseconds);
