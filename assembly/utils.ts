@@ -1085,13 +1085,17 @@ function largestDurationUnit(y: i32, mon: i32, w: i32, d: i32, h: i32, min: i32,
   return TimeComponent.Nanoseconds;
 }
 
+export function largerTimeComponent(t1: TimeComponent, t2: TimeComponent): TimeComponent {
+  return min(t1, t2) as TimeComponent
+}
+
 export function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
   y2: i32, mon2: i32, w2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32,
   relativeTo: PlainDateTime | null
 ): Duration  {
   const largestUnit1 = largestDurationUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
   const largestUnit2 = largestDurationUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
-  const largestUnit = min(largestUnit1, largestUnit2) as TimeComponent;
+  const largestUnit = largerTimeComponent(largestUnit1, largestUnit2);
 
   if (!relativeTo) {
     if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {

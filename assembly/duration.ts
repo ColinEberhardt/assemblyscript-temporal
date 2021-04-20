@@ -1,8 +1,9 @@
 import { RegExp } from "assemblyscript-regex";
 
-import { addDuration, coalesce, durationSign, sign } from "./utils";
+import { addDuration, coalesce, durationSign, sign, largerTimeComponent } from "./utils";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { PlainDateTime } from "./plaindatetime";
+import { TimeComponent } from "./enums";
 
 const NULL = i32.MAX_VALUE;
 
@@ -136,6 +137,10 @@ export class Duration {
     );
   }
 
+  get blank(): bool {
+    return this.sign == 0;
+  }
+
   // P1Y1M1DT1H1M1.1S
   toString(): string {
     const date =
@@ -224,8 +229,37 @@ export class Duration {
       relativeTo
     );
   }
-}
 
+  negated(): Duration {
+    return new Duration(
+      -this.years,
+      -this.months,
+      -this.weeks,
+      -this.days,
+      -this.hours,
+      -this.minutes,
+      -this.seconds,
+      -this.milliseconds,
+      -this.microseconds,
+      -this.nanoseconds
+    );
+  }
+
+  abs(): Duration {
+    return new Duration(
+      abs(this.years),
+      abs(this.months),
+      abs(this.weeks),
+      abs(this.days),
+      abs(this.hours),
+      abs(this.minutes),
+      abs(this.seconds),
+      abs(this.milliseconds),
+      abs(this.microseconds),
+      abs(this.nanoseconds)
+    );
+  }
+}
 
 function toString<T extends number>(value: T, suffix: string): string {
   return value

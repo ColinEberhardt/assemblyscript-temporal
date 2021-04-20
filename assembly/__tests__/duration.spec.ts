@@ -1,4 +1,5 @@
 import { Duration, DurationLike } from "../duration";
+import { TimeComponent } from "../enums";
 import { PlainDateTime } from "../plaindatetime";
 
 describe("Construction", () => {
@@ -830,93 +831,89 @@ describe("Duration.subtract()", () => {
   });
 });
 
-// describe("Comparison operators don't work", () => {
-//   const d1 = Duration.from('P3DT1H');
-//   const d1again = Duration.from('P3DT1H');
-//   const d2 = Duration.from('PT2H20M30S');
-//   it('=== is object equality', () => expect(d1).toBe(d1));
-//   it('!== is object equality', () => notexpect(d1).toBe(d1again));
-//   it('<', () => throws(() => d1 < d2));
-//   it('>', () => throws(() => d1 > d2));
-//   it('<=', () => throws(() => d1 <= d2));
-//   it('>=', () => throws(() => d1 >= d2));
-// });
-// describe('Duration.negated()', () => {
-//   it('makes a positive duration negative', () => {
-//     const pos = Duration.from('P3DT1H');
-//     const neg = pos.negated();
-//     expect(`${neg}`).toBe('-P3DT1H');
-//     expect(neg.sign).toBe(-1);
-//   });
-//   it('makes a negative duration positive', () => {
-//     const neg = Duration.from('-PT2H20M30S');
-//     const pos = neg.negated();
-//     expect(`${pos}`).toBe('PT2H20M30S');
-//     expect(pos.sign).toBe(1);
-//   });
-//   it('makes a copy of a zero duration', () => {
-//     const zero = Duration.from('PT0S');
-//     const zero2 = zero.negated();
-//     expect(`${zero}`).toBe(`${zero2}`);
-//     notexpect(zero).toBe(zero2);
-//     expect(zero2.sign).toBe(0);
-//     expect(zero2.years).toBe(0);
-//     expect(zero2.months).toBe(0);
-//     expect(zero2.weeks).toBe(0);
-//     expect(zero2.days).toBe(0);
-//     expect(zero2.hours).toBe(0);
-//     expect(zero2.minutes).toBe(0);
-//     expect(zero2.seconds).toBe(0);
-//     expect(zero2.milliseconds).toBe(0);
-//     expect(zero2.microseconds).toBe(0);
-//     expect(zero2.nanoseconds).toBe(0);
-//   });
-// });
-// describe('Duration.abs()', () => {
-//   it('makes a copy of a positive duration', () => {
-//     const pos = Duration.from('P3DT1H');
-//     const pos2 = pos.abs();
-//     expect(`${pos}`).toBe(`${pos2}`);
-//     notexpect(pos).toBe(pos2);
-//     expect(pos2.sign).toBe(1);
-//   });
-//   it('makes a negative duration positive', () => {
-//     const neg = Duration.from('-PT2H20M30S');
-//     const pos = neg.abs();
-//     expect(`${pos}`).toBe('PT2H20M30S');
-//     expect(pos.sign).toBe(1);
-//   });
-//   it('makes a copy of a zero duration', () => {
-//     const zero = Duration.from('PT0S');
-//     const zero2 = zero.abs();
-//     expect(`${zero}`).toBe(`${zero2}`);
-//     notexpect(zero).toBe(zero2);
-//     expect(zero2.sign).toBe(0);
-//   });
-// });
-// describe('Duration.blank', () => {
-//   it('works', () => {
-//     assert(!Duration.from('P3DT1H').blank);
-//     assert(!Duration.from('-PT2H20M30S').blank);
-//     assert(Duration.from('PT0S').blank);
-//   });
-//   it('zero regardless of how many fields are in the duration', () => {
-//     const zero = Duration.from({
-//       years: 0,
-//       months: 0,
-//       weeks: 0,
-//       days: 0,
-//       hours: 0,
-//       minutes: 0,
-//       seconds: 0,
-//       milliseconds: 0,
-//       microseconds: 0,
-//       nanoseconds: 0
-//     });
-//     assert(zero.blank);
-//   });
-// });
+describe("Duration.negated()", () => {
+  it("makes a positive duration negative", () => {
+    const pos = Duration.from("P3DT1H");
+    const neg = pos.negated();
+    expect(`${neg}`).toBe("-P3DT1H");
+    expect(neg.sign).toBe(-1);
+  });
+  it("makes a negative duration positive", () => {
+    const neg = Duration.from("-PT2H20M30S");
+    const pos = neg.negated();
+    expect(`${pos}`).toBe("PT2H20M30S");
+    expect(pos.sign).toBe(1);
+  });
+  it("makes a copy of a zero duration", () => {
+    const zero = Duration.from("PT0S");
+    const zero2 = zero.negated();
+    expect(`${zero}`).toBe(`${zero2}`);
+    expect(zero2.sign).toBe(0);
+    expect(zero2.years).toBe(0);
+    expect(zero2.months).toBe(0);
+    expect(zero2.weeks).toBe(0);
+    expect(zero2.days).toBe(0);
+    expect(zero2.hours).toBe(0);
+    expect(zero2.minutes).toBe(0);
+    expect(zero2.seconds).toBe(0);
+    expect(zero2.milliseconds).toBe(0);
+    expect(zero2.microseconds).toBe(0);
+    expect(zero2.nanoseconds).toBe(0);
+  });
+});
+
+describe("Duration.abs()", () => {
+  it("makes a copy of a positive duration", () => {
+    const pos = Duration.from("P3DT1H");
+    const pos2 = pos.abs();
+    expect(`${pos}`).toBe(`${pos2}`);
+    expect(pos2.sign).toBe(1);
+  });
+  it("makes a negative duration positive", () => {
+    const neg = Duration.from("-PT2H20M30S");
+    const pos = neg.abs();
+    expect(`${pos}`).toBe("PT2H20M30S");
+    expect(pos.sign).toBe(1);
+  });
+  it("makes a copy of a zero duration", () => {
+    const zero = Duration.from("PT0S");
+    const zero2 = zero.abs();
+    expect(`${zero}`).toBe(`${zero2}`);
+    expect(zero2.sign).toBe(0);
+  });
+});
+
+describe('Duration.blank', () => {
+  it('works', () => {
+    assert(!Duration.from('P3DT1H').blank);
+    assert(!Duration.from('-PT2H20M30S').blank);
+    assert(Duration.from('PT0S').blank);
+  });
+  it('zero regardless of how many fields are in the duration', () => {
+    const zero = Duration.from({
+      years: 0,
+      months: 0,
+      weeks: 0,
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      milliseconds: 0,
+      microseconds: 0,
+      nanoseconds: 0
+    });
+    assert(zero.blank);
+  });
+});
+
 // describe('Duration.round()', () => {
+  // const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
+  //   const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
+  //   const relativeTo = PlainDateTime.from('2020-01-01T00:00');
+  //   it("succeeds with largestUnit: 'auto'", () => {
+  //     expect(`${Duration.from({ hours: 25 }).round({ largestUnit: 'auto' })}`).toBe('PT25H');
+  //   });
+
 //   const d = new Duration(5, 5, 5, 5, 5, 5, 5, 5, 5, 5);
 //   const d2 = new Duration(0, 0, 0, 5, 5, 5, 5, 5, 5, 5);
 //   const relativeTo = Temporal.PlainDateTime.from('2020-01-01T00:00');

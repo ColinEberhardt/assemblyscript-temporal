@@ -281,15 +281,15 @@ Properties
 - [x] microseconds
 - [x] nanoseconds
 - [x] sign
-- [ ] blank
+- [x] blank
 
 Methods
 
 - [x] with
 - [x] add
 - [x] subtract
-- [ ] negated
-- [ ] abs
+- [x] negated
+- [x] abs
 - [ ] round
 - [ ] total
 - [x] toString
