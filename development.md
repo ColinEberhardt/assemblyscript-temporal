@@ -287,7 +287,7 @@ Methods
 
 - [x] with
 - [x] add
-- [ ] subtract
+- [x] subtract
 - [ ] negated
 - [ ] abs
 - [ ] round

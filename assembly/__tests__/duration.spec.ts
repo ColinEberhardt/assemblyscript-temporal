@@ -536,7 +536,7 @@ describe("Duration.add()", () => {
   xit("supports zoned date time", () => {
     // it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
     //     const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
-    //     expect(`${oneDay.add(hours24).toBe({ relativeTo })}`, 'P2D');
+    //     expect(`${oneDay.add(hours24, relativeTo)}`, 'P2D');
     //   const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
     //   const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
     //   const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
@@ -549,8 +549,8 @@ describe("Duration.add()", () => {
     //     });
     //     it('start after repeated hour, end inside (negative)', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-11-05T01:00[America/Vancouver]');
-    //       expect(`${hours25.negated().add(oneDay.negated()).toBe({ relativeTo })}`, '-P2DT1H');
-    //       expect(`${oneDay.negated().add(hours25.negated()).toBe({ relativeTo })}`, '-P2D');
+    //       expect(`${hours25.negated().add(oneDay.negated(), relativeTo)}`, '-P2DT1H');
+    //       expect(`${oneDay.negated().add(hours25.negated(), relativeTo)}`, '-P2D');
     //     });
     //     it('start inside repeated hour, end in skipped hour', () => {
     //       expect(`${hours25.add(Duration.from({ days: 125).toBe(hours: 1 }), { relativeTo: inRepeatedHour })}`, 'P126DT1H');
@@ -559,8 +559,8 @@ describe("Duration.add()", () => {
     //     });
     //     it('start in normal hour, end in skipped hour', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-03-08T02:30[America/Vancouver]');
-    //       expect(`${oneDay.add(hours25).toBe({ relativeTo })}`, 'P2DT1H');
-    //       expect(`${hours25.add(oneDay).toBe({ relativeTo })}`, 'P2D');
+    //       expect(`${oneDay.add(hours25, relativeTo)}`, 'P2DT1H');
+    //       expect(`${hours25.add(oneDay, relativeTo)}`, 'P2D');
     //     });
     //     it('start before skipped hour, end >1 day after', () => {
     //       expect(`${hours25.add(oneDay).toBe({ relativeTo: skippedHourDay })}`, 'P2DT2H');
@@ -568,8 +568,8 @@ describe("Duration.add()", () => {
     //     });
     //     it('start after skipped hour, end >1 day before (negative)', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-03-11T00:00[America/Vancouver]');
-    //       expect(`${hours25.negated().add(oneDay.negated()).toBe({ relativeTo })}`, '-P2DT2H');
-    //       expect(`${oneDay.negated().add(hours25.negated()).toBe({ relativeTo })}`, '-P2DT1H');
+    //       expect(`${hours25.negated().add(oneDay.negated(), relativeTo)}`, '-P2DT2H');
+    //       expect(`${oneDay.negated().add(hours25.negated(), relativeTo)}`, '-P2DT1H');
     //     });
     //     it('start before skipped hour, end <1 day after', () => {
     //       expect(`${hours12.add(oneDay).toBe({ relativeTo: skippedHourDay })}`, 'P1DT13H');
@@ -577,8 +577,8 @@ describe("Duration.add()", () => {
     //     });
     //     it('start after skipped hour, end <1 day before (negative)', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-03-10T12:00[America/Vancouver]');
-    //       expect(`${hours12.negated().add(oneDay.negated()).toBe({ relativeTo })}`, '-P1DT13H');
-    //       expect(`${oneDay.negated().add(hours12.negated()).toBe({ relativeTo })}`, '-P1DT12H');
+    //       expect(`${hours12.negated().add(oneDay.negated(), relativeTo)}`, '-P1DT13H');
+    //       expect(`${oneDay.negated().add(hours12.negated(), relativeTo)}`, '-P1DT12H');
     //     });
     //     it('start before repeated hour, end >1 day after', () => {
     //       expect(`${hours25.add(oneDay).toBe({ relativeTo: repeatedHourDay })}`, 'P2D');
@@ -586,8 +586,8 @@ describe("Duration.add()", () => {
     //     });
     //     it('start after repeated hour, end >1 day before (negative)', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-11-04T00:00[America/Vancouver]');
-    //       expect(`${hours25.negated().add(oneDay.negated()).toBe({ relativeTo })}`, '-P2D');
-    //       expect(`${oneDay.negated().add(hours25.negated()).toBe({ relativeTo })}`, '-P2DT1H');
+    //       expect(`${hours25.negated().add(oneDay.negated(), relativeTo)}`, '-P2D');
+    //       expect(`${oneDay.negated().add(hours25.negated(), relativeTo)}`, '-P2DT1H');
     //     });
     //     it('start before repeated hour, end <1 day after', () => {
     //       expect(`${hours12.add(oneDay).toBe({ relativeTo: repeatedHourDay })}`, 'P1DT11H');
@@ -595,13 +595,13 @@ describe("Duration.add()", () => {
     //     });
     //     it('start after repeated hour, end <1 day before (negative)', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2019-11-03T12:00[America/Vancouver]');
-    //       expect(`${hours12.negated().add(oneDay.negated()).toBe({ relativeTo })}`, '-P1DT11H');
-    //       expect(`${oneDay.negated().add(hours12.negated()).toBe({ relativeTo })}`, '-P1DT12H');
+    //       expect(`${hours12.negated().add(oneDay.negated(), relativeTo)}`, '-P1DT11H');
+    //       expect(`${oneDay.negated().add(hours12.negated(), relativeTo)}`, '-P1DT12H');
     //     });
     //     it('Samoa skipped 24 hours', () => {
     //       const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
-    //       expect(`${hours25.add(oneDay).toBe({ relativeTo })}`, 'P3DT1H');
-    //       expect(`${oneDay.add(hours25).toBe({ relativeTo })}`, 'P3DT1H');
+    //       expect(`${hours25.add(oneDay, relativeTo)}`, 'P3DT1H');
+    //       expect(`${oneDay.add(hours25, relativeTo)}`, 'P3DT1H');
     //     });
     //   });
     //   it('casts relativeTo to ZonedDateTime if possible', () => {
@@ -623,193 +623,213 @@ describe("Duration.add()", () => {
   });
 });
 
-// });
-// describe('Duration.subtract()', () => {
-//   const duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
-//   it('subtracts same units with positive result', () => {
-//     expect(`${duration.subtract({ days: 1).toBe(minutes: 5 })}`, 'P2DT1H5M');
-//   });
-//   it('subtracts same units with zero result', () => {
-//     expect(`${duration.subtract(duration)}`).toBe('PT0S');
-//     expect(`${duration.subtract({ days: 3 })}`).toBe('PT1H10M');
-//     expect(`${duration.subtract({ minutes: 10 })}`).toBe('P3DT1H');
-//   });
-//   it('balances when subtracting same units with negative result', () => {
-//     expect(`${duration.subtract({ minutes: 15 })}`).toBe('P3DT55M');
-//   });
-//   it('balances when subtracting different units', () => {
-//     expect(`${duration.subtract({ seconds: 30 })}`).toBe('P3DT1H9M30S');
-//   });
-//   it('symmetric with regard to negative durations', () => {
-//     expect(`${Duration.from('P2DT1H5M').subtract({ days: -1).toBe(minutes: -5 })}`, 'P3DT1H10M');
-//     expect(`${new Duration().subtract({ days: -3).toBe(hours: -1, minutes: -10 })}`, 'P3DT1H10M');
-//     expect(`${Duration.from('PT1H10M').subtract({ days: -3 })}`).toBe('P3DT1H10M');
-//     expect(`${Duration.from('P3DT1H').subtract({ minutes: -10 })}`).toBe('P3DT1H10M');
-//     expect(`${Duration.from('P3DT55M').subtract({ minutes: -15 })}`).toBe('P3DT1H10M');
-//     expect(`${Duration.from('P3DT1H9M30S').subtract({ seconds: -30 })}`).toBe('P3DT1H10M');
-//   });
-//   it('balances positive units up to the largest nonzero unit', () => {
-//     const d = Duration.from({
-//       minutes: 100,
-//       seconds: 100,
-//       milliseconds: 2000,
-//       microseconds: 2000,
-//       nanoseconds: 2000
-//     });
-//     const less = Duration.from({
-//       minutes: 10,
-//       seconds: 10,
-//       milliseconds: 500,
-//       microseconds: 500,
-//       nanoseconds: 500
-//     });
-//     const result = d.subtract(less);
-//     expect(result.minutes).toBe(91);
-//     expect(result.seconds).toBe(31);
-//     expect(result.milliseconds).toBe(501);
-//     expect(result.microseconds).toBe(501);
-//     expect(result.nanoseconds).toBe(500);
-//   });
-//   const tenDays = Duration.from('P10D');
-//   const tenMinutes = Duration.from('PT10M');
-//   it('has correct negative result', () => {
-//     let result = tenDays.subtract({ days: 15 });
-//     expect(result.days).toBe(-5);
-//     result = tenMinutes.subtract({ minutes: 15 });
-//     expect(result.minutes).toBe(-5);
-//   });
-//   it('balances correctly if subtracting different units flips the overall sign', () => {
-//     const d1 = Duration.from({ hours: 1, seconds: 60 });
-//     expect(`${d1.subtract({ minutes: 122 })}`).toBe('-PT1H1M');
-//     const d2 = Duration.from({ hours: 1, seconds: 3721 });
-//     expect(`${d2.subtract({ minutes: 61).toBe(nanoseconds: 3722000000001 })}`, '-PT1M1.000000001S');
-//   });
-//   it('mixed positive and negative values always throw', () => {
-//     throws(() => duration.subtract({ hours: 1, minutes: -30 }), RangeError);
-//   });
-//   it('relativeTo required for years, months, and weeks', () => {
-//     const d = Duration.from({ hours: 1 });
-//     const dy = Duration.from({ years: 1, hours: 1 });
-//     const dm = Duration.from({ months: 1, hours: 1 });
-//     const dw = Duration.from({ weeks: 1, hours: 1 });
-//     throws(() => d.subtract(dy), RangeError);
-//     throws(() => d.subtract(dm), RangeError);
-//     throws(() => d.subtract(dw), RangeError);
-//     throws(() => dy.subtract(d), RangeError);
-//     throws(() => dm.subtract(d), RangeError);
-//     throws(() => dw.subtract(d), RangeError);
-//     const relativeTo = Temporal.PlainDateTime.from('2000-01-01');
-//     expect(`${d.subtract(dy).toBe({ relativeTo })}`, '-P1Y');
-//     expect(`${d.subtract(dm).toBe({ relativeTo })}`, '-P1M');
-//     expect(`${d.subtract(dw).toBe({ relativeTo })}`, '-P1W');
-//     expect(`${dy.subtract(d).toBe({ relativeTo })}`, 'P1Y');
-//     expect(`${dm.subtract(d).toBe({ relativeTo })}`, 'P1M');
-//     expect(`${dw.subtract(d).toBe({ relativeTo })}`, 'P1W');
-//   });
-//   it('options may only be an object or undefined', () => {
-//     [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-//       throws(() => duration.subtract({ hours: 1 }, badOptions), TypeError)
-//     );
-//     [{}, () => {}, undefined].forEach((options) => expect(duration.subtract({ hours: 1 }).toBe(options).hours, 0));
-//   });
-//   it('object must contain at least one correctly-spelled property', () => {
-//     throws(() => duration.subtract({}), TypeError);
-//     throws(() => duration.subtract({ month: 12 }), TypeError);
-//   });
-//   it('incorrectly-spelled properties are ignored', () => {
-//     expect(`${duration.subtract({ month: 1).toBe(days: 1 })}`, 'P2DT1H10M');
-//   });
-//   it('casts argument', () => {
-//     expect(`${duration.subtract(Temporal.Duration.from('P1DT5M'))}`).toBe('P2DT1H5M');
-//     expect(`${duration.subtract('P1DT5M')}`).toBe('P2DT1H5M');
-//   });
-//   it('relativeTo affects year length', () => {
-//     const oneYear = new Duration(1);
-//     const days365 = new Duration(0, 0, 0, 365);
-//     expect(`${oneYear.subtract(days365).toBe({ relativeTo: Temporal.PlainDateTime.from('2017-01-01') })}`, 'PT0S');
-//     expect(`${oneYear.subtract(days365).toBe({ relativeTo: Temporal.PlainDateTime.from('2016-01-01') })}`, 'P1D');
-//   });
-//   it('relativeTo affects month length', () => {
-//     const oneMonth = new Duration(0, 1);
-//     const days30 = new Duration(0, 0, 0, 30);
-//     expect(`${oneMonth.subtract(days30).toBe({ relativeTo: Temporal.PlainDateTime.from('2018-02-01') })}`, '-P2D');
-//     expect(`${oneMonth.subtract(days30).toBe({ relativeTo: Temporal.PlainDateTime.from('2018-03-01') })}`, 'P1D');
-//     expect(`${oneMonth.subtract(days30).toBe({ relativeTo: Temporal.PlainDateTime.from('2018-04-01') })}`, 'PT0S');
-//   });
-//   it('first this is resolved against relativeTo, then the argument against relativeTo + this', () => {
-//     const d1 = new Duration(0, 2, 1, 4);
-//     const d2 = new Duration(0, 1, 1, 1);
-//     const relativeTo = new Temporal.PlainDateTime(2000, 1, 1);
-//     expect(`${d1.subtract(d2).toBe({ relativeTo })}`, 'P1M3D');
-//   });
-//   const oneDay = new Duration(0, 0, 0, 1);
-//   const hours24 = new Duration(0, 0, 0, 0, 24);
-//   it('relativeTo does not affect days if PlainDateTime', () => {
-//     const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
-//     expect(`${oneDay.subtract(hours24).toBe({ relativeTo })}`, 'PT0S');
-//   });
-//   it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
-//     const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
-//     expect(`${oneDay.subtract(hours24).toBe({ relativeTo })}`, 'PT0S');
-//   });
-//   const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
-//   const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
-//   const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
-//   const twoDays = new Duration(0, 0, 0, 2);
-//   const threeDays = new Duration(0, 0, 0, 3);
-//   describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
-//     it('start inside repeated hour, end after', () => {
-//       expect(`${hours24.subtract(oneDay).toBe({ relativeTo: inRepeatedHour })}`, '-PT1H');
-//       expect(`${oneDay.subtract(hours24).toBe({ relativeTo: inRepeatedHour })}`, 'PT1H');
-//     });
-//     it('start inside repeated hour, end in skipped hour', () => {
-//       expect(`${Duration.from({ days: 127).toBe(hours: 1 }).subtract(oneDay, { relativeTo: inRepeatedHour })}`, 'P126DT1H');
-//       expect(`${Duration.from({ days: 127).toBe(hours: 1 }).subtract(hours24, { relativeTo: inRepeatedHour })}`, 'P126D');
-//     });
-//     it('start in normal hour, end in skipped hour', () => {
-//       const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
-//       expect(`${hours24.subtract(oneDay).toBe({ relativeTo })}`, 'PT1H');
-//       expect(`${oneDay.subtract(hours24).toBe({ relativeTo })}`, 'PT0S');
-//     });
-//     it('start before skipped hour, end >1 day after', () => {
-//       expect(`${threeDays.subtract(hours24).toBe({ relativeTo: skippedHourDay })}`, 'P2D');
-//       expect(`${hours24.subtract(threeDays).toBe({ relativeTo: skippedHourDay })}`, '-P1DT23H');
-//     });
-//     it('start before skipped hour, end <1 day after', () => {
-//       expect(`${twoDays.subtract(hours24).toBe({ relativeTo: skippedHourDay })}`, 'P1D');
-//       expect(`${hours24.subtract(twoDays).toBe({ relativeTo: skippedHourDay })}`, '-PT23H');
-//     });
-//     it('start before repeated hour, end >1 day after', () => {
-//       expect(`${threeDays.subtract(hours24).toBe({ relativeTo: repeatedHourDay })}`, 'P2D');
-//       expect(`${hours24.subtract(threeDays).toBe({ relativeTo: repeatedHourDay })}`, '-P2DT1H');
-//     });
-//     it('start before repeated hour, end <1 day after', () => {
-//       expect(`${twoDays.subtract(hours24).toBe({ relativeTo: repeatedHourDay })}`, 'P1D');
-//       expect(`${hours24.subtract(twoDays).toBe({ relativeTo: repeatedHourDay })}`, '-P1DT1H');
-//     });
-//     it('Samoa skipped 24 hours', () => {
-//       const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
-//       expect(`${twoDays.subtract(Duration.from({ hours: 48 })).toBe({ relativeTo })}`, '-P1D');
-//       expect(`${Duration.from({ hours: 48 }).subtract(twoDays).toBe({ relativeTo })}`, 'P2D');
-//     });
-//   });
-//   it('casts relativeTo to ZonedDateTime if possible', () => {
-//     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: '2019-11-03T00:00[America/Vancouver]' })}`, 'PT1H');
-//     equal(
-//       `${oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11, day: 3, timeZone: 'America/Vancouver' } })}`,
-//       'PT1H'
-//     );
-//   });
-//   it('casts relativeTo to PlainDateTime if possible', () => {
-//     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: '2019-11-02T00:00' })}`, 'PT0S');
-//     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'PT0S');
-//   });
-//   it('at least the required properties must be present in relativeTo', () => {
-//     throws(() => oneDay.subtract(hours24, { relativeTo: { month: 11, day: 3 } }), TypeError);
-//     throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
-//     throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
-//   });
-// });
+let tenDays: Duration, tenMinutes: Duration;
+
+describe("Duration.subtract()", () => {
+  duration = Duration.from({ days: 3, hours: 1, minutes: 10 });
+  it("subtracts same units with positive result", () => {
+    expect(`${duration.subtract({ days: 1, minutes: 5 })}`).toBe("P2DT1H5M");
+  });
+  it("subtracts same units with zero result", () => {
+    expect(`${duration.subtract(duration)}`).toBe("PT0S");
+    expect(`${duration.subtract({ days: 3 })}`).toBe("PT1H10M");
+    expect(`${duration.subtract({ minutes: 10 })}`).toBe("P3DT1H");
+  });
+  it("balances when subtracting same units with negative result", () => {
+    expect(`${duration.subtract({ minutes: 15 })}`).toBe("P3DT55M");
+  });
+  it("balances when subtracting different units", () => {
+    expect(`${duration.subtract({ seconds: 30 })}`).toBe("P3DT1H9M30S");
+  });
+  it("symmetric with regard to negative durations", () => {
+    expect(
+      `${Duration.from("P2DT1H5M").subtract({ days: -1, minutes: -5 })}`
+    ).toBe("P3DT1H10M");
+    expect(
+      `${new Duration().subtract({ days: -3, hours: -1, minutes: -10 })}`
+    ).toBe("P3DT1H10M");
+    expect(`${Duration.from("PT1H10M").subtract({ days: -3 })}`).toBe(
+      "P3DT1H10M"
+    );
+    expect(`${Duration.from("P3DT1H").subtract({ minutes: -10 })}`).toBe(
+      "P3DT1H10M"
+    );
+    expect(`${Duration.from("P3DT55M").subtract({ minutes: -15 })}`).toBe(
+      "P3DT1H10M"
+    );
+    expect(`${Duration.from("P3DT1H9M30S").subtract({ seconds: -30 })}`).toBe(
+      "P3DT1H10M"
+    );
+  });
+  it("balances positive units up to the largest nonzero unit", () => {
+    const d = Duration.from({
+      minutes: 100,
+      seconds: 100,
+      milliseconds: 2000,
+      microseconds: 2000,
+      nanoseconds: 2000,
+    });
+    const less = Duration.from({
+      minutes: 10,
+      seconds: 10,
+      milliseconds: 500,
+      microseconds: 500,
+      nanoseconds: 500,
+    });
+    const result = d.subtract(less);
+    expect(result.minutes).toBe(91);
+    expect(result.seconds).toBe(31);
+    expect(result.milliseconds).toBe(501);
+    expect(result.microseconds).toBe(501);
+    expect(result.nanoseconds).toBe(500);
+  });
+  tenDays = Duration.from("P10D");
+  tenMinutes = Duration.from("PT10M");
+  it("has correct negative result", () => {
+    let result = tenDays.subtract({ days: 15 });
+    expect(result.days).toBe(-5);
+    result = tenMinutes.subtract({ minutes: 15 });
+    expect(result.minutes).toBe(-5);
+  });
+  it("balances correctly if subtracting different units flips the overall sign", () => {
+    const d1 = Duration.from({ hours: 1, seconds: 60 });
+    expect(`${d1.subtract({ minutes: 122 })}`).toBe("-PT1H1M");
+    const d2 = Duration.from({ hours: 1, seconds: 3721 });
+    // expect(`${d2.subtract({ minutes: 61, nanoseconds: 3722000000001 })}`).toBe(
+    //   "-PT1M1.000000001S"
+    // );
+  });
+  it("mixed positive and negative values always throw", () => {
+    expect(() => {
+      duration.subtract({ hours: 1, minutes: -30 });
+    }).toThrow();
+  });
+  it("relativeTo required for years, months, and weeks", () => {
+    const d = Duration.from({ hours: 1 });
+    const dy = Duration.from({ years: 1, hours: 1 });
+    const dm = Duration.from({ months: 1, hours: 1 });
+    const dw = Duration.from({ weeks: 1, hours: 1 });
+    expect(() => {
+      d.subtract(dy);
+    }).toThrow();
+    expect(() => {
+      d.subtract(dm);
+    }).toThrow();
+    expect(() => {
+      d.subtract(dw);
+    }).toThrow();
+    expect(() => {
+      dy.subtract(d);
+    }).toThrow();
+    expect(() => {
+      dm.subtract(d);
+    }).toThrow();
+    expect(() => {
+      dw.subtract(d);
+    }).toThrow();
+    const relativeTo = PlainDateTime.from("2000-01-01");
+    expect(`${d.subtract(dy, relativeTo)}`).toBe("-P1Y");
+    expect(`${d.subtract(dm, relativeTo)}`).toBe("-P1M");
+    expect(`${d.subtract(dw, relativeTo)}`).toBe("-P1W");
+    expect(`${dy.subtract(d, relativeTo)}`).toBe("P1Y");
+    expect(`${dm.subtract(d, relativeTo)}`).toBe("P1M");
+    expect(`${dw.subtract(d, relativeTo)}`).toBe("P1W");
+  });
+  it("relativeTo affects year length", () => {
+    const oneYear = new Duration(1);
+    const days365 = new Duration(0, 0, 0, 365);
+    expect(
+      `${oneYear.subtract(days365, PlainDateTime.from("2017-01-01"))}`
+    ).toBe("PT0S");
+    expect(
+      `${oneYear.subtract(days365, PlainDateTime.from("2016-01-01"))}`
+    ).toBe("P1D");
+  });
+  it("relativeTo affects month length", () => {
+    const oneMonth = new Duration(0, 1);
+    const days30 = new Duration(0, 0, 0, 30);
+    expect(
+      `${oneMonth.subtract(days30, PlainDateTime.from("2018-02-01"))}`
+    ).toBe("-P2D");
+    expect(
+      `${oneMonth.subtract(days30, PlainDateTime.from("2018-03-01"))}`
+    ).toBe("P1D");
+    expect(
+      `${oneMonth.subtract(days30, PlainDateTime.from("2018-04-01"))}`
+    ).toBe("PT0S");
+  });
+  xit("supports zoned date time", () => {
+    //   const oneDay = new Duration(0, 0, 0, 1);
+    //   const hours24 = new Duration(0, 0, 0, 0, 24);
+    //   it('relativeTo does not affect days if PlainDateTime', () => {
+    //     const relativeTo = Temporal.PlainDateTime.from('2017-01-01');
+    //     expect(`${oneDay.subtract(hours24, relativeTo)}`, 'PT0S');
+    //   });
+    //   it('relativeTo does not affect days if ZonedDateTime, and duration encompasses no DST change', () => {
+    //     const relativeTo = Temporal.ZonedDateTime.from('2017-01-01T00:00[America/Montevideo]');
+    //     expect(`${oneDay.subtract(hours24, relativeTo)}`, 'PT0S');
+    //   });
+    //   const skippedHourDay = Temporal.ZonedDateTime.from('2019-03-10T00:00[America/Vancouver]');
+    //   const repeatedHourDay = Temporal.ZonedDateTime.from('2019-11-03T00:00[America/Vancouver]');
+    //   const inRepeatedHour = Temporal.ZonedDateTime.from('2019-11-03T01:00-07:00[America/Vancouver]');
+    //   const twoDays = new Duration(0, 0, 0, 2);
+    //   const threeDays = new Duration(0, 0, 0, 3);
+    //   describe('relativeTo affects days if ZonedDateTime, and duration encompasses DST change', () => {
+    //     it('start inside repeated hour, end after', () => {
+    //       expect(`${hours24.subtract(oneDay).toBe({ relativeTo: inRepeatedHour })}`, '-PT1H');
+    //       expect(`${oneDay.subtract(hours24).toBe({ relativeTo: inRepeatedHour })}`, 'PT1H');
+    //     });
+    //     it('start inside repeated hour, end in skipped hour', () => {
+    //       expect(`${Duration.from({ days: 127).toBe(hours: 1 }).subtract(oneDay, { relativeTo: inRepeatedHour })}`, 'P126DT1H');
+    //       expect(`${Duration.from({ days: 127).toBe(hours: 1 }).subtract(hours24, { relativeTo: inRepeatedHour })}`, 'P126D');
+    //     });
+    //     it('start in normal hour, end in skipped hour', () => {
+    //       const relativeTo = Temporal.ZonedDateTime.from('2019-03-09T02:30[America/Vancouver]');
+    //       expect(`${hours24.subtract(oneDay, relativeTo)}`, 'PT1H');
+    //       expect(`${oneDay.subtract(hours24, relativeTo)}`, 'PT0S');
+    //     });
+    //     it('start before skipped hour, end >1 day after', () => {
+    //       expect(`${threeDays.subtract(hours24).toBe({ relativeTo: skippedHourDay })}`, 'P2D');
+    //       expect(`${hours24.subtract(threeDays).toBe({ relativeTo: skippedHourDay })}`, '-P1DT23H');
+    //     });
+    //     it('start before skipped hour, end <1 day after', () => {
+    //       expect(`${twoDays.subtract(hours24).toBe({ relativeTo: skippedHourDay })}`, 'P1D');
+    //       expect(`${hours24.subtract(twoDays).toBe({ relativeTo: skippedHourDay })}`, '-PT23H');
+    //     });
+    //     it('start before repeated hour, end >1 day after', () => {
+    //       expect(`${threeDays.subtract(hours24).toBe({ relativeTo: repeatedHourDay })}`, 'P2D');
+    //       expect(`${hours24.subtract(threeDays).toBe({ relativeTo: repeatedHourDay })}`, '-P2DT1H');
+    //     });
+    //     it('start before repeated hour, end <1 day after', () => {
+    //       expect(`${twoDays.subtract(hours24).toBe({ relativeTo: repeatedHourDay })}`, 'P1D');
+    //       expect(`${hours24.subtract(twoDays).toBe({ relativeTo: repeatedHourDay })}`, '-P1DT1H');
+    //     });
+    //     it('Samoa skipped 24 hours', () => {
+    //       const relativeTo = Temporal.ZonedDateTime.from('2011-12-29T12:00-10:00[Pacific/Apia]');
+    //       expect(`${twoDays.subtract(Duration.from({ hours: 48 }), relativeTo)}`, '-P1D');
+    //       expect(`${Duration.from({ hours: 48 }).subtract(twoDays, relativeTo)}`, 'P2D');
+    //     });
+    //   });
+    //   it('casts relativeTo to ZonedDateTime if possible', () => {
+    //     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: '2019-11-03T00:00[America/Vancouver]' })}`, 'PT1H');
+    //     equal(
+    //       `${oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11, day: 3, timeZone: 'America/Vancouver' } })}`,
+    //       'PT1H'
+    //     );
+    //   });
+    //   it('casts relativeTo to PlainDateTime if possible', () => {
+    //     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: '2019-11-02T00:00' })}`, 'PT0S');
+    //     expect(`${oneDay.subtract(hours24).toBe({ relativeTo: { year: 2019, month: 11, day: 2 } })}`, 'PT0S');
+    //   });
+    //   it('at least the required properties must be present in relativeTo', () => {
+    //     throws(() => oneDay.subtract(hours24, { relativeTo: { month: 11, day: 3 } }), TypeError);
+    //     throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, month: 11 } }), TypeError);
+    //     throws(() => oneDay.subtract(hours24, { relativeTo: { year: 2019, day: 3 } }), TypeError);
+    //   });
+    // });
+  });
+});
+
 // describe("Comparison operators don't work", () => {
 //   const d1 = Duration.from('P3DT1H');
 //   const d1again = Duration.from('P3DT1H');

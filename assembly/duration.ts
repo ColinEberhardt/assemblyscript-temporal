@@ -193,6 +193,37 @@ export class Duration {
       relativeTo
     );
   }
+
+  subtract<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
+    const duration =
+      durationToAdd instanceof DurationLike
+        ? durationToAdd.toDuration()
+        // @ts-ignore TS2352
+        : durationToAdd as Duration;
+
+    return addDuration(this.years,
+      this.months,
+      this.weeks,
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds,
+      -duration.years,
+      -duration.months,
+      -duration.weeks,
+      -duration.days,
+      -duration.hours,
+      -duration.minutes,
+      -duration.seconds,
+      -duration.milliseconds,
+      -duration.microseconds,
+      -duration.nanoseconds,
+      relativeTo
+    );
+  }
 }
 
 

@@ -1097,7 +1097,6 @@ export function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1:
     if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
       throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
     }
-    // years = months = weeks = 0;
     const balanced = balanceDuration(
       d1 + d2,
       h1 + h2,
