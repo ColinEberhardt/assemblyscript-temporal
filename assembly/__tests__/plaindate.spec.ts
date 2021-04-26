@@ -37,6 +37,15 @@ describe("Construction", () => {
   it("date.toString() is 1976-11-18", () => {
     expect(date.toString()).toBe("1976-11-18");
   });
+  it("date.dayOfWeek further tests", () => {
+    expect(new PlainDate(2021, 4, 19).dayOfWeek).toBe(1);
+    expect(new PlainDate(2021, 4, 20).dayOfWeek).toBe(2);
+    expect(new PlainDate(2021, 4, 21).dayOfWeek).toBe(3);
+    expect(new PlainDate(2021, 4, 22).dayOfWeek).toBe(4);
+    expect(new PlainDate(2021, 4, 23).dayOfWeek).toBe(5);
+    expect(new PlainDate(2021, 4, 24).dayOfWeek).toBe(6);
+    expect(new PlainDate(2021, 4, 25).dayOfWeek).toBe(7);
+  });
 });
 
 describe(".with manipulation", () => {

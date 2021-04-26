@@ -487,7 +487,7 @@ export function balanceDuration(
 
   const sig = i32(sign(nanosecondsI64));
   nanosecondsI64 = abs(nanosecondsI64);
-
+  
   switch (largestUnit) {
     case TimeComponent.Years:
     case TimeComponent.Months:
@@ -1105,13 +1105,13 @@ export function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1:
 
     const dateDuration1 = new Duration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
     const dateDuration2 = new Duration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
-
+    
     const intermediate = datePart.add(dateDuration1);
     const end = intermediate.add(dateDuration2);
 
     const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
     const dateDiff = datePart.until(end, dateLargestUnit);
-
+    
     const dur =  balanceDuration(
       dateDiff.days,
       h1 + h2,
