@@ -168,7 +168,8 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   year += year / 4 - year / 100 + year / 400;
   month = <i32>load<u8>(tab + month - 1);
   const w = (year + month + day) % 7;
-  return w + (w < 0 ? 7 : 0);
+  // Use ISO 8601 which has [1, 7] range to represent Monday-Sunday
+  return w + (w <= 0 ? 7 : 0);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
