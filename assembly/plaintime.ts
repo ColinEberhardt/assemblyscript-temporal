@@ -2,7 +2,7 @@ import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
-import { DateLike } from "./plaindate";
+import { DateLike, PlainDate } from "./plaindate";
 import {
   sign,
   ord,
@@ -15,6 +15,8 @@ import {
   differenceTime,
   regulateTime,
 } from "./utils";
+import { TimeZone } from "./timezone";
+import { ZonedDateTime } from "./zoneddatetime";
 
 export class TimeLike {
   hour: i32 = -1;
@@ -202,6 +204,10 @@ export class PlainTime {
       this.microsecond,
       this.nanosecond
     );
+  }
+
+  toZonedDateTime(tz: TimeZone, date: PlainDate): ZonedDateTime {
+    return date.toZonedDateTime(tz, this);
   }
 
   until(

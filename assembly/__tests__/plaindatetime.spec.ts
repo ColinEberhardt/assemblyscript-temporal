@@ -2,6 +2,7 @@ import { Duration, DurationLike } from "../duration";
 import { Overflow } from "../enums";
 import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
+import { TimeZone } from "../timezone";
 
 let datetime: PlainDateTime;
 
@@ -229,9 +230,9 @@ describe("DateTime.fromString() works", () => {
     );
   });
   it("with milliseconds", () => {
-    expect(
-      PlainDateTime.from("1976-11-18T12:34:56.123456789").toString()
-    ).toBe("1976-11-18T12:34:56.123456789");
+    expect(PlainDateTime.from("1976-11-18T12:34:56.123456789").toString()).toBe(
+      "1976-11-18T12:34:56.123456789"
+    );
   });
   it("throws on invalid string", () => {
     expect(() => {
@@ -355,7 +356,7 @@ describe("DateTime.add() works", () => {
   });
   it("throw when overflowing result with reject", () => {
     throws("TypeError", () => {
-      jan31.add({ months: 1 }, Overflow.Reject)
+      jan31.add({ months: 1 }, Overflow.Reject);
     });
   });
   xit("mixed positive and negative values always throw", () => {
@@ -411,6 +412,41 @@ describe("date.subtract() works", () => {
   xit("casts argument", () => {
     // expect(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T14:59:59');
     // expect(`${mar31.subtract('P1MT1S')}`).toBe('2020-02-29T14:59:59');
+  });
+});
+
+describe("Date.toPlainDate() works", () => {
+  it("combines the date and time", () => {
+    expect(
+      PlainDateTime.from("1976-11-18T11:30:23").toPlainDate().toString()
+    ).toBe("1976-11-18");
+  });
+});
+
+describe("Date.toPlainYearMonth() works", () => {
+  it("combines the date and time", () => {
+    expect(PlainDateTime.from("1976-11-18").toPlainYearMonth().toString()).toBe(
+      "1976-11"
+    );
+  });
+});
+
+describe("Date.toPlainMonthDay() works", () => {
+  it("combines the date and time", () => {
+    expect(PlainDateTime.from("1976-11-18").toPlainMonthDay().toString()).toBe(
+      "11-18"
+    );
+  });
+});
+
+describe("Date.toZonedDateTime()", () => {
+  it("works", () => {
+    const date = PlainDateTime.from("2020-01-01");
+    const tz = TimeZone.from("America/Los_Angeles");
+    const zdt = date.toZonedDateTime(tz);
+    expect(zdt.toString()).toBe(
+      "2020-01-01T00:00:00-08:00[America/Los_Angeles]"
+    );
   });
 });
 

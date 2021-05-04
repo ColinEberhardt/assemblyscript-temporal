@@ -2,6 +2,12 @@ import { RegExp } from "assemblyscript-regex";
 
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
+import { Instant } from "./instant";
+import { PlainDateTime } from "./plaindatetime";
+import { PlainMonthDay } from "./plainmonthday";
+import { PlainTime } from "./plaintime";
+import { PlainYearMonth } from "./plainyearmonth";
+import { TimeZone } from "./timezone";
 import {
   addDate,
   dayOfWeek,
@@ -19,6 +25,7 @@ import {
   coalesce,
   parseISOString,
 } from "./utils";
+import { ZonedDateTime } from "./zoneddatetime";
 
 export class DateLike {
   year: i32 = -1;
@@ -231,6 +238,29 @@ export class PlainDate {
     );
 
     return new PlainDate(newDate.year, newDate.month, newDate.day);
+  }
+
+  toPlainDateTime(time: PlainTime | null = null): PlainDateTime {
+    if (time) {
+      return new PlainDateTime(this.year, this.month, this.day,
+        time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond);
+    } else {
+      return new PlainDateTime(this.year, this.month, this.day);
+    }
+  }
+
+  toPlainYearMonth(): PlainYearMonth {
+    return new PlainYearMonth(this.year, this.month);
+  }
+
+  toPlainMonthDay(): PlainMonthDay {
+    return new PlainMonthDay(this.month, this.day);
+  }
+
+  toZonedDateTime(tz: TimeZone, time: PlainTime | null = null): ZonedDateTime {
+    const dt = this.toPlainDateTime(time);
+    const offset = tz.getOffsetNanosecondsFor(new Instant(dt.epochNanoseconds))
+    return new ZonedDateTime(dt.epochNanoseconds - offset, tz);
   }
 
   static compare(a: PlainDate, b: PlainDate): i32 {

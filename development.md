@@ -64,10 +64,10 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [ ] toZonedDateTime
-- [ ] toPlainDateTime
-- [ ] toPlainYearMonth
-- [ ] toPlainMonthDay
+- [x] toZonedDateTime
+- [x] toPlainDateTime
+- [x] toPlainYearMonth
+- [x] toPlainMonthDay
 - [ ] getISOFields
 
 General features
@@ -111,7 +111,7 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [ ] toZonedDateTime
+- [x] toZonedDateTime
 - [x] toPlainDateTime
 - [ ] getISOFields
 
@@ -245,11 +245,11 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [ ] toZonedDateTime
+- [x] toZonedDateTime
 - [x] toPlainDate
 - [x] toPlainTime
-- [ ] toPlainYearMonth
-- [ ] toPlainMonthDay
+- [x] toPlainYearMonth
+- [x] toPlainMonthDay
 - [ ] getISOFields
 
 General features
@@ -265,7 +265,7 @@ Constructor
 
 static methods
 
-- [ ] from
+- [x] from
 - [ ] compare
 
 Properties
