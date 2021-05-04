@@ -38,13 +38,13 @@ export class PlainDate {
   static from<T = DateLike>(date: T): PlainDate {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return this.fromString(<string>date);
+      return PlainDate.fromString(<string>date);
     } else {
       if (isReference<T>()) {
         if (date instanceof PlainDate) {
-          return this.fromPlainDate(date);
+          return PlainDate.fromPlainDate(date);
         } else if (date instanceof DateLike) {
-          return this.fromDateLike(date);
+          return PlainDate.fromDateLike(date);
         }
       }
       throw new TypeError("invalid date type");
@@ -66,11 +66,7 @@ export class PlainDate {
 
   private static fromString(date: string): PlainDate {
     const parsed = parseISOString(date);
-    return new PlainDate(
-      parsed.year,
-      parsed.month,
-      parsed.day
-    );
+    return new PlainDate(parsed.year, parsed.month, parsed.day);
   }
 
   constructor(readonly year: i32, readonly month: i32, readonly day: i32) {
@@ -146,7 +142,11 @@ export class PlainDate {
     );
   }
 
-  until(date: PlainDate, largestUnit: TimeComponent = TimeComponent.Days): Duration {
+  until<T = DateLike>(
+    dateLike: T,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const date = PlainDate.from(dateLike);
     return differenceDate(
       this.year,
       this.month,
@@ -158,7 +158,11 @@ export class PlainDate {
     );
   }
 
-  since(date: PlainDate, largestUnit: TimeComponent = TimeComponent.Days): Duration {
+  since<T = DateLike>(
+    dateLike: T,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const date = PlainDate.from(dateLike);
     return differenceDate(
       date.year,
       date.month,
@@ -178,12 +182,15 @@ export class PlainDate {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDate {
+  add<T = DurationLike>(
+    durationToAdd: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainDate {
     const duration =
       durationToAdd instanceof DurationLike
         ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+        : // @ts-ignore TS2352
+          (durationToAdd as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -208,12 +215,15 @@ export class PlainDate {
     return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDate {
+  subtract<T = DurationLike>(
+    durationToSubtract: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainDate {
     const duration =
       durationToSubtract instanceof DurationLike
         ? durationToSubtract.toDuration()
-        // @ts-ignore TS2352
-        : durationToSubtract as Duration;
+        : // @ts-ignore TS2352
+          (durationToSubtract as Duration);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -242,8 +252,17 @@ export class PlainDate {
 
   toPlainDateTime(time: PlainTime | null = null): PlainDateTime {
     if (time) {
-      return new PlainDateTime(this.year, this.month, this.day,
-        time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond);
+      return new PlainDateTime(
+        this.year,
+        this.month,
+        this.day,
+        time.hour,
+        time.minute,
+        time.second,
+        time.millisecond,
+        time.microsecond,
+        time.nanosecond
+      );
     } else {
       return new PlainDateTime(this.year, this.month, this.day);
     }
@@ -259,7 +278,7 @@ export class PlainDate {
 
   toZonedDateTime(tz: TimeZone, time: PlainTime | null = null): ZonedDateTime {
     const dt = this.toPlainDateTime(time);
-    const offset = tz.getOffsetNanosecondsFor(new Instant(dt.epochNanoseconds))
+    const offset = tz.getOffsetNanosecondsFor(new Instant(dt.epochNanoseconds));
     return new ZonedDateTime(dt.epochNanoseconds - offset, tz);
   }
 

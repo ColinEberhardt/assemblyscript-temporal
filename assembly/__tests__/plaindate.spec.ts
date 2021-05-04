@@ -91,47 +91,45 @@ describe("Date.toPlainDateTime() works", () => {
     ).toBe("1976-11-18T11:30:23");
   });
   it("defaults to zero hours / mins / seconds", () => {
-    expect(
-      PlainDate.from("1976-11-18")
-        .toPlainDateTime()
-        .toString()
-    ).toBe("1976-11-18T00:00:00");
+    expect(PlainDate.from("1976-11-18").toPlainDateTime().toString()).toBe(
+      "1976-11-18T00:00:00"
+    );
   });
 });
 
 describe("Date.toPlainYearMonth() works", () => {
   it("combines the date and time", () => {
-    expect(
-      PlainDate.from("1976-11-18")
-        .toPlainYearMonth()
-        .toString()
-    ).toBe("1976-11");
+    expect(PlainDate.from("1976-11-18").toPlainYearMonth().toString()).toBe(
+      "1976-11"
+    );
   });
 });
 
 describe("Date.toPlainMonthDay() works", () => {
   it("combines the date and time", () => {
-    expect(
-      PlainDate.from("1976-11-18")
-        .toPlainMonthDay()
-        .toString()
-    ).toBe("11-18");
+    expect(PlainDate.from("1976-11-18").toPlainMonthDay().toString()).toBe(
+      "11-18"
+    );
   });
 });
 
 describe("Date.toZonedDateTime()", function () {
-  it('works', () => {
-    const date = PlainDate.from('2020-01-01');
-    const time = PlainTime.from('12:00');
-    const tz = TimeZone.from('America/Los_Angeles');
+  it("works", () => {
+    const date = PlainDate.from("2020-01-01");
+    const time = PlainTime.from("12:00");
+    const tz = TimeZone.from("America/Los_Angeles");
     const zdt = date.toZonedDateTime(tz, time);
-    expect(zdt.toString()).toBe('2020-01-01T12:00:00-08:00[America/Los_Angeles]')
+    expect(zdt.toString()).toBe(
+      "2020-01-01T12:00:00-08:00[America/Los_Angeles]"
+    );
   });
-  it('works with time omitted (timeZone argument)', () => {
-    const date = PlainDate.from('2020-01-01');
-    const tz = TimeZone.from('America/Los_Angeles');
+  it("works with time omitted (timeZone argument)", () => {
+    const date = PlainDate.from("2020-01-01");
+    const tz = TimeZone.from("America/Los_Angeles");
     const zdt = date.toZonedDateTime(tz);
-    expect(zdt.toString()).toBe('2020-01-01T00:00:00-08:00[America/Los_Angeles]')
+    expect(zdt.toString()).toBe(
+      "2020-01-01T00:00:00-08:00[America/Los_Angeles]"
+    );
   });
 });
 
@@ -180,9 +178,11 @@ describe("date.until() works", () => {
     expect(duration.microseconds).toBe(0);
     expect(duration.nanoseconds).toBe(0);
   });
-  xit("casts argument", () => {
-    // expect(date.until({ year: 2019, month: 7, day: 24 }).toString()).toBe('P18262D');
-    // expect(date.until('2019-07-24').toString()).toBe('P18262D');
+  it("casts argument", () => {
+    expect(date.until({ year: 2019, month: 7, day: 24 }).toString()).toBe(
+      "P18262D"
+    );
+    expect(date.until("2019-07-24").toString()).toBe("P18262D");
   });
   it("takes days per month into account", () => {
     const date1 = PlainDate.from("2019-01-01");
@@ -410,9 +410,11 @@ describe("date.since() works", () => {
     expect(duration.microseconds).toBe(0);
     expect(duration.nanoseconds).toBe(0);
   });
-  xit("casts argument", () => {
-    // expect(date.since({ year: 2019, month: 11, day: 5 }).toString()).toBe('-P15692D')
-    // expect(date.since('2019-11-05').toString()).toBe('-P15692D')
+  it("casts argument", () => {
+    expect(date.since({ year: 2019, month: 11, day: 5 }).toString()).toBe(
+      "-P15692D"
+    );
+    expect(date.since("2019-11-05").toString()).toBe("-P15692D");
   });
   xit("takes days per month into account", () => {
     const date1 = PlainDate.from("2019-01-01");

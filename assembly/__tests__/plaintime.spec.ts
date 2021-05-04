@@ -204,12 +204,14 @@ describe(".with manipulation", () => {
 });
 
 describe("time.toZonedDateTime()", function () {
-  it('works', () => {
-    const date = PlainDate.from('2020-01-01');
-    const time = PlainTime.from('12:00');
-    const tz = TimeZone.from('America/Los_Angeles');
+  it("works", () => {
+    const date = PlainDate.from("2020-01-01");
+    const time = PlainTime.from("12:00");
+    const tz = TimeZone.from("America/Los_Angeles");
     const zdt = time.toZonedDateTime(tz, date);
-    expect(zdt.toString()).toBe('2020-01-01T12:00:00-08:00[America/Los_Angeles]')
+    expect(zdt.toString()).toBe(
+      "2020-01-01T12:00:00-08:00[America/Los_Angeles]"
+    );
   });
 });
 
@@ -259,7 +261,7 @@ describe("time.until() works", () => {
       expect(two.until(time).toString()).toBe("-PT1H37M");
     }
   );
-  xit(
+  it(
     "(" +
       time.toString() +
       ").until(" +
@@ -270,17 +272,15 @@ describe("time.until() works", () => {
       time.toString() +
       ")",
     () => {
-      // expect(time.until(two).toString()).toBe(two.since(time).toString());
+      expect(time.until(two).toString()).toBe(two.since(time).toString());
     }
   );
-  xit("casts argument", () => {
-    // expect(time.until({ hour: 16, minute: 34 }).toString()).toBe( "PT1H10M29.876543211S");
-    // expect(time.until("16:34").toString()).toBe( "PT1H10M29.876543211S");
+  it("casts argument", () => {
+    expect(time.until({ hour: 16, minute: 34 }).toString()).toBe(
+      "PT1H10M29.876543211S"
+    );
+    expect(time.until("16:34").toString()).toBe("PT1H10M29.876543211S");
   });
-  // xit("object must contain at least one correctly-spelled property", () => {
-  // throws(() => time.until({}), TypeError);
-  // throws(() => time.until({ minutes: 30 }), TypeError);
-  // });
   t1 = PlainTime.from("10:23:15");
   t2 = PlainTime.from("17:15:57");
   it("the default largest unit is at least hours", () => {
@@ -732,9 +732,11 @@ describe("time.since() works", () => {
       expect(two.since(time).toString()).toBe(time.until(two).toString());
     }
   );
-  xit("casts argument", () => {
-    // equal(`${time.since({ hour: 16, minute: 34 })}", '-PT1H10M29.876543211S');
-    // equal(`${time.since('16:34')}", '-PT1H10M29.876543211S');
+  it("casts argument", () => {
+    expect(`${time.since({ hour: 16, minute: 34 })}`).toBe(
+      "-PT1H10M29.876543211S"
+    );
+    expect(`${time.since("16:34")}`).toBe("-PT1H10M29.876543211S");
   });
   // it('object must contain at least one correctly-spelled property', () => {
   //   throws(() => time.since({}), TypeError);
