@@ -6,11 +6,14 @@
   "ascMain": "assembly/index.ts",
   "types": "assembly/index.ts",
   "scripts": {
-    "test": "asp --verbose --nologo",
-    "test:ci": "asp --summary",
+    "pretest": "npm run asbuild:empty",
+    "test": "asp --verbose --nologo && npm run test:empty",
+    "test:empty": "diff build/empty.wat assembly/__tests__/empty.wat",
+    "test:ci": "asp --summary && npm run test:empty",
     "asbuild:untouched": "asc assembly/index.ts --target debug",
     "asbuild:optimized": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "asbuild:empty": "asc --config asconfig.empty.json"
   },
   "author": "colin.eberhardt@gmail.com",
   "license": "MIT",
@@ -21,6 +24,6 @@
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "assemblyscript-regex": "^1.6.2"
+    "assemblyscript-regex": "^1.6.3"
   }
 }
