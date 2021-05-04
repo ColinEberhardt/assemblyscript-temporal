@@ -186,11 +186,7 @@ export class PlainDate {
     durationToAdd: T,
     overflow: Overflow = Overflow.Constrain
   ): PlainDate {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+    const duration = Duration.from(durationToAdd);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -219,11 +215,7 @@ export class PlainDate {
     durationToSubtract: T,
     overflow: Overflow = Overflow.Constrain
   ): PlainDate {
-    const duration =
-      durationToSubtract instanceof DurationLike
-        ? durationToSubtract.toDuration()
-        : // @ts-ignore TS2352
-          (durationToSubtract as Duration);
+    const duration = Duration.from(durationToSubtract);
 
     const balancedDuration = balanceDuration(
       duration.days,

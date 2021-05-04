@@ -38,14 +38,31 @@ export class DurationLike {
 }
 
 export class Duration {
-  static from<T = DurationLike>(date: T): Duration {
+  static from<T = DurationLike>(duration: T): Duration {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return Duration.fromString(<string>date);
-    } else if (date instanceof DurationLike) {
-      return Duration.fromDurationLike(date);
+      return Duration.fromString(<string>duration);
+    } else if (duration instanceof DurationLike) {
+      return Duration.fromDurationLike(duration);
+    } else if (duration instanceof Duration) {
+      return Duration.fromDuration(duration);
     }
     throw new TypeError("invalid duration type");
+  }
+
+  private static fromDuration(duration: Duration): Duration {
+    return new Duration(
+      duration.years,
+      duration.months,
+      duration.weeks,
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds
+    );
   }
 
   private static fromString(duration: string): Duration {
@@ -171,11 +188,7 @@ export class Duration {
   }
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+    const duration = Duration.from(durationToAdd);
 
     return addDuration(this.years,
       this.months,
@@ -202,11 +215,7 @@ export class Duration {
   }
 
   subtract<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+    const duration = Duration.from(durationToAdd);
 
     return addDuration(this.years,
       this.months,

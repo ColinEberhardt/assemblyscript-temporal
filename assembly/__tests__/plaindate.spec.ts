@@ -624,11 +624,11 @@ describe("date.add() works", () => {
       "2019-02-28"
     );
   });
-  xit("date.add(durationObj)", () => {
+  it("date.add(durationObj)", () => {
     expect(date.add(new Duration(43)).toString()).toBe("2019-11-18");
   });
-  xit("casts argument", () => {
-    // expect(date.add('P43Y').toString()).toBe('2019-11-18');
+  it("casts argument", () => {
+    expect(date.add("P43Y").toString()).toBe("2019-11-18");
   });
   xit("constrain when overflowing result", () => {
     //   const jan31 = PlainDate.from('2020-01-31');
@@ -724,11 +724,11 @@ describe("date.subtract() works", () => {
       PlainDate.from("2019-02-28").subtract({ months: 1 }).toString()
     ).toBe("2019-01-28");
   });
-  xit("Date.subtract(durationObj)", () => {
+  it("Date.subtract(durationObj)", () => {
     expect(date.subtract(new Duration(43)).toString()).toBe("1976-11-18");
   });
-  xit("casts argument", () => {
-    //     expect(date.subtract('P43Y').toString()).toBe('1976-11-18');
+  it("casts argument", () => {
+    expect(date.subtract("P43Y").toString()).toBe("1976-11-18");
   });
   xit("constrain when overflowing result", () => {
     //     const mar31 = PlainDate.from('2020-03-31');
