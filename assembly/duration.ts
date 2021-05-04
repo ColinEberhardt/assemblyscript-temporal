@@ -5,6 +5,8 @@ import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./consta
 import { PlainDateTime } from "./plaindatetime";
 import { TimeComponent } from "./enums";
 
+// @ts-ignore
+@lazy 
 const NULL = i32.MAX_VALUE;
 
 export class DurationLike {

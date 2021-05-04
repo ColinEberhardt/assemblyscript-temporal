@@ -1,5 +1,3 @@
-/// <reference types="@as-pect/assembly/types/as-pect" />
-
 import { Disambiguation } from "../enums";
 import { Instant } from "../instant";
 import { PlainDateTime } from "../plaindatetime";

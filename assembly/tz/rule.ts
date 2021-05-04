@@ -1,6 +1,7 @@
 import { daysInMonth, dayOfWeek } from "../utils";
 import { JsDate } from "../date";
 
+@inline
 export enum AtTimeZone {
   // the 'at' time is measured in local time, i.e. incorporates daylight saving
   Local,

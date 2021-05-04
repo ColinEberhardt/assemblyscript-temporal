@@ -1,5 +1,3 @@
-/// <reference types="@as-pect/assembly/types/as-pect" />
-
 import { Duration, DurationLike } from "../duration";
 import { Overflow } from "../enums";
 import { PlainDate } from "../plaindate";

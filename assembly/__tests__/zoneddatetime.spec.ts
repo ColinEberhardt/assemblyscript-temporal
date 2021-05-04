@@ -1,6 +1,4 @@
-/// <reference types="@as-pect/assembly/types/as-pect" />
-
-import { ZonedDateTime, TimeZone } from "../index";
+import { ZonedDateTime, TimeZone } from "..";
 
 const tz = new TimeZone("America/Los_Angeles");
 
