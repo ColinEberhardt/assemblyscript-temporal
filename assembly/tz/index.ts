@@ -1,6 +1,8 @@
 import { zones, rules } from "./iana";
 import { AtTimeZone } from "./rule";
 
+// @ts-ignore
+@lazy
 let n: string;
 
 // returns the offset in milliseconds for a time, defined in UTC as the number
