@@ -366,9 +366,9 @@ describe("DateTime.add() works", () => {
     //          throws(() => jan31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
     //        );
   });
-  xit("casts argument", () => {
-    //        expect(`${jan31.add(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T15:00:01');
-    //        expect(`${jan31.add('P1MT1S')}`).toBe('2020-02-29T15:00:01');
+  it("casts argument", () => {
+    expect(`${jan31.add(Duration.from("P1MT1S"))}`).toBe("2020-02-29T15:00:01");
+    expect(`${jan31.add("P1MT1S")}`).toBe("2020-02-29T15:00:01");
   });
 });
 
@@ -411,9 +411,11 @@ describe("date.subtract() works", () => {
     //   throws(() => mar31.add({ hours: 1, minutes: -30 }, { overflow }), RangeError)
     // );
   });
-  xit("casts argument", () => {
-    // expect(`${mar31.subtract(Temporal.Duration.from('P1MT1S'))}`).toBe('2020-02-29T14:59:59');
-    // expect(`${mar31.subtract('P1MT1S')}`).toBe('2020-02-29T14:59:59');
+  it("casts argument", () => {
+    expect(`${mar31.subtract(Duration.from("P1MT1S"))}`).toBe(
+      "2020-02-29T14:59:59"
+    );
+    expect(`${mar31.subtract("P1MT1S")}`).toBe("2020-02-29T14:59:59");
   });
 });
 

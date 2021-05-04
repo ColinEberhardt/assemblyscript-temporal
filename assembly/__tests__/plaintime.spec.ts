@@ -1073,13 +1073,14 @@ describe("time.add() works", () => {
         .toString()
     ).toBe("15:23:30.123456789");
   });
-  // it("time.add(durationObj)", () => {
-  //   expect(time.add(Duration.from("PT16H")).toString()).toBe(
-  //     "07:23:30.123456789"
-  //   );
-  // });
-  // it("casts argument", () =>
-  //   expect(time.add("PT16H").toString()).toBe("07:23:30.123456789"));
+  it("time.add(durationObj)", () => {
+    expect(time.add(Duration.from("PT16H")).toString()).toBe(
+      "07:23:30.123456789"
+    );
+  });
+  it("casts argument", () => {
+    expect(time.add("PT16H").toString()).toBe("07:23:30.123456789");
+  });
   // it("ignores higher units", () => {
   //   expect(time.add({ days: 1 }).toString()).toBe("15:23:30.123456789");
   //   expect(time.add({ months: 1 }).toString()).toBe("15:23:30.123456789");
@@ -1182,13 +1183,14 @@ describe("time.subtract() works", () => {
         .toString()
     ).toBe("15:23:30.123456789");
   });
-  // it("time.subtract(durationObj)", () => {
-  //   expect(time.subtract(Temporal.Duration.from("PT16H")).toString()).toBe(
-  //     "23:23:30.123456789"
-  //   );
-  // });
-  // it("casts argument", () =>
-  //   expect(time.subtract("PT16H").toString()).toBe("23:23:30.123456789"));
+  it("time.subtract(durationObj)", () => {
+    expect(time.subtract(Duration.from("PT16H")).toString()).toBe(
+      "23:23:30.123456789"
+    );
+  });
+  it("casts argument", () => {
+    expect(time.subtract("PT16H").toString()).toBe("23:23:30.123456789");
+  });
   it("ignores higher units", () => {
     expect(time.subtract({ days: 1 }).toString()).toBe("15:23:30.123456789");
     expect(time.subtract({ months: 1 }).toString()).toBe("15:23:30.123456789");

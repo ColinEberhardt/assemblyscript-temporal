@@ -3,7 +3,11 @@ import { RegExp } from "assemblyscript-regex";
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainTime } from "./plaintime";
-import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
+import {
+  MICROS_PER_SECOND,
+  MILLIS_PER_SECOND,
+  NANOS_PER_SECOND,
+} from "./constants";
 import {
   dayOfWeek,
   dayOfYear,
@@ -157,8 +161,17 @@ export class PlainDateTime {
 
   @inline
   get epochNanoseconds(): i64 {
-    return epochFromParts(this.year, this.month, this.day, this.hour, this.minute,
-      this.second, this.millisecond, this.microsecond, this.nanosecond)
+    return epochFromParts(
+      this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond
+    );
   }
 
   with(dateTimeLike: DateTimeLike): PlainDateTime {
@@ -189,16 +202,15 @@ export class PlainDateTime {
       toPaddedString(this.minute) +
       ":" +
       toPaddedString(this.second) +
-      (this.nanosecond  != 0 ||
-       this.microsecond != 0 ||
-       this.millisecond != 0
+      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
         ? (
-            f64(this.nanosecond)  / NANOS_PER_SECOND +
+            f64(this.nanosecond) / NANOS_PER_SECOND +
             f64(this.microsecond) / MICROS_PER_SECOND +
             f64(this.millisecond) / MILLIS_PER_SECOND
-          ).toString().substring(1)
-        : ""
-      )
+          )
+            .toString()
+            .substring(1)
+        : "")
     );
   }
 
@@ -214,15 +226,13 @@ export class PlainDateTime {
   }
 
   toPlainDate(): PlainDate {
-    return new PlainDate(
-      this.year,
-      this.month,
-      this.day
-    );
+    return new PlainDate(this.year, this.month, this.day);
   }
 
   toZonedDateTime(tz: TimeZone): ZonedDateTime {
-    const offset = tz.getOffsetNanosecondsFor(new Instant(this.epochNanoseconds))
+    const offset = tz.getOffsetNanosecondsFor(
+      new Instant(this.epochNanoseconds)
+    );
     return new ZonedDateTime(this.epochNanoseconds - offset, tz);
   }
 
@@ -274,12 +284,11 @@ export class PlainDateTime {
     );
   }
 
-  add<T = DurationLike>(durationToAdd: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+  add<T = DurationLike>(
+    durationToAdd: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainDateTime {
+    const duration = Duration.from(durationToAdd);
 
     const newDate = addDateTime(
       this.year,
@@ -316,12 +325,11 @@ export class PlainDateTime {
     );
   }
 
-  subtract<T = DurationLike>(durationToSubtract: T, overflow: Overflow = Overflow.Constrain): PlainDateTime {
-    const duration =
-      durationToSubtract instanceof DurationLike
-        ? durationToSubtract.toDuration()
-        // @ts-ignore TS2352
-        : durationToSubtract as Duration;
+  subtract<T = DurationLike>(
+    durationToSubtract: T,
+    overflow: Overflow = Overflow.Constrain
+  ): PlainDateTime {
+    const duration = Duration.from(durationToSubtract);
 
     const newDate = addDateTime(
       this.year,

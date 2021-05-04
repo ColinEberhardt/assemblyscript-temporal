@@ -900,8 +900,9 @@ describe("YearMonth", () => {
     it("yearMonth.add(durationObj)", () => {
       expect(ym.add(new Duration(0, 2)).toString()).toBe("2020-01");
     });
-    xit("casts argument", () => {});
-    // expect(ym.add("P2M").toString()).toBe("2020-01"));
+    it("casts argument", () => {;
+      expect(ym.add("P2M").toString()).toBe("2020-01");
+    });
     it("ignores lower units that don't balance up to the length of the month", () => {
       expect(ym.add({ days: 1 }).toString()).toBe("2019-11");
       expect(ym.add({ days: 29 }).toString()).toBe("2019-11");
@@ -1014,8 +1015,9 @@ describe("YearMonth", () => {
     it("yearMonth.subtract(durationObj)", () => {
       expect(ym.subtract(new Duration(0, 11)).toString()).toBe("2018-12");
     });
-    xit("casts argument", () => {});
-    // expect(ym.subtract("P11M").toString()).toBe("2018-12"));
+    it("casts argument", () => {;
+      expect(ym.subtract("P11M").toString()).toBe("2018-12");
+    });
     it("ignores lower units that don't balance up to the length of the month", () => {
       expect(ym.subtract({ days: 1 }).toString()).toBe("2019-11");
       expect(ym.subtract({ hours: 1 }).toString()).toBe("2019-11");

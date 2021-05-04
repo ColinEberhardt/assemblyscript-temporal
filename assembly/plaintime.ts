@@ -318,11 +318,7 @@ export class PlainTime {
   }
 
   add<T = DurationLike>(durationToAdd: T): PlainTime {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        // @ts-ignore TS2352
-        : durationToAdd as Duration;
+    const duration = Duration.from(durationToAdd);
 
     const newTime = addTime(
       this.hour,
@@ -359,11 +355,7 @@ export class PlainTime {
   }
 
   subtract<T = DurationLike>(durationToSubtract: T): PlainTime {
-    const duration =
-      durationToSubtract instanceof DurationLike
-        ? durationToSubtract.toDuration()
-        // @ts-ignore TS2352
-        : durationToSubtract as Duration;
+    const duration = Duration.from(durationToSubtract);
 
     const newTime = addTime(
       this.hour,

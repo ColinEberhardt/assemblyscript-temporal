@@ -194,11 +194,7 @@ export class PlainYearMonth {
     durationToAdd: T,
     overflow: Overflow = Overflow.Constrain
   ): PlainYearMonth {
-    const duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+    const duration = Duration.from(durationToAdd);
 
     const balancedDuration = balanceDuration(
       duration.days,
@@ -228,11 +224,7 @@ export class PlainYearMonth {
     durationToAdd: T,
     overflow: Overflow = Overflow.Constrain
   ): PlainYearMonth {
-    let duration =
-      durationToAdd instanceof DurationLike
-        ? durationToAdd.toDuration()
-        : // @ts-ignore TS2352
-          (durationToAdd as Duration);
+    let duration = Duration.from(durationToAdd);
 
     duration = new Duration(
       -duration.years,
