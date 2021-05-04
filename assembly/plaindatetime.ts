@@ -42,13 +42,13 @@ export class PlainDateTime {
   static from<T = DateTimeLike>(date: T): PlainDateTime {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return this.fromString(<string>date);
+      return PlainDateTime.fromString(<string>date);
     } else {
       if (isReference<T>()) {
         if (date instanceof PlainDateTime) {
-          return this.fromPlainDateTime(date);
+          return PlainDateTime.fromPlainDateTime(date);
         } else if (date instanceof DateTimeLike) {
-          return this.fromDateTimeLike(date);
+          return PlainDateTime.fromDateTimeLike(date);
         }
       }
       throw new TypeError("invalid date type");

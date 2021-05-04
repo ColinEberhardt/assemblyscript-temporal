@@ -32,15 +32,15 @@ export class PlainTime {
   static from<T = TimeLike>(time: T): PlainTime {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return this.fromString(<string>time);
+      return PlainTime.fromString(<string>time);
     } else {
       if (isReference<T>()) {
         if (time instanceof PlainTime) {
-          return this.fromPlainTime(time);
+          return PlainTime.fromPlainTime(time);
         } else if (time instanceof TimeLike) {
-          return this.fromTimeLike(time);
+          return PlainTime.fromTimeLike(time);
         } else if (time instanceof PlainDateTime) {
-          return this.fromPlainDateTime(time);
+          return PlainTime.fromPlainDateTime(time);
         }
       }
       throw new TypeError("invalid time type");
@@ -210,13 +210,15 @@ export class PlainTime {
     return date.toZonedDateTime(tz, this);
   }
 
-  until(
-    other: PlainTime,
+  until<T = TimeLike>(
+    otherLike: T,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
     if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
+
+    const other = PlainTime.from(otherLike);
 
     let diffTime = differenceTime(
       this.hour,
@@ -245,13 +247,15 @@ export class PlainTime {
     );
   }
 
-  since(
-    other: PlainTime,
+  since<T = TimeLike>(
+    otherLike: T,
     largestUnit: TimeComponent = TimeComponent.Hours
   ): Duration {
     if (largestUnit >= TimeComponent.Years && largestUnit <= TimeComponent.Days) {
       throw new RangeError("higher units are not allowed");
     }
+
+    const other = PlainTime.from(otherLike);
 
     let diffTime = differenceTime(
       this.hour,

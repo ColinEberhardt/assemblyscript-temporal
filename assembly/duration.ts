@@ -39,9 +39,9 @@ export class Duration {
   static from<T = DurationLike>(date: T): Duration {
     if (isString<T>()) {
       // @ts-ignore: cast
-      return this.fromString(<string>date);
+      return Duration.fromString(<string>date);
     } else if (date instanceof DurationLike) {
-      return this.fromDurationLike(date);
+      return Duration.fromDurationLike(date);
     }
     throw new TypeError("invalid duration type");
   }

@@ -409,7 +409,7 @@ describe("YearMonth", () => {
     nov94 = PlainYearMonth.from("1994-11");
     jun13 = PlainYearMonth.from("2013-06");
     diff = nov94.until(jun13);
-    xit(
+    it(
       "(" +
         jun13.toString() +
         ").until((" +
@@ -420,7 +420,7 @@ describe("YearMonth", () => {
         jun13.toString() +
         ")).negated()",
       () => {
-        // expect(jun13.until(nov94).toString()).toBe(diff.negated())
+         expect(jun13.until(nov94).toString()).toBe(diff.negated().toString())
       }
     );
 
@@ -462,9 +462,9 @@ describe("YearMonth", () => {
         expect(diff.toString()).toBe(jun13.since(nov94).toString());
       }
     );
-    xit("casts argument", () => {
-      // equal("${nov94.until({ year: 2013, month: 6 })}", "" + diff.toString() + "");
-      // equal("${nov94.until("2013-06")}", "" + diff.toString() + "");
+    it("casts argument", () => {
+      expect(`${nov94.until({ year: 2013, month: 6 })}`).toBe(diff.toString());
+      expect(`${nov94.until("2013-06")}`).toBe(diff.toString());
     });
     //   it("object must contain at least the required properties", () => {
     //     throws(() => nov94.until({ year: 2013 }), TypeError);
