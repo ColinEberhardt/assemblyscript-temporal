@@ -3,7 +3,7 @@ import { PlainDateTime } from "./plaindatetime";
 import {
   getPartsFromEpoch,
   balanceDateTime,
-  formatTimeZoneOffsetString
+  formatTimeZoneOffsetString,
 } from "./utils";
 import { offsetForTimezoneNanos, offsetForTimezone } from "./tz/index";
 import { Disambiguation } from "./enums";
@@ -11,6 +11,10 @@ import { DurationLike } from "./duration";
 import { MILLIS_PER_DAY, NANOS_PER_DAY } from "./constants";
 
 export class TimeZone {
+  static from(id: string): TimeZone {
+    return new TimeZone(id);
+  }
+
   constructor(public id: string) {}
 
   getOffsetNanosecondsFor(instant: Instant): i64 {
@@ -56,7 +60,10 @@ export class TimeZone {
   getPossibleInstantsFor(dateTime: PlainDateTime): Instant[] {
     // see: ES.GetIANATimeZoneEpochValue
     const epochNanos = dateTime.epochNanoseconds;
-    const earliest = offsetForTimezoneNanos(this.id, epochNanos - NANOS_PER_DAY);
+    const earliest = offsetForTimezoneNanos(
+      this.id,
+      epochNanos - NANOS_PER_DAY
+    );
     const latest = offsetForTimezoneNanos(this.id, epochNanos + NANOS_PER_DAY);
 
     const earliestDateTime = this.getPlainDateTimeFor(

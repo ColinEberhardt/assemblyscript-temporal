@@ -19,6 +19,11 @@ import {
   epochFromParts,
 } from "./utils";
 import { PlainDate } from "./plaindate";
+import { PlainYearMonth } from "./plainyearmonth";
+import { PlainMonthDay } from "./plainmonthday";
+import { TimeZone } from "./timezone";
+import { Instant } from "./instant";
+import { ZonedDateTime } from "./zoneddatetime";
 
 export class DateTimeLike {
   year: i32 = -1;
@@ -214,6 +219,19 @@ export class PlainDateTime {
       this.month,
       this.day
     );
+  }
+
+  toZonedDateTime(tz: TimeZone): ZonedDateTime {
+    const offset = tz.getOffsetNanosecondsFor(new Instant(this.epochNanoseconds))
+    return new ZonedDateTime(this.epochNanoseconds - offset, tz);
+  }
+
+  toPlainYearMonth(): PlainYearMonth {
+    return new PlainYearMonth(this.year, this.month);
+  }
+
+  toPlainMonthDay(): PlainMonthDay {
+    return new PlainMonthDay(this.month, this.day);
   }
 
   static compare(a: PlainDateTime, b: PlainDateTime): i32 {

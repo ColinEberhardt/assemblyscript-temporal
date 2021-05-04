@@ -3,6 +3,7 @@ import { TimeComponent } from "../enums";
 import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 import { PlainTime, TimeLike } from "../plaintime";
+import { TimeZone } from "../timezone";
 
 let time: PlainTime,
   t1: PlainTime,
@@ -202,6 +203,16 @@ describe(".with manipulation", () => {
   // });
 });
 
+describe("time.toZonedDateTime()", function () {
+  it('works', () => {
+    const date = PlainDate.from('2020-01-01');
+    const time = PlainTime.from('12:00');
+    const tz = TimeZone.from('America/Los_Angeles');
+    const zdt = time.toZonedDateTime(tz, date);
+    expect(zdt.toString()).toBe('2020-01-01T12:00:00-08:00[America/Los_Angeles]')
+  });
+});
+
 describe("time.toPlainDateTime() works", () => {
   time = PlainTime.from("11:30:23.123456789");
   dt = time.toPlainDateTime({ year: 1976, month: 11, day: 18 });
@@ -221,14 +232,6 @@ describe("time.toPlainDateTime() works", () => {
       time.toPlainDateTime({ year: 1976, month: 11, day: 18 }).toString()
     ).toBe("1976-11-18T11:30:23.123456789");
   });
-  xit("casts argument string like", () => {
-    // expect(time.toPlainDateTime("1976-11-18").toString()).toBe(
-    //   "1976-11-18T11:30:23.123456789"
-    // );
-  });
-  // it("object must contain at least the required properties", () => {
-  //   throws(() => time.toPlainDateTime({ year: 1976 }), TypeError);
-  // });
 });
 
 let one: PlainTime;

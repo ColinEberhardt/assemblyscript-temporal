@@ -2,6 +2,9 @@ import { PlainDate } from "..";
 import { Duration, DurationLike } from "../duration";
 import { TimeComponent, Overflow } from "../enums";
 import { DateLike } from "../plaindate";
+import { PlainDateTime } from "../plaindatetime";
+import { PlainTime } from "../plaintime";
+import { TimeZone } from "../timezone";
 
 let date: PlainDate;
 
@@ -80,54 +83,56 @@ describe(".with manipulation", () => {
 });
 
 describe("Date.toPlainDateTime() works", () => {
-  // const date = PlainDate.from('1976-11-18');
-  // const dt = date.toPlainDateTime(Temporal.PlainTime.from('11:30:23'));
-  // it('returns a Temporal.PlainDateTime', () => assert(dt instanceof Temporal.PlainDateTime));
-  // it('combines the date and time', () => expect(dt.toString()).toBe('1976-11-18T11:30:23'))
-  // it('casts argument', () => {
-  //   expect(date.toPlainDateTime({ hour: 11, minute: 30, second: 23 }).toString()).toBe('1976-11-18T11:30:23')
-  //   expect(date.toPlainDateTime('11:30:23').toString()).toBe('1976-11-18T11:30:23')
-  // });
-  // it('object must contain at least one correctly-spelled property', () => {
-  //   throws(() => date.toPlainDateTime({}), TypeError);
-  //   throws(() => date.toPlainDateTime({ minutes: 30 }), TypeError);
-  // });
-  // it('optional argument defaults to midnight', () => {
-  //   expect(date.toPlainDateTime().toString()).toBe('1976-11-18T00:00:00')
-  // });
+  it("combines the date and time", () => {
+    expect(
+      PlainDate.from("1976-11-18")
+        .toPlainDateTime(PlainTime.from("11:30:23"))
+        .toString()
+    ).toBe("1976-11-18T11:30:23");
+  });
+  it("defaults to zero hours / mins / seconds", () => {
+    expect(
+      PlainDate.from("1976-11-18")
+        .toPlainDateTime()
+        .toString()
+    ).toBe("1976-11-18T00:00:00");
+  });
 });
+
+describe("Date.toPlainYearMonth() works", () => {
+  it("combines the date and time", () => {
+    expect(
+      PlainDate.from("1976-11-18")
+        .toPlainYearMonth()
+        .toString()
+    ).toBe("1976-11");
+  });
+});
+
+describe("Date.toPlainMonthDay() works", () => {
+  it("combines the date and time", () => {
+    expect(
+      PlainDate.from("1976-11-18")
+        .toPlainMonthDay()
+        .toString()
+    ).toBe("11-18");
+  });
+});
+
 describe("Date.toZonedDateTime()", function () {
-  // it('works', () => {
-  //   const date = PlainDate.from('2020-01-01');
-  //   const time = Temporal.PlainTime.from('12:00');
-  //   const tz = Temporal.TimeZone.from('America/Los_Angeles');
-  //   const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: time });
-  //   expect(zdt.toString()).toBe('2020-01-01T12:00:00-08:00[America/Los_Angeles]')
-  // });
-  // it('works with time omitted (timeZone argument)', () => {
-  //   const date = PlainDate.from('2020-01-01');
-  //   const tz = Temporal.TimeZone.from('America/Los_Angeles');
-  //   const zdt = date.toZonedDateTime(tz);
-  //   expect(zdt.toString()).toBe('2020-01-01T00:00:00-08:00[America/Los_Angeles]')
-  // });
-  // it('works with time omitted (timeZone property)', () => {
-  //   const date = PlainDate.from('2020-01-01');
-  //   const tz = Temporal.TimeZone.from('America/Los_Angeles');
-  //   const zdt = date.toZonedDateTime({ timeZone: tz });
-  //   expect(zdt.toString()).toBe('2020-01-01T00:00:00-08:00[America/Los_Angeles]')
-  // });
-  // it('casts timeZone property', () => {
-  //   const date = PlainDate.from('2020-07-08');
-  //   const time = Temporal.PlainTime.from('12:00');
-  //   const zdt = date.toZonedDateTime({ timeZone: 'America/Los_Angeles', plainTime: time });
-  //   expect(zdt.toString()).toBe('2020-07-08T12:00:00-07:00[America/Los_Angeles]')
-  // });
-  // it('casts time property', () => {
-  //   const date = PlainDate.from('2020-07-08');
-  //   const tz = Temporal.TimeZone.from('America/Los_Angeles');
-  //   const zdt = date.toZonedDateTime({ timeZone: tz, plainTime: '12:00' });
-  //   expect(zdt.toString()).toBe('2020-07-08T12:00:00-07:00[America/Los_Angeles]')
-  // });
+  it('works', () => {
+    const date = PlainDate.from('2020-01-01');
+    const time = PlainTime.from('12:00');
+    const tz = TimeZone.from('America/Los_Angeles');
+    const zdt = date.toZonedDateTime(tz, time);
+    expect(zdt.toString()).toBe('2020-01-01T12:00:00-08:00[America/Los_Angeles]')
+  });
+  it('works with time omitted (timeZone argument)', () => {
+    const date = PlainDate.from('2020-01-01');
+    const tz = TimeZone.from('America/Los_Angeles');
+    const zdt = date.toZonedDateTime(tz);
+    expect(zdt.toString()).toBe('2020-01-01T00:00:00-08:00[America/Los_Angeles]')
+  });
 });
 
 let feb20: PlainDate,
@@ -601,35 +606,21 @@ describe("date.add() works", () => {
   let date = new PlainDate(1976, 11, 18);
   it("date.add({ years: 43 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .add({ years: 43 })
-        .toString()
-    ).toBe("2019-11-18");
+    expect(date.add({ years: 43 }).toString()).toBe("2019-11-18");
   });
   it("date.add({ months: 3 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .add({ months: 3 })
-        .toString()
-    ).toBe("1977-02-18");
+    expect(date.add({ months: 3 }).toString()).toBe("1977-02-18");
   });
   it("date.add({ days: 20 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .add({ days: 20 })
-        .toString()
-    ).toBe("1976-12-08");
+    expect(date.add({ days: 20 }).toString()).toBe("1976-12-08");
   });
   it("new Date(2019, 1, 31).add({ months: 1 })", () => {
     // @ts-ignore
-    expect(
-      new PlainDate(2019, 1, 31)
-        .add({ months: 1 })
-        .toString()
-    ).toBe("2019-02-28");
+    expect(new PlainDate(2019, 1, 31).add({ months: 1 }).toString()).toBe(
+      "2019-02-28"
+    );
   });
   xit("date.add(durationObj)", () => {
     expect(date.add(new Duration(43)).toString()).toBe("2019-11-18");
@@ -644,111 +635,54 @@ describe("date.add() works", () => {
   });
   it("throw when overflowing result with reject", () => {
     throws("TypeError", () => {
-      new PlainDate(2020, 1, 31)
-        .add({ months: 1 }, Overflow.Reject)
+      new PlainDate(2020, 1, 31).add({ months: 1 }, Overflow.Reject);
     });
   });
   it("symmetrical with regard to negative durations", () => {
     // @ts-ignore
-    expect(
-      PlainDate.from("2019-11-18")
-        .add({ years: -43 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(PlainDate.from("2019-11-18").add({ years: -43 }).toString()).toBe(
+      "1976-11-18"
+    );
     // @ts-ignore
-    expect(
-      PlainDate.from("1977-02-18")
-        .add({ months: -3 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(PlainDate.from("1977-02-18").add({ months: -3 }).toString()).toBe(
+      "1976-11-18"
+    );
     // @ts-ignore
-    expect(
-      PlainDate.from("1976-12-08")
-        .add({ days: -20 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(PlainDate.from("1976-12-08").add({ days: -20 }).toString()).toBe(
+      "1976-11-18"
+    );
     // @ts-ignore
-    expect(
-      PlainDate.from("2019-02-28")
-        .add({ months: -1 })
-        .toString()
-    ).toBe("2019-01-28");
+    expect(PlainDate.from("2019-02-28").add({ months: -1 }).toString()).toBe(
+      "2019-01-28"
+    );
   });
   it("ignores lower units that don't balance up to a day", () => {
     // @ts-ignore
-    expect(
-      date
-        .add({ hours: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ hours: 1 }).toString()).toBe("1976-11-18");
     // @ts-ignore
-    expect(
-      date
-        .add({ minutes: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ minutes: 1 }).toString()).toBe("1976-11-18");
     // @ts-ignore
-    expect(
-      date
-        .add({ seconds: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ seconds: 1 }).toString()).toBe("1976-11-18");
     // @ts-ignore
-    expect(
-      date
-        .add({ milliseconds: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ milliseconds: 1 }).toString()).toBe("1976-11-18");
     // @ts-ignore
-    expect(
-      date
-        .add({ microseconds: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ microseconds: 1 }).toString()).toBe("1976-11-18");
     // @ts-ignore
-    expect(
-      date
-        .add({ nanoseconds: 1 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.add({ nanoseconds: 1 }).toString()).toBe("1976-11-18");
   });
   it("adds lower units that balance up to a day or more", () => {
     // @ts-ignore
-    expect(
-      date
-        .add({ hours: 24 })
-        .toString()
-    ).toBe("1976-11-19");
+    expect(date.add({ hours: 24 }).toString()).toBe("1976-11-19");
     // @ts-ignore
-    expect(
-      date
-        .add({ hours: 36 })
-        .toString()
-    ).toBe("1976-11-19");
+    expect(date.add({ hours: 36 }).toString()).toBe("1976-11-19");
     // @ts-ignore
-    expect(
-      date
-        .add({ hours: 48 })
-        .toString()
-    ).toBe("1976-11-20");
+    expect(date.add({ hours: 48 }).toString()).toBe("1976-11-20");
     // @ts-ignore
-    expect(
-      date
-        .add({ minutes: 1440 })
-        .toString()
-    ).toBe("1976-11-19");
+    expect(date.add({ minutes: 1440 }).toString()).toBe("1976-11-19");
     // @ts-ignore
-    expect(
-      date
-        .add({ seconds: 86400 })
-        .toString()
-    ).toBe("1976-11-19");
+    expect(date.add({ seconds: 86400 }).toString()).toBe("1976-11-19");
     // @ts-ignore
-    expect(
-      date
-        .add({ milliseconds: 86400000 })
-        .toString()
-    ).toBe("1976-11-19");
+    expect(date.add({ milliseconds: 86400000 }).toString()).toBe("1976-11-19");
     // expect(date.add({ microseconds: 86400000000 }).toString()).toBe('1976-11-19');
     // expect(date.add({ nanoseconds: 86400000000000 }).toString()).toBe('1976-11-19');
   });
@@ -772,40 +706,24 @@ describe("date.subtract() works", () => {
   date = PlainDate.from("2019-11-18");
   it("date.subtract({ years: 43 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .subtract({ years: 43 })
-        .toString()
-    ).toBe("1976-11-18");
+    expect(date.subtract({ years: 43 }).toString()).toBe("1976-11-18");
   });
   it("date.subtract({ months: 11 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .subtract({ months: 11 })
-        .toString()
-    ).toBe("2018-12-18");
+    expect(date.subtract({ months: 11 }).toString()).toBe("2018-12-18");
   });
   it("date.subtract({ days: 20 })", () => {
     // @ts-ignore
-    expect(
-      date
-        .subtract({ days: 20 })
-        .toString()
-    ).toBe("2019-10-29");
+    expect(date.subtract({ days: 20 }).toString()).toBe("2019-10-29");
   });
   it('Date.from("2019-02-28").subtract({ months: 1 })', () => {
     expect(
       // @ts-ignore
-      PlainDate.from("2019-02-28")
-        .subtract({ months: 1 })
-        .toString()
+      PlainDate.from("2019-02-28").subtract({ months: 1 }).toString()
     ).toBe("2019-01-28");
   });
   xit("Date.subtract(durationObj)", () => {
-    expect(date.subtract(new Duration(43)).toString()).toBe(
-      "1976-11-18"
-    );
+    expect(date.subtract(new Duration(43)).toString()).toBe("1976-11-18");
   });
   xit("casts argument", () => {
     //     expect(date.subtract('P43Y').toString()).toBe('1976-11-18');
@@ -822,88 +740,44 @@ describe("date.subtract() works", () => {
   it("symmetrical with regard to negative durations", () => {
     expect(
       // @ts-ignore
-      PlainDate.from("1976-11-18")
-        .subtract({ years: -43 })
-        .toString()
+      PlainDate.from("1976-11-18").subtract({ years: -43 }).toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
-      PlainDate.from("2018-12-18")
-        .subtract({ months: -11 })
-        .toString()
+      PlainDate.from("2018-12-18").subtract({ months: -11 }).toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
-      PlainDate.from("2019-10-29")
-        .subtract({ days: -20 })
-        .toString()
+      PlainDate.from("2019-10-29").subtract({ days: -20 }).toString()
     ).toBe("2019-11-18");
     expect(
       // @ts-ignore
-      PlainDate.from("2019-01-28")
-        .subtract({ months: -1 })
-        .toString()
+      PlainDate.from("2019-01-28").subtract({ months: -1 }).toString()
     ).toBe("2019-02-28");
   });
   it("ignores lower units that don't balance up to a day", () => {
     // @ts-ignore
-    expect(
-      date
-        .subtract({ hours: 1 })
-        .toString()
-    ).toBe("2019-11-18");
+    expect(date.subtract({ hours: 1 }).toString()).toBe("2019-11-18");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ minutes: 1 })
-        .toString()
-    ).toBe("2019-11-18");
+    expect(date.subtract({ minutes: 1 }).toString()).toBe("2019-11-18");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ seconds: 1 })
-        .toString()
-    ).toBe("2019-11-18");
+    expect(date.subtract({ seconds: 1 }).toString()).toBe("2019-11-18");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ milliseconds: 1 })
-        .toString()
-    ).toBe("2019-11-18");
+    expect(date.subtract({ milliseconds: 1 }).toString()).toBe("2019-11-18");
     // expect(date.subtract({ microseconds: 1 }).toString()).toBe('2019-11-18');
     // expect(date.subtract({ nanoseconds: 1 }).toString()).toBe('2019-11-18');
   });
   it("subtracts lower units that balance up to a day or more", () => {
     // @ts-ignore
-    expect(
-      date
-        .subtract({ hours: 24 })
-        .toString()
-    ).toBe("2019-11-17");
+    expect(date.subtract({ hours: 24 }).toString()).toBe("2019-11-17");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ hours: 36 })
-        .toString()
-    ).toBe("2019-11-17");
+    expect(date.subtract({ hours: 36 }).toString()).toBe("2019-11-17");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ hours: 48 })
-        .toString()
-    ).toBe("2019-11-16");
+    expect(date.subtract({ hours: 48 }).toString()).toBe("2019-11-16");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ minutes: 1440 })
-        .toString()
-    ).toBe("2019-11-17");
+    expect(date.subtract({ minutes: 1440 }).toString()).toBe("2019-11-17");
     // @ts-ignore
-    expect(
-      date
-        .subtract({ seconds: 86400 })
-        .toString()
-    ).toBe("2019-11-17");
+    expect(date.subtract({ seconds: 86400 }).toString()).toBe("2019-11-17");
     // expect(date.subtract({ milliseconds: 86400_000 }).toString()).toBe('2019-11-17');
     // expect(date.subtract({ microseconds: 86400_000_000 }).toString()).toBe('2019-11-17');
     // expect(date.subtract({ nanoseconds: 86400_000_000_000 }).toString()).toBe('2019-11-17');
@@ -1123,65 +997,65 @@ describe("Date.equal works", () => {
 //   it('>=', () => throws(() => d1 >= d2));
 // });
 
-describe('Min/max range', () => {
-  it('constructing from numbers', () => {
+describe("Min/max range", () => {
+  it("constructing from numbers", () => {
     // throws("RangeError", () => { new PlainDate(-271821, 4, 18) });
     // throws("RangeError", () => { new PlainDate(275760, 9, 14) });
-    expect(new PlainDate(-271821, 4, 19).toString()).toBe('-271821-04-19');
-    expect(new PlainDate(275760, 9, 13).toString()).toBe('275760-09-13');
+    expect(new PlainDate(-271821, 4, 19).toString()).toBe("-271821-04-19");
+    expect(new PlainDate(275760, 9, 13).toString()).toBe("275760-09-13");
   });
-//   it('constructing from property bag', () => {
-//     const tooEarly = { year: -271821, month: 4, day: 18 };
-//     const tooLate = { year: 275760, month: 9, day: 14 };
-//     ['reject', 'constrain'].forEach((overflow) => {
-//       [tooEarly, tooLate].forEach((props) => {
-//         throws(() => PlainDate.from(props, { overflow }), RangeError);
-//       });
-//     });
-//     expect(PlainDate.from({ year: -271821, month: 4, day: 19 }).toString()).toBe('-271821-04-19');
-//     expect(PlainDate.from({ year: 275760, month: 9, day: 13 }).toString()).toBe('+275760-09-13');
-//   });
-//   it('constructing from ISO string', () => {
-//     ['reject', 'constrain'].forEach((overflow) => {
-//       ['-271821-04-18', '+275760-09-14'].forEach((str) => {
-//         throws(() => PlainDate.from(str, { overflow }), RangeError);
-//       });
-//     });
-//     expect(PlainDate.from('-271821-04-19').toString()).toBe('-271821-04-19');
-//     expect(PlainDate.from('+275760-09-13').toString()).toBe('+275760-09-13');
-//   });
-//   it('converting from DateTime', () => {
-//     const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');
-//     const max = Temporal.PlainDateTime.from('+275760-09-13T23:59:59.999999999');
-//     expect(min.toPlainDate().toString()).toBe('-271821-04-19');
-//     expect(max.toPlainDate().toString()).toBe('+275760-09-13');
-//   });
-//   it('converting from YearMonth', () => {
-//     const min = Temporal.PlainYearMonth.from('-271821-04');
-//     const max = Temporal.PlainYearMonth.from('+275760-09');
-//     throws(() => min.toPlainDate({ day: 1 }), RangeError);
-//     throws(() => max.toPlainDate({ day: 30 }), RangeError);
-//     expect(min.toPlainDate({ day: 19 }).toString()).toBe('-271821-04-19');
-//     expect(max.toPlainDate({ day: 13 }).toString()).toBe('+275760-09-13');
-//   });
-//   it('converting from MonthDay', () => {
-//     const jan1 = Temporal.PlainMonthDay.from('01-01');
-//     const dec31 = Temporal.PlainMonthDay.from('12-31');
-//     const minYear = -271821;
-//     const maxYear = 275760;
-//     throws(() => jan1.toPlainDate({ year: minYear }), RangeError);
-//     throws(() => dec31.toPlainDate({ year: maxYear }), RangeError);
-//     expect(jan1.toPlainDate({ year: minYear + 1 }).toString()).toBe('-271820-01-01');
-//     expect(dec31.toPlainDate({ year: maxYear - 1 }).toString()).toBe('+275759-12-31');
-//   });
-//   it('adding and subtracting beyond limit', () => {
-//     const min = PlainDate.from('-271821-04-19');
-//     const max = PlainDate.from('+275760-09-13');
-//     ['reject', 'constrain'].forEach((overflow) => {
-//       throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
-//       throws(() => max.add({ days: 1 }, { overflow }), RangeError);
-//     });
-//   });
+  //   it('constructing from property bag', () => {
+  //     const tooEarly = { year: -271821, month: 4, day: 18 };
+  //     const tooLate = { year: 275760, month: 9, day: 14 };
+  //     ['reject', 'constrain'].forEach((overflow) => {
+  //       [tooEarly, tooLate].forEach((props) => {
+  //         throws(() => PlainDate.from(props, { overflow }), RangeError);
+  //       });
+  //     });
+  //     expect(PlainDate.from({ year: -271821, month: 4, day: 19 }).toString()).toBe('-271821-04-19');
+  //     expect(PlainDate.from({ year: 275760, month: 9, day: 13 }).toString()).toBe('+275760-09-13');
+  //   });
+  //   it('constructing from ISO string', () => {
+  //     ['reject', 'constrain'].forEach((overflow) => {
+  //       ['-271821-04-18', '+275760-09-14'].forEach((str) => {
+  //         throws(() => PlainDate.from(str, { overflow }), RangeError);
+  //       });
+  //     });
+  //     expect(PlainDate.from('-271821-04-19').toString()).toBe('-271821-04-19');
+  //     expect(PlainDate.from('+275760-09-13').toString()).toBe('+275760-09-13');
+  //   });
+  //   it('converting from DateTime', () => {
+  //     const min = Temporal.PlainDateTime.from('-271821-04-19T00:00:00.000000001');
+  //     const max = Temporal.PlainDateTime.from('+275760-09-13T23:59:59.999999999');
+  //     expect(min.toPlainDate().toString()).toBe('-271821-04-19');
+  //     expect(max.toPlainDate().toString()).toBe('+275760-09-13');
+  //   });
+  //   it('converting from YearMonth', () => {
+  //     const min = Temporal.PlainYearMonth.from('-271821-04');
+  //     const max = Temporal.PlainYearMonth.from('+275760-09');
+  //     throws(() => min.toPlainDate({ day: 1 }), RangeError);
+  //     throws(() => max.toPlainDate({ day: 30 }), RangeError);
+  //     expect(min.toPlainDate({ day: 19 }).toString()).toBe('-271821-04-19');
+  //     expect(max.toPlainDate({ day: 13 }).toString()).toBe('+275760-09-13');
+  //   });
+  //   it('converting from MonthDay', () => {
+  //     const jan1 = Temporal.PlainMonthDay.from('01-01');
+  //     const dec31 = Temporal.PlainMonthDay.from('12-31');
+  //     const minYear = -271821;
+  //     const maxYear = 275760;
+  //     throws(() => jan1.toPlainDate({ year: minYear }), RangeError);
+  //     throws(() => dec31.toPlainDate({ year: maxYear }), RangeError);
+  //     expect(jan1.toPlainDate({ year: minYear + 1 }).toString()).toBe('-271820-01-01');
+  //     expect(dec31.toPlainDate({ year: maxYear - 1 }).toString()).toBe('+275759-12-31');
+  //   });
+  //   it('adding and subtracting beyond limit', () => {
+  //     const min = PlainDate.from('-271821-04-19');
+  //     const max = PlainDate.from('+275760-09-13');
+  //     ['reject', 'constrain'].forEach((overflow) => {
+  //       throws(() => min.subtract({ days: 1 }, { overflow }), RangeError);
+  //       throws(() => max.add({ days: 1 }, { overflow }), RangeError);
+  //     });
+  //   });
 });
 
 // describe('date.getISOFields() works', () => {
