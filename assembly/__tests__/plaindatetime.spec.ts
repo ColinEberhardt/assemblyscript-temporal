@@ -1,7 +1,7 @@
 import { Duration, DurationLike } from "../duration";
-import { Overflow } from "../enums";
+import { Overflow, TimeComponent } from "../enums";
 import { PlainDate } from "../plaindate";
-import { PlainDateTime } from "../plaindatetime";
+import { DateTimeLike, PlainDateTime } from "../plaindatetime";
 import { TimeZone } from "../timezone";
 
 let datetime: PlainDateTime;
@@ -452,76 +452,97 @@ describe("Date.toZonedDateTime()", () => {
   });
 });
 
-//    describe('DateTime.until()', () => {
-//      const dt = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-//      it('dt.until(later) === later.since(dt)', () => {
-//        const later = PlainDateTime.from({ year: 2016, month: 3, day: 3, hour: 18 });
-//        expect(`${dt.until(later)}`).toBe(`${later.since(dt)}`);
-//      });
-//      it('casts argument', () => {
-//        expect(`${dt.until({ year: 2019, month: 10, day: 29, hour: 10 })}`).toBe('P15684DT18H36M29.876543211S');
-//        expect(`${dt.until('2019-10-29T10:46:38.271986102')}`).toBe('P15684DT19H23M8.148529313S');
-//      });
-//      const feb20 = PlainDateTime.from('2020-02-01T00:00');
-//      const feb21 = PlainDateTime.from('2021-02-01T00:00');
-//      it('defaults to returning days', () => {
-//        expect(`${feb20.until(feb21)}`).toBe('P366D');
-//        expect(`${feb20.until(feb21, { largestUnit: 'auto' })}`).toBe('P366D');
-//        expect(`${feb20.until(feb21, { largestUnit: 'days' })}`).toBe('P366D');
-//        expect(`${feb20.until(PlainDateTime.from('2021-02-01T00:00:00.000000001'))}`).toBe('P366DT0.000000001S');
-//        expect(`${PlainDateTime.from('2020-02-01T00:00:00.000000001').until(feb21)}`).toBe('P365DT23H59M59.999999999S');
-//      });
-//      it('can return lower or higher units', () => {
-//        expect(`${feb20.until(feb21, { largestUnit: 'years' })}`).toBe('P1Y');
-//        expect(`${feb20.until(feb21, { largestUnit: 'months' })}`).toBe('P12M');
-//        expect(`${feb20.until(feb21, { largestUnit: 'hours' })}`).toBe('PT8784H');
-//        expect(`${feb20.until(feb21, { largestUnit: 'minutes' })}`).toBe('PT527040M');
-//        expect(`${feb20.until(feb21, { largestUnit: 'seconds' })}`).toBe('PT31622400S');
-//      });
-//      it('can return subseconds', () => {
-//        const later = feb20.add({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
+let dt: PlainDateTime, feb20: PlainDateTime, feb21: PlainDateTime;
 
-//        const msDiff = feb20.until(later, { largestUnit: 'milliseconds' });
-//        expect(msDiff.seconds).toBe(0);
-//        expect(msDiff.milliseconds).toBe(86400250);
-//        expect(msDiff.microseconds).toBe(250);
-//        expect(msDiff.nanoseconds).toBe(250);
+describe("DateTime.until()", () => {
+  dt = PlainDateTime.from("1976-11-18T15:23:30.123456789");
+  it("dt.until(later) === later.since(dt)", () => {
+    const later = PlainDateTime.from({
+      year: 2016,
+      month: 3,
+      day: 3,
+      hour: 18,
+    });
+    expect(`${dt.until(later)}`).toBe(`${later.since(dt)}`);
+  });
+  it("casts argument", () => {
+    expect(
+      dt
+        // @ts-ignore
+        .until({ year: 2019, month: 10, day: 29, hour: 10 })
+        .toString()
+    ).toBe("P15684DT18H36M29.876543211S");
+    expect(
+      // @ts-ignore
+      dt.until("2019-10-29T10:46:38.271986102").toString()
+    ).toBe("P15684DT19H23M8.148529313S");
+  });
+  feb20 = PlainDateTime.from("2020-02-01T00:00");
+  feb21 = PlainDateTime.from("2021-02-01T00:00");
+  it("defaults to returning days", () => {
+    expect(`${feb20.until(feb21)}`).toBe("P366D");
+    //  expect(`${feb20.until(feb21, TimeComponent.Auto)}`).toBe('P366D');
+    expect(`${feb20.until(feb21, TimeComponent.Days)}`).toBe("P366D");
+    // see: https://github.com/ColinEberhardt/assemblyscript-temporal/issues/50
+    // expect(
+    //   `${feb20.until(PlainDateTime.from("2021-02-01T00:00:00.000000001"))}`
+    // ).toBe("P366DT0.000000001S");
+    // expect(
+    //   `${PlainDateTime.from("2020-02-01T00:00:00.000000001").until(feb21)}`
+    // ).toBe("P365DT23H59M59.999999999S");
+  });
+  it("can return lower or higher units", () => {
+    expect(`${feb20.until(feb21, TimeComponent.Years)}`).toBe("P1Y");
+    expect(`${feb20.until(feb21, TimeComponent.Months)}`).toBe("P12M");
+    expect(`${feb20.until(feb21, TimeComponent.Hours)}`).toBe("PT8784H");
+    expect(`${feb20.until(feb21, TimeComponent.Minutes)}`).toBe("PT527040M");
+    expect(`${feb20.until(feb21, TimeComponent.Seconds)}`).toBe("PT31622400S");
+  });
+  it("can return subseconds", () => {
+    const later = feb20.add({
+      days: 1,
+      milliseconds: 250,
+      microseconds: 250,
+      nanoseconds: 250,
+    });
 
-//        const µsDiff = feb20.until(later, { largestUnit: 'microseconds' });
-//        expect(µsDiff.milliseconds).toBe(0);
-//        expect(µsDiff.microseconds).toBe(86400250250);
-//        expect(µsDiff.nanoseconds).toBe(250);
+    const msDiff = feb20.until(later, TimeComponent.Milliseconds);
+    expect(msDiff.seconds).toBe(0);
+    expect(msDiff.milliseconds).toBe(86400250);
+    expect(msDiff.microseconds).toBe(250);
+    expect(msDiff.nanoseconds).toBe(250);
 
-//        const nsDiff = feb20.until(later, { largestUnit: 'nanoseconds' });
-//        expect(nsDiff.microseconds).toBe(0);
-//        expect(nsDiff.nanoseconds).toBe(86400250250250);
-//      });
-//      it('does not include higher units than necessary', () => {
-//        const lastFeb20 = PlainDateTime.from('2020-02-29T00:00');
-//        const lastFeb21 = PlainDateTime.from('2021-02-28T00:00');
-//        expect(`${lastFeb20.until(lastFeb21)}`).toBe('P365D');
-//        expect(`${lastFeb20.until(lastFeb21, { largestUnit: 'months' })}`).toBe('P12M');
-//        expect(`${lastFeb20.until(lastFeb21, { largestUnit: 'years' })}`).toBe('P1Y');
-//      });
-//      it('weeks and months are mutually exclusive', () => {
-//        const laterDateTime = dt.add({ days: 42, hours: 3 });
-//        const weeksDifference = dt.until(laterDateTime, { largestUnit: 'weeks' });
-//        notexpect(weeksDifference.weeks).toBe(0);
-//        expect(weeksDifference.months).toBe(0);
-//        const monthsDifference = dt.until(laterDateTime, { largestUnit: 'months' });
-//        expect(monthsDifference.weeks).toBe(0);
-//        notexpect(monthsDifference.months).toBe(0);
-//      });
+    const µsDiff = feb20.until(later, TimeComponent.Microseconds);
+    expect(µsDiff.milliseconds).toBe(0);
+    // expect(µsDiff.microseconds).toBe(86400250250);
+    expect(µsDiff.nanoseconds).toBe(250);
+
+    const nsDiff = feb20.until(later, TimeComponent.Nanoseconds);
+    expect(nsDiff.microseconds).toBe(0);
+    // expect(nsDiff.nanoseconds).toBe(86400250250250);
+  });
+  it("does not include higher units than necessary", () => {
+    const lastFeb20 = PlainDateTime.from("2020-02-29T00:00");
+    const lastFeb21 = PlainDateTime.from("2021-02-28T00:00");
+    expect(`${lastFeb20.until(lastFeb21)}`).toBe("P365D");
+    expect(`${lastFeb20.until(lastFeb21, TimeComponent.Months)}`).toBe("P12M");
+    expect(`${lastFeb20.until(lastFeb21, TimeComponent.Years)}`).toBe("P1Y");
+  });
+  it("weeks and months are mutually exclusive", () => {
+    const laterDateTime = dt.add({ days: 42, hours: 3 });
+    const weeksDifference = dt.until(laterDateTime, TimeComponent.Weeks);
+    expect(weeksDifference.weeks).not.toBe(0);
+    expect(weeksDifference.months).toBe(0);
+    const monthsDifference = dt.until(laterDateTime, TimeComponent.Months);
+    expect(monthsDifference.weeks).toBe(0);
+    expect(monthsDifference.months).not.toBe(0);
+  });
+});
+
 //      it('no two different calendars', () => {
 //        const dt1 = new PlainDateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0);
 //        const dt2 = new PlainDateTime(2000, 1, 1, 0, 0, 0, 0, 0, 0, Temporal.Calendar.from('japanese'));
 //        throws(() => dt1.until(dt2), RangeError);
-//      });
-//      it('options may only be an object or undefined', () => {
-//        [null, 1, 'hello', true, Symbol('foo'), 1n].forEach((badOptions) =>
-//          throws(() => feb20.until(feb21, badOptions), TypeError)
-//        );
-//        [{}, () => {}, undefined].forEach((options) => expect(`${feb20.until(feb21, options)}`).toBe('P366D'));
 //      });
 //      const earlier = PlainDateTime.from('2019-01-08T08:22:36.123456789');
 //      const later = PlainDateTime.from('2021-09-07T12:39:40.987654321');
@@ -773,32 +794,46 @@ describe("Date.toZonedDateTime()", () => {
 //        expect(`${dt2.until(dt1, { smallestUnit: 'years', roundingMode: 'halfExpand' })}`).toBe('-P1Y');
 //      });
 //    });
-//    describe('DateTime.since()', () => {
-//      const dt = PlainDateTime.from('1976-11-18T15:23:30.123456789');
-//      it('dt.since(earlier) === earlier.until(dt)', () => {
-//        const earlier = PlainDateTime.from({ year: 1966, month: 3, day: 3, hour: 18 });
-//        expect(`${dt.since(earlier)}`).toBe(`${earlier.until(dt)}`);
-//      });
-//      it('casts argument', () => {
-//        expect(`${dt.since({ year: 2019, month: 10, day: 29, hour: 10 })}`).toBe('-P15684DT18H36M29.876543211S');
-//        expect(`${dt.since('2019-10-29T10:46:38.271986102')}`).toBe('-P15684DT19H23M8.148529313S');
-//      });
-//      const feb20 = PlainDateTime.from('2020-02-01T00:00');
-//      const feb21 = PlainDateTime.from('2021-02-01T00:00');
-//      it('defaults to returning days', () => {
-//        expect(`${feb21.since(feb20)}`).toBe('P366D');
-//        expect(`${feb21.since(feb20, { largestUnit: 'auto' })}`).toBe('P366D');
-//        expect(`${feb21.since(feb20, { largestUnit: 'days' })}`).toBe('P366D');
-//        expect(`${PlainDateTime.from('2021-02-01T00:00:00.000000001').since(feb20)}`).toBe('P366DT0.000000001S');
-//        expect(`${feb21.since(PlainDateTime.from('2020-02-01T00:00:00.000000001'))}`).toBe('P365DT23H59M59.999999999S');
-//      });
-//      it('can return lower or higher units', () => {
-//        expect(`${feb21.since(feb20, { largestUnit: 'years' })}`).toBe('P1Y');
-//        expect(`${feb21.since(feb20, { largestUnit: 'months' })}`).toBe('P12M');
-//        expect(`${feb21.since(feb20, { largestUnit: 'hours' })}`).toBe('PT8784H');
-//        expect(`${feb21.since(feb20, { largestUnit: 'minutes' })}`).toBe('PT527040M');
-//        expect(`${feb21.since(feb20, { largestUnit: 'seconds' })}`).toBe('PT31622400S');
-//      });
+
+describe("DateTime.since()", () => {
+  dt = PlainDateTime.from("1976-11-18T15:23:30.123456789");
+  it("dt.since(earlier) === earlier.until(dt)", () => {
+    const earlier = PlainDateTime.from({
+      year: 1966,
+      month: 3,
+      day: 3,
+      hour: 18,
+    });
+    expect(`${dt.since(earlier)}`).toBe(`${earlier.until(dt)}`);
+  });
+  it("casts argument", () => {
+    expect(`${dt.since({ year: 2019, month: 10, day: 29, hour: 10 })}`).toBe(
+      "-P15684DT18H36M29.876543211S"
+    );
+    expect(`${dt.since("2019-10-29T10:46:38.271986102")}`).toBe(
+      "-P15684DT19H23M8.148529313S"
+    );
+  });
+  it("defaults to returning days", () => {
+    expect(`${feb21.since(feb20)}`).toBe("P366D");
+    // expect(`${feb21.since(feb20, { largestUnit: "auto" })}`).toBe("P366D");
+    expect(`${feb21.since(feb20, TimeComponent.Days)}`).toBe("P366D");
+    // expect(
+    //   `${PlainDateTime.from("2021-02-01T00:00:00.000000001").since(feb20)}`
+    // ).toBe("P366DT0.000000001S");
+    // expect(
+    //   `${feb21.since(PlainDateTime.from("2020-02-01T00:00:00.000000001"))}`
+    // ).toBe("P365DT23H59M59.999999999S");
+  });
+  it("can return lower or higher units", () => {
+    expect(`${feb21.since(feb20, TimeComponent.Years)}`).toBe("P1Y");
+    expect(`${feb21.since(feb20, TimeComponent.Months)}`).toBe("P12M");
+    expect(`${feb21.since(feb20, TimeComponent.Hours)}`).toBe("PT8784H");
+    expect(`${feb21.since(feb20, TimeComponent.Minutes)}`).toBe("PT527040M");
+    expect(`${feb21.since(feb20, TimeComponent.Seconds)}`).toBe("PT31622400S");
+  });
+});
+
 //      it('can return subseconds', () => {
 //        const later = feb20.add({ days: 1, milliseconds: 250, microseconds: 250, nanoseconds: 250 });
 
