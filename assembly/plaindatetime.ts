@@ -21,6 +21,7 @@ import {
   parseISOString,
   leapYear,
   epochFromParts,
+  differenceDateTime,
 } from "./utils";
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
@@ -28,6 +29,10 @@ import { PlainMonthDay } from "./plainmonthday";
 import { TimeZone } from "./timezone";
 import { Instant } from "./instant";
 import { ZonedDateTime } from "./zoneddatetime";
+
+// @ts-ignore
+@lazy
+const NULL = -1;
 
 export class DateTimeLike {
   year: i32 = -1;
@@ -39,6 +44,23 @@ export class DateTimeLike {
   millisecond: i32 = -1;
   microsecond: i32 = -1;
   nanosecond: i32 = -1;
+
+  toPlainDateTime(): PlainDateTime {
+    if (this.year == NULL || this.month == NULL || this.day == NULL) {
+      throw new TypeError("missing required property");
+    }
+    return new PlainDateTime(
+      this.year != NULL ? this.year : 0,
+      this.month != NULL ? this.month : 0,
+      this.day != NULL ? this.day : 0,
+      this.hour != NULL ? this.hour : 0,
+      this.minute != NULL ? this.minute : 0,
+      this.second != NULL ? this.second : 0,
+      this.millisecond != NULL ? this.millisecond : 0,
+      this.microsecond != NULL ? this.microsecond : 0,
+      this.nanosecond != NULL ? this.nanosecond : 0
+    );
+  }
 }
 
 export class PlainDateTime {
@@ -76,20 +98,7 @@ export class PlainDateTime {
 
   @inline
   private static fromDateTimeLike(date: DateTimeLike): PlainDateTime {
-    if (date.year == -1 || date.month == -1 || date.day == -1) {
-      throw new TypeError("missing required property");
-    }
-    return new PlainDateTime(
-      date.year,
-      date.month,
-      date.day,
-      date.hour,
-      date.minute,
-      date.second,
-      date.millisecond,
-      date.microsecond,
-      date.nanosecond
-    );
+    return date.toPlainDateTime();
   }
 
   private static fromString(date: string): PlainDateTime {
@@ -185,6 +194,64 @@ export class PlainDateTime {
       coalesce(dateTimeLike.millisecond, this.millisecond),
       coalesce(dateTimeLike.microsecond, this.microsecond),
       coalesce(dateTimeLike.nanosecond, this.nanosecond)
+    );
+  }
+
+  until<T = DateTimeLike>(
+    otherLike: T,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const other = PlainDateTime.from(otherLike);
+
+    return differenceDateTime(
+      this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond,
+      other.year,
+      other.month,
+      other.day,
+      other.hour,
+      other.minute,
+      other.second,
+      other.millisecond,
+      other.microsecond,
+      other.nanosecond,
+      largestUnit
+    );
+  }
+
+  since<T = DateTimeLike>(
+    otherLike: T,
+    largestUnit: TimeComponent = TimeComponent.Days
+  ): Duration {
+    const other = PlainDateTime.from(otherLike);
+
+    return differenceDateTime(
+      other.year,
+      other.month,
+      other.day,
+      other.hour,
+      other.minute,
+      other.second,
+      other.millisecond,
+      other.microsecond,
+      other.nanosecond,
+      this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond,
+      largestUnit
     );
   }
 

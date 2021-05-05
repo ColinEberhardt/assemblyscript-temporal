@@ -7,7 +7,7 @@
   "types": "assembly/index.ts",
   "scripts": {
     "pretest": "npm run asbuild:empty",
-    "test": "asp --verbose --nologo && npm run test:empty",
+    "test": "npm run test:empty && asp --verbose --nologo ",
     "test:empty": "diff build/empty.wat assembly/__tests__/empty.wat",
     "test:ci": "asp --summary && npm run test:empty",
     "asbuild:untouched": "asc assembly/index.ts --target debug",

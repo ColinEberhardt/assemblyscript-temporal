@@ -614,6 +614,52 @@ export function compareTemporalDateTime(
   return ord(d1, d2);
 }
 
+export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  y2: i32, mon2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32, largestUnit: TimeComponent = TimeComponent.Days): Duration  {
+  
+  const diffTime = differenceTime(
+    h1,
+    min1,
+    s1,
+    ms1,
+    µs1,
+    ns1,
+    h2,
+    min2,
+    s2,
+    ms2,
+    µs2,
+    ns2
+  );
+  const balancedDate = balanceDate(y1, mon1, d1 + diffTime.days);
+  const diffDate = differenceDate(balancedDate.year, balancedDate.month,
+    balancedDate.day, y2, mon2, d2, largerTimeComponent(largestUnit, TimeComponent.Days));
+
+  // Signs of date part and time part may not agree; balance them together
+  const balancedBoth = balanceDuration(
+    diffDate.days,
+    diffTime.hours,
+    diffTime.minutes,
+    diffTime.seconds,
+    diffTime.milliseconds,
+    diffTime.microseconds,
+    diffTime.nanoseconds,
+    largestUnit
+  );
+  return new Duration(
+    diffDate.years,
+    diffDate.months,
+    diffDate.weeks,
+    balancedBoth.days,
+    balancedBoth.hours,
+    balancedBoth.minutes,
+    balancedBoth.seconds,
+    balancedBoth.milliseconds,
+    balancedBoth.microseconds,
+    balancedBoth.nanoseconds
+  );
+}
+
 export function differenceDate(
   yr1: i32, mo1: i32, d1: i32,
   yr2: i32, mo2: i32, d2: i32,
@@ -734,7 +780,7 @@ export function differenceDate(
     }
 
     default:
-      throw new Error('assert not reached');
+      throw new Error('differenceDate - cannot support TimeComponent < Days');
   }
 }
 
