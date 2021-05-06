@@ -6,7 +6,7 @@ import { PlainDateTime } from "./plaindatetime";
 import { TimeComponent } from "./enums";
 
 // @ts-ignore
-@lazy 
+@inline 
 const NULL = i32.MAX_VALUE;
 
 export class DurationLike {

@@ -18,16 +18,16 @@ import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
 
 // @ts-ignore
-@lazy
+@inline
 const YEAR_MIN = -271821;
 
 // @ts-ignore
-@lazy
+@inline
 const YEAR_MAX =  275760;
 
 // @ts-ignore
-@lazy
-let __null = false;
+@inline
+const __null = false;
 
 // value objects - used in place of object literals
 export class YMD {

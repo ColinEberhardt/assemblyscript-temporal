@@ -2,7 +2,8 @@
   "options": {
     "runtime": "stub",
     "textFile": "build/empty.wat",
-    "debug": true
+    "debug": true,
+    "optimizeLevel": 3
   },
   "entries": ["assembly/__tests__/empty.ts"]
 }
