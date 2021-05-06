@@ -18,7 +18,6 @@ import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
 
 // @ts-ignore
-@lazy
 const YEAR_MIN = -271821;
 
 // @ts-ignore
