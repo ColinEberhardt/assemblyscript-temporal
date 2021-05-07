@@ -26,9 +26,6 @@ import {
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
 import { PlainMonthDay } from "./plainmonthday";
-import { TimeZone } from "./timezone";
-import { Instant } from "./instant";
-import { ZonedDateTime } from "./zoneddatetime";
 
 // @ts-ignore
 @lazy
@@ -294,13 +291,6 @@ export class PlainDateTime {
 
   toPlainDate(): PlainDate {
     return new PlainDate(this.year, this.month, this.day);
-  }
-
-  toZonedDateTime(tz: TimeZone): ZonedDateTime {
-    const offset = tz.getOffsetNanosecondsFor(
-      new Instant(this.epochNanoseconds)
-    );
-    return new ZonedDateTime(this.epochNanoseconds - offset, tz);
   }
 
   toPlainYearMonth(): PlainYearMonth {

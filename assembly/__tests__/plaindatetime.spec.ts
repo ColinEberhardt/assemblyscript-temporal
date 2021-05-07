@@ -1,8 +1,6 @@
 import { Duration, DurationLike } from "../duration";
 import { Overflow, TimeComponent } from "../enums";
-import { PlainDate } from "../plaindate";
-import { DateTimeLike, PlainDateTime } from "../plaindatetime";
-import { TimeZone } from "../timezone";
+import { PlainDateTime, DateTimeLike } from "../plaindatetime";
 
 let datetime: PlainDateTime;
 
@@ -437,17 +435,6 @@ describe("Date.toPlainMonthDay() works", () => {
   it("combines the date and time", () => {
     expect(PlainDateTime.from("1976-11-18").toPlainMonthDay().toString()).toBe(
       "11-18"
-    );
-  });
-});
-
-describe("Date.toZonedDateTime()", () => {
-  it("works", () => {
-    const date = PlainDateTime.from("2020-01-01");
-    const tz = TimeZone.from("America/Los_Angeles");
-    const zdt = date.toZonedDateTime(tz);
-    expect(zdt.toString()).toBe(
-      "2020-01-01T00:00:00-08:00[America/Los_Angeles]"
     );
   });
 });

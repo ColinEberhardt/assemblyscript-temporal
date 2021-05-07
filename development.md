@@ -7,7 +7,7 @@ This is a very large library, therefore a prioritised roadmap is important. The 
  3. Time-zone aware classes, `TimeZone`, `ZonedDateTime`, etc
  4. Non gregorian calendar systems
 
-So far much of (1) has been implemented. Also a 'spike' implementation of (3) has been added to determine a suitable approach for implementing timezone offsets.
+So far much of (1 & 2) have been implemented. Also a 'spike' implementation of (3) has been created to determine a suitable approach for implementing timezone offsets.
 
 
 ### Implementation approach
@@ -64,7 +64,7 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [x] toZonedDateTime
+- [ ] toZonedDateTime
 - [x] toPlainDateTime
 - [x] toPlainYearMonth
 - [x] toPlainMonthDay
@@ -111,7 +111,7 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [x] toZonedDateTime
+- [ ] toZonedDateTime
 - [x] toPlainDateTime
 - [ ] getISOFields
 
@@ -245,7 +245,7 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-- [x] toZonedDateTime
+- [ ] toZonedDateTime
 - [x] toPlainDate
 - [x] toPlainTime
 - [x] toPlainYearMonth
@@ -301,71 +301,6 @@ General features
 
 - [ ] precision - need to determine what type to use for the properties
 
-
-#### ZonedDateTime
-
-Constructor
- - [x] new Temporal.ZonedDateTime
-
-Static methods
-- [ ] from
-- [ ] compare
-
-Properties
-- [x] year
-- [x] month
-- [x] day
-- [x] hour
-- [x] minute
-- [x] second
-- [x] millisecond
-- [x] microsecond
-- [x] nanosecond
-- [x] epochSeconds
-- [x] epochMilliseconds
-- [x] epochMicroseconds
-- [x] epochNanoseconds
-- [ ] calendar
-- [x] timeZone
-- [ ] era
-- [ ] eraYear
-- [x] dayOfWeek
-- [x] dayOfYear
-- [x] weekOfYear
-- [x] daysInWeek
-- [x] daysInMonth
-- [x] daysInYear
-- [x] monthsInYear
-- [x] inLeapYear
-- [x] hoursInDay
-- [ ] startOfDay
-- [x] offsetNanoseconds
-- [x] offset
-
-Methods
-- [ ] with
-- [ ] withPlainTime
-- [ ] withPlainDate
-- [ ] withTimeZone
-- [ ] withCalendar
-- [ ] add
-- [ ] subtract
-- [ ] until
-- [ ] since
-- [ ] round
-- [ ] equals
-- [ ] toString
-- [ ] toLocaleString
-- [ ] toJSON
-- [ ] valueOf
-- [ ] toInstant
-- [ ] toPlainDate
-- [ ] toPlainTime
-- [ ] toPlainDateTime
-- [ ] toPlainYearMonth
-- [ ] toPlainMonthDay
-- [ ] getISOFields
-
 #### Instant
 
 Constructor
@@ -398,25 +333,3 @@ Methods
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
-
-#### TimeZone
-
-Constructor
-- [x] new Temporal.TimeZone
-
-Static methods
-- [ ] from
-
-Properties
-- [x] id
-
-Methods
-- [x] getOffsetNanosecondsFor
-- [x] getOffsetStringFor
-- [x] getPlainDateTimeFor
-- [ ] getInstantFor
-- [x] getPossibleInstantsFor
-- [ ] getNextTransition
-- [ ] getPreviousTransition
-- [ ] toString
-- [ ] toJSON
