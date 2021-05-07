@@ -12,9 +12,6 @@ import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { JsDate } from "./date";
-import { TimeZone } from "./timezone";
-import { Instant } from "./instant";
-import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
 
 // @ts-ignore

@@ -1,10 +1,10 @@
 ## assemblyscript-temporal
 
-An implementation of temporal within AssemblyScript, with an initial focus on non-timezone-aware classes and functionality.
+An implementation of [TC39 Temporal}(https://github.com/tc39/proposal-temporal) for AssemblyScript, with an focus on non-timezone-aware classes and functionality.
 
 ### Why?
 
-AssemblyScript has minimal `Date` support, however, the JS Date API itself is terrible and people tend not to use it that often. As a result libraries like moment / luxon have become staple replacements. However, there is now a [relatively mature TC39 proposal](https://github.com/tc39/proposal-temporal) that adds greatly improved date support to JS. The goal of this project is to implement Temporal for AssemblyScript.
+AssemblyScript has minimal `Date` support, however, the JS Date API itself is terrible and people tend not to use it that often. As a result libraries like moment / luxon have become staple replacements. However, there is now a [relatively mature TC39 proposal](https://github.com/tc39/proposal-temporal) that adds greatly improved date support to JS. 
 
 ### Usage
 
@@ -92,6 +92,22 @@ For detailed documentation see the
 , this implementation follows the specification as closely as possible.
 
 The `PlainYearMonth` API is almost identical to `PlainDateTime`, so see above for API usage examples.
+
+#### `Duration`
+
+A `Duration` represents a duration of time which can be used in date/time arithmetic. For detailed documentation see the
+[TC39 Temporal proposal website](https://tc39.es/proposal-temporal/docs/duration.html)
+
+Here's a small example, showing just some of wha you can do with durations:
+
+```javascript
+// create a duration
+const duration = Duration.from({ days: 1, minutes: 5 });
+// add another duration to the first one
+const duration2 = duration.add({ days: 2, minutes: 5 })};
+duration2.toString(); // "P3DT10M"
+```
+
 
 #### `now`
 

@@ -1,9 +1,7 @@
 import { Duration, DurationLike } from "../duration";
 import { TimeComponent } from "../enums";
-import { PlainDate } from "../plaindate";
 import { PlainDateTime } from "../plaindatetime";
 import { PlainTime, TimeLike } from "../plaintime";
-import { TimeZone } from "../timezone";
 
 let time: PlainTime,
   t1: PlainTime,
@@ -201,18 +199,6 @@ describe(".with manipulation", () => {
   // it("throws with timeZone property", () => {
   //   throws(() => time.with({ hour: 21, timeZone: "UTC" }), TypeError);
   // });
-});
-
-describe("time.toZonedDateTime()", function () {
-  it("works", () => {
-    const date = PlainDate.from("2020-01-01");
-    const time = PlainTime.from("12:00");
-    const tz = TimeZone.from("America/Los_Angeles");
-    const zdt = time.toZonedDateTime(tz, date);
-    expect(zdt.toString()).toBe(
-      "2020-01-01T12:00:00-08:00[America/Los_Angeles]"
-    );
-  });
 });
 
 describe("time.toPlainDateTime() works", () => {
