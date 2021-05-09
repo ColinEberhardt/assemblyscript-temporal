@@ -1,6 +1,6 @@
 ## assemblyscript-temporal
 
-An implementation of [TC39 Temporal}(https://github.com/tc39/proposal-temporal) for AssemblyScript, with an focus on non-timezone-aware classes and functionality.
+An implementation of [TC39 Temporal](https://github.com/tc39/proposal-temporal) for AssemblyScript, with an focus on non-timezone-aware classes and functionality.
 
 ### Why?
 
