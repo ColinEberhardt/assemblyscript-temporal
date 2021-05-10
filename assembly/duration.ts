@@ -3,7 +3,6 @@ import { RegExp } from "assemblyscript-regex";
 import { addDuration, coalesce, durationSign, sign, largerTimeComponent } from "./utils";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { PlainDateTime } from "./plaindatetime";
-import { TimeComponent } from "./enums";
 
 // @ts-ignore
 @lazy 
