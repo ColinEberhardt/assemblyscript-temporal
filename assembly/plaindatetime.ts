@@ -1,20 +1,12 @@
-import { RegExp } from "assemblyscript-regex";
-
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainTime } from "./plaintime";
-import {
-  MICROS_PER_SECOND,
-  MILLIS_PER_SECOND,
-  NANOS_PER_SECOND,
-} from "./constants";
 import {
   dayOfWeek,
   dayOfYear,
   weekOfYear,
   daysInMonth,
   daysInYear,
-  toPaddedString,
   coalesce,
   compareTemporalDateTime,
   addDateTime,
@@ -22,6 +14,7 @@ import {
   leapYear,
   epochFromParts,
   differenceDateTime,
+  formatISOString,
 } from "./utils";
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
@@ -253,29 +246,15 @@ export class PlainDateTime {
   }
 
   toString(): string {
-    // 1976-11-18T00:00:00
-    return (
-      this.year.toString() +
-      "-" +
-      toPaddedString(this.month) +
-      "-" +
-      toPaddedString(this.day) +
-      "T" +
-      toPaddedString(this.hour) +
-      ":" +
-      toPaddedString(this.minute) +
-      ":" +
-      toPaddedString(this.second) +
-      (this.nanosecond != 0 || this.microsecond != 0 || this.millisecond != 0
-        ? (
-            f64(this.nanosecond) / NANOS_PER_SECOND +
-            f64(this.microsecond) / MICROS_PER_SECOND +
-            f64(this.millisecond) / MILLIS_PER_SECOND
-          )
-            .toString()
-            .substring(1)
-        : "")
-    );
+    return formatISOString(this.year,
+      this.month,
+      this.day,
+      this.hour,
+      this.minute,
+      this.second,
+      this.millisecond,
+      this.microsecond,
+      this.nanosecond);
   }
 
   toPlainTime(): PlainTime {

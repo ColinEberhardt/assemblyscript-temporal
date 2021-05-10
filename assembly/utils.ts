@@ -10,8 +10,7 @@ import { RegExp } from "assemblyscript-regex";
 
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
-import { MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
-import { JsDate } from "./date";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { PlainDateTime } from "./plaindatetime";
 
 // @ts-ignore
@@ -444,9 +443,9 @@ export function balanceDuration(
   hours: i32,
   minutes: i32,
   seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64,
   largestUnit: TimeComponent
 ): Duration {
   const durationNs = totalDurationNanoseconds(
@@ -454,9 +453,9 @@ export function balanceDuration(
     hours as i64,
     minutes as i64,
     seconds as i64,
-    milliseconds as i64,
-    microseconds as i64,
-    nanoseconds as i64
+    milliseconds,
+    microseconds, 
+    nanoseconds
   );
 
   let
@@ -1028,7 +1027,7 @@ export function getPartsFromEpoch(epochNanoseconds: i64): DT {
   const microsecond = i32((nanos / 1_000) % 1_000);
   const nanosecond = i32(nanos % 1_000);
 
-  const item = new JsDate(epochMilliseconds);
+  const item = new Date(epochMilliseconds);
   const year = item.getUTCFullYear();
   const month = item.getUTCMonth() + 1;
   const day = item.getUTCDate();
@@ -1097,6 +1096,32 @@ export function parseISOString(date: string): DTZ {
     nanosecond: I32.parseInt(fraction.substring(6, 9)),
     timezone: match.matches[9]
   }
+}
+
+export function formatISOString(year: i32, month: i32, day: i32, hour: i32, minute: i32,
+   second: i32, millisecond: i32, microsecond: i32, nanosecond: i32): string {
+  return (
+    year.toString() +
+    "-" +
+    toPaddedString(month) +
+    "-" +
+    toPaddedString(day) +
+    "T" +
+    toPaddedString(hour) +
+    ":" +
+    toPaddedString(minute) +
+    ":" +
+    toPaddedString(second) +
+    (nanosecond != 0 || microsecond != 0 || millisecond != 0
+      ? (
+          f64(nanosecond) / NANOS_PER_SECOND +
+          f64(microsecond) / MICROS_PER_SECOND +
+          f64(millisecond) / MILLIS_PER_SECOND
+        )
+          .toString()
+          .substring(1)
+      : "")
+  );
 }
 
 function addInstant(epochNanoseconds: i64, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): i64 {

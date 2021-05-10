@@ -307,12 +307,12 @@ Constructor
 - [x] new Temporal.Instant
 
 Static methods
-- [ ] from
-- [ ] fromEpochSeconds
-- [ ] fromEpochMilliseconds
-- [ ] fromEpochMicroseconds
-- [ ] fromEpochNanoseconds
-- [ ] compare
+- [x] from
+- [x] fromEpochSeconds
+- [x] fromEpochMilliseconds
+- [x] fromEpochMicroseconds
+- [x] fromEpochNanoseconds
+- [x] compare
 
 Properties
 - [x] epochSeconds
@@ -323,13 +323,17 @@ Properties
 Methods
 - [ ] toZonedDateTimeISO
 - [ ] toZonedDateTime
-- [ ] add
-- [ ] subtract
-- [ ] until
-- [ ] since
+- [x] add
+- [x] subtract
+- [x] until
+- [x] since
 - [ ] round
-- [ ] equals
-- [ ] toString
+- [x] equals
+- [x] toString
 - [ ] toLocaleString
 - [ ] toJSON
 - [ ] valueOf
+
+General features
+
+- [ ] rounding and smallest unit behaviour

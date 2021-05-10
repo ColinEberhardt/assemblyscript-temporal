@@ -1,11 +1,10 @@
 import { PlainDateTime } from "./plaindatetime";
-import { JsDate } from "./date";
 import { PlainDate } from "./plaindate";
 
 export class now {
   static plainDateTimeISO(): PlainDateTime {
     const epochMillis = Date.now();
-    const date = new JsDate(epochMillis);
+    const date = new Date(epochMillis);
     return new PlainDateTime(
       date.getUTCFullYear(),
       date.getUTCMonth() + 1,
@@ -19,7 +18,7 @@ export class now {
 
   static plainDateISO(): PlainDate {
     const epochMillis = Date.now();
-    const date = new JsDate(epochMillis);
+    const date = new Date(epochMillis);
     return new PlainDate(
       date.getUTCFullYear(),
       date.getUTCMonth() + 1,
