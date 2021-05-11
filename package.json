@@ -18,12 +18,12 @@
   "author": "colin.eberhardt@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "@as-pect/cli": "^6.0.0",
+    "@as-pect/cli": "^6.1.1",
     "@assemblyscript/loader": "^0.18.20",
+    "assemblyscript": "^0.18.31",
     "prettier": "^2.2.1"
   },
   "dependencies": {
-    "assemblyscript": "^0.18.31",
     "assemblyscript-regex": "^1.6.3"
   }
 }
