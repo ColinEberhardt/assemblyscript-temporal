@@ -337,3 +337,17 @@ Methods
 General features
 
 - [ ] rounding and smallest unit behaviour
+
+#### now
+
+Methods
+- [ ] zonedDateTimeISO
+- [ ] zonedDateTime
+- [x] instant
+- [ ] timeZone
+- [x] plainDateTimeISO
+- [ ] plainDateTime
+- [x] plainDateISO
+- [ ] plainDate
+- [x] plainTimeISO
+
