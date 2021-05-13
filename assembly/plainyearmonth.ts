@@ -4,16 +4,15 @@ import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
 import {
-  balanceDuration,
   checkDateTimeRange,
   coalesce,
   compareTemporalDate,
   daysInMonth,
-  durationSign,
   isoYearString,
   leapYear,
   toPaddedString,
   daysInYear,
+  arraySign,
 } from "./utils";
 
 export class YearMonthLike {
@@ -196,7 +195,7 @@ export class PlainYearMonth {
   ): PlainYearMonth {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = balanceDuration(
+    const balancedDuration = Duration.balanced(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -207,12 +206,12 @@ export class PlainYearMonth {
       TimeComponent.Days
     );
 
-    const sign = durationSign(
+    const sign = arraySign([
       duration.years,
       duration.months,
       duration.weeks,
       balancedDuration.days
-    );
+    ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
     const startDate = new PlainDate(this.year, this.month, day);
@@ -239,7 +238,7 @@ export class PlainYearMonth {
       -duration.nanoseconds
     );
 
-    const balancedDuration = balanceDuration(
+    const balancedDuration = Duration.balanced(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -250,12 +249,12 @@ export class PlainYearMonth {
       TimeComponent.Days
     );
 
-    const sign = durationSign(
+    const sign = arraySign([
       duration.years,
       duration.months,
       duration.weeks,
       balancedDuration.days
-    );
+    ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
     const startdate = new PlainDate(this.year, this.month, day);

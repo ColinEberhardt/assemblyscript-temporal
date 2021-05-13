@@ -6,9 +6,7 @@ import { DateLike } from "./plaindate";
 import {
   sign,
   ord,
-  checkRange,
   rejectTime,
-  balanceDuration,
   addTime,
   toPaddedString,
   coalesce,
@@ -228,7 +226,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return balanceDuration(
+    return Duration.balanced(
       // diffTime.days,
       0,
       diffTime.hours,
@@ -265,7 +263,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return balanceDuration(
+    return Duration.balanced(
       // diffTime.days,
       0,
       -diffTime.hours,

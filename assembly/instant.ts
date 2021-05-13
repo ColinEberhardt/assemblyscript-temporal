@@ -5,7 +5,6 @@ import {
   getPartsFromEpoch,
   formatISOString,
   ord,
-  balanceDuration,
 } from "./utils";
 
 export class Instant {
@@ -97,7 +96,7 @@ export class Instant {
       throw new RangeError("Largest unit must be smaller than days")
     }
     const diffNanos = this.epochNanoseconds - instant.epochNanoseconds;
-    return balanceDuration(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
+    return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
   }
 
   until(
@@ -108,7 +107,7 @@ export class Instant {
       throw new RangeError("Largest unit must be smaller than days")
     }
     const diffNanos = instant.epochNanoseconds - this.epochNanoseconds;
-    return balanceDuration(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
+    return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
   }
 
   equals(other: Instant): boolean {

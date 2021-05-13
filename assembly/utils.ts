@@ -80,12 +80,12 @@ export class BalancedTime {
 
 // @ts-ignore: decorator
 @inline
-export function sign<T extends number>(x: T): T {
+export function sign<T extends number>(x: T): i32 {
   // optimized variant of x < 0 ? -1 : 1
   // i32: x >> 31 | 1
   // i64: x >> 63 | 1
   // @ts-ignore
-  return (x >> (sizeof<T>() * 8 - 1)) | 1;
+  return ((x >> (sizeof<T>() * 8 - 1)) | 1) as i32;
 }
 
 // @ts-ignore: decorator
@@ -395,173 +395,6 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   return week;
 }
 
-// https://github.com/tc39/proposal-temporal/blob/main/polyfill/lib/ecmascript.mjs#L2217
-export function durationSign(
-  years: i32,
-  months: i32,
-  weeks: i32,
-  days: i32,
-  hours: i32 = 0,
-  minutes: i32 = 0,
-  seconds: i32 = 0,
-  milliseconds: i32 = 0,
-  microseconds: i32 = 0,
-  nanoseconds: i32 = 0
-): i32 {
-  if (years) return sign(years);
-  if (months) return sign(months);
-  if (weeks) return sign(weeks);
-  if (days) return sign(days);
-  if (hours) return sign(hours);
-  if (minutes) return sign(minutes);
-  if (seconds) return sign(seconds);
-  if (milliseconds) return sign(milliseconds);
-  if (microseconds) return sign(microseconds);
-  if (nanoseconds) return sign(nanoseconds);
-  return 0;
-}
-
-function totalDurationNanoseconds(
-  days: i64,
-  hours: i64,
-  minutes: i64,
-  seconds: i64,
-  milliseconds: i64,
-  microseconds: i64,
-  nanoseconds: i64
-): i64 {
-  hours += days * 24;
-  minutes += hours * 60;
-  seconds += minutes * 60;
-  milliseconds += seconds * MILLIS_PER_SECOND;
-  microseconds += milliseconds * 1000;
-  return nanoseconds + microseconds * 1000;
-}
-
-export function balanceDuration(
-  days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i64,
-  microseconds: i64,
-  nanoseconds: i64,
-  largestUnit: TimeComponent
-): Duration {
-  const durationNs = totalDurationNanoseconds(
-    days as i64,
-    hours as i64,
-    minutes as i64,
-    seconds as i64,
-    milliseconds,
-    microseconds, 
-    nanoseconds
-  );
-
-  let
-    nanosecondsI64: i64 = 0,
-    microsecondsI64: i64 = 0,
-    millisecondsI64: i64 = 0,
-    secondsI64: i64 = 0,
-    minutesI64: i64 = 0,
-    hoursI64: i64 = 0,
-    daysI64: i64 = 0;
-
-  if (
-    largestUnit >= TimeComponent.Years &&
-    largestUnit <= TimeComponent.Days
-  ) {
-    // inlined nanosecondsToDays
-    const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
-    if (durationNs != 0) {
-      daysI64        = durationNs / oneDayNs;
-      nanosecondsI64 = durationNs % oneDayNs;
-    }
-  } else {
-    nanosecondsI64 = durationNs;
-  }
-
-  const sig = i32(sign(nanosecondsI64));
-  nanosecondsI64 = abs(nanosecondsI64);
-
-  switch (largestUnit) {
-    case TimeComponent.Years:
-    case TimeComponent.Months:
-    case TimeComponent.Weeks:
-    case TimeComponent.Days:
-    case TimeComponent.Hours:
-      microsecondsI64 = nanosecondsI64 / 1000;
-      nanosecondsI64  = nanosecondsI64 % 1000;
-
-      millisecondsI64 = microsecondsI64 / 1000;
-      microsecondsI64 = microsecondsI64 % 1000;
-
-      secondsI64      = millisecondsI64 / 1000;
-      millisecondsI64 = millisecondsI64 % 1000;
-
-      minutesI64 = secondsI64 / 60;
-      secondsI64 = secondsI64 % 60;
-
-      hoursI64   = minutesI64 / 60;
-      minutesI64 = minutesI64 % 60;
-      break;
-
-    case TimeComponent.Minutes:
-      microsecondsI64 = nanosecondsI64 / 1000;
-      nanosecondsI64  = nanosecondsI64 % 1000;
-
-      millisecondsI64 = microsecondsI64 / 1000;
-      microsecondsI64 = microsecondsI64 % 1000;
-
-      secondsI64      = millisecondsI64 / 1000;
-      millisecondsI64 = millisecondsI64 % 1000;
-
-      minutesI64 = secondsI64 / 60;
-      secondsI64 = secondsI64 % 60;
-      break;
-
-    case TimeComponent.Seconds:
-      microsecondsI64 = nanosecondsI64 / 1000;
-      nanosecondsI64  = nanosecondsI64 % 1000;
-
-      millisecondsI64 = microsecondsI64 / 1000;
-      microsecondsI64 = microsecondsI64 % 1000;
-
-      secondsI64      = millisecondsI64 / 1000;
-      millisecondsI64 = millisecondsI64 % 1000;
-      break;
-
-    case TimeComponent.Milliseconds:
-      microsecondsI64 = nanosecondsI64 / 1000;
-      nanosecondsI64  = nanosecondsI64 % 1000;
-
-      millisecondsI64 = microsecondsI64 / 1000;
-      microsecondsI64 = microsecondsI64 % 1000;
-      break;
-
-    case TimeComponent.Microseconds:
-      microsecondsI64 = nanosecondsI64 / 1000;
-      nanosecondsI64  = nanosecondsI64 % 1000;
-      break;
-
-    case TimeComponent.Nanoseconds:
-      break;
-  }
-
-  return new Duration(
-    0,
-    0,
-    0,
-    i32(daysI64),
-    i32(hoursI64) * sig,
-    i32(minutesI64) * sig,
-    i32(secondsI64) * sig,
-    i32(millisecondsI64) * sig,
-    i32(microsecondsI64) * sig,
-    i32(nanosecondsI64) * sig
-  );
-}
-
 export function compareTemporalDate(
   yr1: i32, mo1: i32, d1: i32,
   yr2: i32, mo2: i32, d2: i32
@@ -632,7 +465,7 @@ export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: 
     balancedDate.day, y2, mon2, d2, largerTimeComponent(largestUnit, TimeComponent.Days));
 
   // Signs of date part and time part may not agree; balance them together
-  const balancedBoth = balanceDuration(
+  const balancedBoth = Duration.balanced(
     diffDate.days,
     diffTime.hours,
     diffTime.minutes,
@@ -780,6 +613,13 @@ export function differenceDate(
   }
 }
 
+export function arraySign(values: Array<i32>): i32 {
+  for (let i = 0; i < values.length; i++) {
+    if (values[i]) return sign(values[i]);
+  }
+  return 0;
+}
+
 // https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
 export function differenceTime(
   h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
@@ -792,18 +632,14 @@ export function differenceTime(
   let microseconds = µs2 - µs1;
   let nanoseconds = ns2 - ns1;
 
-  const sign = durationSign(
-    0,
-    0,
-    0,
-    0,
+  const sign = arraySign([
     hours,
     minutes,
     seconds,
     milliseconds,
     microseconds,
     nanoseconds
-  );
+  ]);
 
   const balancedTime = balanceTime(
     hours * sign,
@@ -860,9 +696,9 @@ export function addDateTime(
   hours: i32,
   minutes: i32,
   seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64,
   overflow: Overflow
 ): DT {
   const addedTime = addTime(
@@ -957,19 +793,19 @@ export function addTime(
   hours: i32,
   minutes: i32,
   seconds: i32,
-  milliseconds: i32,
-  microseconds: i32,
-  nanoseconds: i32
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64
 ): BalancedTime {
 
-  hour += hours;
-  minute += minutes;
-  second += seconds;
-  millisecond += milliseconds;
-  microsecond += microseconds;
-  nanosecond += nanoseconds;
+  hours += hour;
+  minutes += minute;
+  seconds += second;
+  milliseconds += millisecond;
+  microseconds += microsecond;
+  nanoseconds += nanosecond;
 
-  return balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  return balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
 }
 
 function balanceTime(
@@ -1047,7 +883,8 @@ export function toPaddedString(number: i32, length: i32 = 2): string {
 
 // @ts-ignore: decorator
 @inline
-export function coalesce(a: i32, b: i32, nill: i32 = -1):i32 {
+// @ts-ignore: default value
+export function coalesce<T extends number>(a: T, b: T, nill: T = -1):T {
   return a == nill ? b : a;
 }
 
@@ -1128,70 +965,8 @@ function addInstant(epochNanoseconds: i64, h: i32, min: i32, s: i32, ms: i32, µ
   return epochNanoseconds + ns + µs * 1_000 + ms * 1_000_000 + s * 1_000_000_000 * min * 60_000_000_000 + h * 3_600_000_000_000;
 }
 
-function largestDurationUnit(y: i32, mon: i32, w: i32, d: i32, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): TimeComponent {
-  if (y != 0) return TimeComponent.Years;
-  if (mon != 0) return TimeComponent.Months;
-  if (w != 0) return TimeComponent.Weeks;
-  if (d != 0) return TimeComponent.Days;
-  if (h != 0) return TimeComponent.Hours;
-  if (min != 0) return TimeComponent.Minutes;
-  if (s != 0) return TimeComponent.Seconds;
-  if (ms != 0) return TimeComponent.Milliseconds;
-  if (µs != 0) return TimeComponent.Microseconds;
-  return TimeComponent.Nanoseconds;
-}
+
 
 export function largerTimeComponent(t1: TimeComponent, t2: TimeComponent): TimeComponent {
   return min(t1, t2) as TimeComponent
-}
-
-export function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
-  y2: i32, mon2: i32, w2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32,
-  relativeTo: PlainDateTime | null
-): Duration  {
-  const largestUnit1 = largestDurationUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
-  const largestUnit2 = largestDurationUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
-  const largestUnit = largerTimeComponent(largestUnit1, largestUnit2);
-
-  if (!relativeTo) {
-    if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
-      throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
-    }
-    const balanced = balanceDuration(
-      d1 + d2,
-      h1 + h2,
-      min1 + min2,
-      s1 + s2,
-      ms1 + ms2,
-      µs1 + µs2,
-      ns1 + ns2,
-      largestUnit
-    );
-    return balanced;
-  } else {
-    const datePart = relativeTo.toPlainDate();
-
-    const dateDuration1 = new Duration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
-    const dateDuration2 = new Duration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
-
-    const intermediate = datePart.add(dateDuration1);
-    const end = intermediate.add(dateDuration2);
-
-    const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
-    const dateDiff = datePart.until(end, dateLargestUnit);
-
-    const dur =  balanceDuration(
-      dateDiff.days,
-      h1 + h2,
-      min1 + min2,
-      s1 + s2,
-      ms1 + ms2,
-      µs1 + µs2,
-      ns1 + ns2,
-      largestUnit
-    );
-
-    return new Duration(dateDiff.years, dateDiff.months, dateDiff.weeks, dur.days, dur.hours, dur.minutes,
-      dur.seconds, dur.milliseconds, dur.microseconds, dur.nanoseconds);
-  }
 }

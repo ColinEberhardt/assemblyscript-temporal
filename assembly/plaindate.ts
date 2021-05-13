@@ -14,7 +14,6 @@ import {
   weekOfYear,
   daysInMonth,
   daysInYear,
-  balanceDuration,
   toPaddedString,
   rejectDate,
   checkDateTimeRange,
@@ -174,9 +173,9 @@ export class PlainDate {
 
   with(dateLike: DateLike): PlainDate {
     return new PlainDate(
-      coalesce(dateLike.year, this.year),
-      coalesce(dateLike.month, this.month),
-      coalesce(dateLike.day, this.day)
+      coalesce(dateLike.year, this.year, -1),
+      coalesce(dateLike.month, this.month, -1),
+      coalesce(dateLike.day, this.day, -1)
     );
   }
 
@@ -186,7 +185,7 @@ export class PlainDate {
   ): PlainDate {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = balanceDuration(
+    const balancedDuration = Duration.balanced(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -215,7 +214,7 @@ export class PlainDate {
   ): PlainDate {
     const duration = Duration.from(durationToSubtract);
 
-    const balancedDuration = balanceDuration(
+    const balancedDuration = Duration.balanced(
       duration.days,
       duration.hours,
       duration.minutes,
