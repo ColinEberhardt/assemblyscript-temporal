@@ -2,7 +2,6 @@ import { Duration, DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
 import {
-  getPartsFromEpoch,
   formatISOString,
   ord,
 } from "./utils";
@@ -116,19 +115,37 @@ export class Instant {
 
   @inline
   toString(): string {
-    const parts = getPartsFromEpoch(this.epochNanoseconds);
+    const quotient = this.epochNanoseconds / 1_000_000;
+    const remainder = this.epochNanoseconds % 1_000_000;
+    let epochMilliseconds = +quotient;
+    let nanos = +remainder;
+    if (nanos < 0) {
+      nanos += 1_000_000;
+      epochMilliseconds -= 1;
+    }
+    const microsecond = i32((nanos / 1_000) % 1_000);
+    const nanosecond = i32(nanos % 1_000);
+
+    const item = new Date(epochMilliseconds);
+    const year = item.getUTCFullYear();
+    const month = item.getUTCMonth() + 1;
+    const day = item.getUTCDate();
+    const hour = item.getUTCHours();
+    const minute = item.getUTCMinutes();
+    const second = item.getUTCSeconds();
+    const millisecond = item.getUTCMilliseconds();
 
     return (
       formatISOString(
-        parts.year,
-        parts.month,
-        parts.day,
-        parts.hour,
-        parts.minute,
-        parts.second,
-        parts.millisecond,
-        parts.microsecond,
-        parts.nanosecond
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
       ) + "Z"
     );
   }
