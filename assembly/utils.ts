@@ -12,6 +12,8 @@ import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
 import { PlainDateTime } from "./plaindatetime";
+import { PlainYearMonth } from "./plainyearmonth";
+import { PlainDate } from "./plaindate";
 
 // @ts-ignore
 @lazy
@@ -168,57 +170,6 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   return w + (w <= 0 ? 7 : 0);
 }
 
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2164
-function balanceYearMonth(year: i32, month: i32): YM {
-  month -= 1;
-  year  += floorDiv(month, 12);
-  month %= 12;
-  month += month < 0 ? 13 : 1;
-  return { year, month };
-}
-
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2173
-function balanceDate(year: i32, month: i32, day: i32): YMD {
-  const yearMonth = balanceYearMonth(year, month);
-
-  year  = yearMonth.year;
-  month = yearMonth.month;
-
-  let daysPerYear = 0;
-  let testYear = month > 2 ? year : year - 1;
-
-  while (((daysPerYear = daysInYear(testYear)), day < -daysPerYear)) {
-    year -= 1;
-    testYear -= 1;
-    day += daysPerYear;
-  }
-
-  testYear += 1;
-
-  while (((daysPerYear = daysInYear(testYear)), day > daysPerYear)) {
-    year += 1;
-    testYear += 1;
-    day -= daysPerYear;
-  }
-
-  while (day < 1) {
-    const yearMonth = balanceYearMonth(year, month - 1);
-    year  = yearMonth.year;
-    month = yearMonth.month;
-    day  += daysInMonth(year, month);
-  }
-
-  let monthDays = 0;
-  while (monthDays = daysInMonth(year, month), day > monthDays) {
-    const yearMonth = balanceYearMonth(year, month + 1);
-    year  = yearMonth.year;
-    month = yearMonth.month;
-    day  -= monthDays;
-  }
-
-  return { year, month, day };
-}
-
 export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
   minute: i32,
   second: i32,
@@ -227,7 +178,7 @@ export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
   nanosecond: i64): DT {
 
   const balancedTime = balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
-  const balancedDate = balanceDate(year, month, day + balancedTime.deltaDays);
+  const balancedDate = PlainDate.balanced(year, month, day + balancedTime.deltaDays);
 
   return {
     year: balancedDate.year,
@@ -303,76 +254,6 @@ export function rejectTime(
   )) throw new RangeError("time out of range");
 }
 
-export function rejectDate(year: i32, month: i32, day: i32): void {
-  if (!checkRange(month, 1, 12)) {
-    throw new RangeError("month out of range");
-  }
-  if (!checkRange(day, 1, daysInMonth(year, month))) {
-    throw new RangeError("day out of range");
-  }
-}
-
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
-export function constrainDate(year: i32, month: i32, day: i32): YMD {
-  month = clamp(month, 1, 12);
-  day   = clamp(day, 1, daysInMonth(year, month));
-  return { year, month, day };
-}
-
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
-export function regulateDate(
-  year: i32,
-  month: i32,
-  day: i32,
-  overflow: Overflow
-): YMD {
-  switch (overflow) {
-    case Overflow.Reject:
-      rejectDate(year, month, day);
-      break;
-
-    case Overflow.Constrain:
-      const date = constrainDate(year, month, day);
-      year  = date.year;
-      month = date.month;
-      day   = date.day;
-      break;
-  }
-
-  return { year, month, day };
-}
-
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2984
-export function addDate(
-  year: i32,
-  month: i32,
-  day: i32,
-  years: i32,
-  months: i32,
-  weeks: i32,
-  days: i32,
-  overflow: Overflow
-): YMD {
-  year  += years;
-  month += months;
-
-  const yearMonth = balanceYearMonth(year, month);
-  year  = yearMonth.year;
-  month = yearMonth.month;
-
-  const regulatedDate = regulateDate(year, month, day, overflow);
-  year  = regulatedDate.year;
-  month = regulatedDate.month;
-  day   = regulatedDate.day;
-  day  += days + weeks * 7;
-
-  const balancedDate = balanceDate(year, month, day);
-  year  = balancedDate.year;
-  month = balancedDate.month;
-  day   = balancedDate.day;
-
-  return { year, month, day };
-}
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2135
 export function weekOfYear(year: i32, month: i32, day: i32): i32 {
@@ -395,52 +276,12 @@ export function weekOfYear(year: i32, month: i32, day: i32): i32 {
   return week;
 }
 
-export function compareTemporalDate(
-  yr1: i32, mo1: i32, d1: i32,
-  yr2: i32, mo2: i32, d2: i32
-): i32 {
-  let res = yr1 - yr2;
-  if (res) return sign(res);
-
-  res = mo1 - mo2;
-  if (res) return sign(res);
-
-  return ord(d1, d2);
-}
-
-export function compareTemporalDateTime(
-  yr1: i32, mo1: i32, d1: i32, h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
-  yr2: i32, mo2: i32, d2: i32, h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
-): i32 {
-
-  let res = yr1 - yr2;
-  if (res) return sign(res);
-
-  res = mo1 - mo2;
-  if (res) return sign(res);
-
-  res = d1 - d2;
-  if (res) return sign(res);
-
-  res = h1 - h2;
-  if (res) return sign(res);
-
-  res = m1 - m2;
-  if (res) return sign(res);
-
-  res = s1 - s2;
-  if (res) return sign(res);
-
-  res = ms1 - ms2;
-  if (res) return sign(res);
-
-  res = µs1 - µs2;
-  if (res) return sign(res);
-
-  res = ns1 - ns2;
-  if (res) return sign(res);
-
-  return ord(d1, d2);
+export function compare<T extends number>(a: Array<T>, b: Array<T>): i32 {
+  for (let i = 0; i < a.length; i++) {
+    let res = a[i] - b[i];
+    if (res) return sign(res);
+  }
+  return 0;
 }
 
 export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
@@ -460,9 +301,9 @@ export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: 
     µs2,
     ns2
   );
-  const balancedDate = balanceDate(y1, mon1, d1 + diffTime.days);
-  const diffDate = differenceDate(balancedDate.year, balancedDate.month,
-    balancedDate.day, y2, mon2, d2, largerTimeComponent(largestUnit, TimeComponent.Days));
+  const balancedDate = PlainDate.balanced(y1, mon1, d1 + diffTime.days);
+  const diffDate = balancedDate.until(new PlainDate(y2, mon2, d2),
+    largerTimeComponent(largestUnit, TimeComponent.Days));
 
   // Signs of date part and time part may not agree; balance them together
   const balancedBoth = Duration.balanced(
@@ -487,130 +328,6 @@ export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: 
     balancedBoth.microseconds,
     balancedBoth.nanoseconds
   );
-}
-
-export function differenceDate(
-  yr1: i32, mo1: i32, d1: i32,
-  yr2: i32, mo2: i32, d2: i32,
-  largestUnit: TimeComponent = TimeComponent.Days
-): Duration {
-  switch (largestUnit) {
-    case TimeComponent.Years:
-    case TimeComponent.Months: {
-      let sign = -compareTemporalDate(yr1, mo1, d1, yr2, mo2, d2);
-      if (sign == 0) return new Duration();
-
-      let startYear  = yr1;
-      let startMonth = mo1;
-
-      let endYear  = yr2;
-      let endMonth = mo2;
-      let endDay   = d2;
-
-      let years = endYear - startYear;
-      let mid = addDate(yr1, mo1, d1, years, 0, 0, 0, Overflow.Constrain);
-      let midSign = -compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
-
-      if (midSign === 0) {
-        return largestUnit === TimeComponent.Years
-          ? new Duration(years)
-          : new Duration(0, years * 12);
-      }
-
-      let months = endMonth - startMonth;
-
-      if (midSign !== sign) {
-        years  -= sign;
-        months += sign * 12;
-      }
-
-      mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-      midSign = -compareTemporalDate(mid.year, mid.month, mid.day, yr2, mo2, d2);
-
-      if (midSign === 0) {
-        return largestUnit === TimeComponent.Years
-          ? new Duration(years, months)
-          : new Duration(0, months + years * 12);
-      }
-
-      if (midSign !== sign) {
-        // The end date is later in the month than mid date (or earlier for
-        // negative durations). Back up one month.
-        months -= sign;
-
-        if (months === -sign) {
-          years -= sign;
-          months = sign * 11;
-        }
-
-        mid = addDate(yr1, mo1, d1, years, months, 0, 0, Overflow.Constrain);
-      }
-
-      let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
-      // is within the range from `start` to `end`. To count the days between
-      // `mid` and `end`, there are 3 cases:
-      // 1) same month: use simple subtraction
-      // 2) end is previous month from intermediate (negative duration)
-      // 3) end is next month from intermediate (positive duration)
-
-      if (mid.month === endMonth && mid.year === endYear) {
-        // 1) same month: use simple subtraction
-      } else if (sign < 0) {
-        // 2) end is previous month from intermediate (negative duration)
-        // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
-        days -= daysInMonth(endYear, endMonth);
-      } else {
-        // 3) end is next month from intermediate (positive duration)
-        // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
-        days += daysInMonth(mid.year, mid.month);
-      }
-
-      if (largestUnit === TimeComponent.Months) {
-        months += years * 12;
-        years = 0;
-      }
-
-      return new Duration(years, months, 0, days);
-    }
-
-    case TimeComponent.Weeks:
-    case TimeComponent.Days: {
-      let neg = compareTemporalDate(yr1, mo1, d1, yr2, mo2, d2) < 0;
-
-      let smallerYear  = neg ? yr1 : yr2;
-      let smallerMonth = neg ? mo1 : mo2;
-      let smallerDay   = neg ? d1 : d2;
-
-      let largerYear  = neg ? yr2 : yr1;
-      let largerMonth = neg ? mo2 : mo1;
-      let largerDay   = neg ? d2 : d1;
-
-      let sign = neg ? 1 : -1;
-
-      let years = largerYear - smallerYear;
-
-      let days = (
-        dayOfYear(largerYear,  largerMonth,  largerDay) -
-        dayOfYear(smallerYear, smallerMonth, smallerDay)
-      );
-
-      while (years > 0) {
-        days  += daysInYear(smallerYear + years - 1);
-        years -= 1;
-      }
-
-      let weeks = 0;
-      if (largestUnit === TimeComponent.Weeks) {
-        weeks = floorDiv(days, 7);
-        days -= weeks * 7;
-      }
-
-      return new Duration(0, 0, weeks * sign, days * sign);
-    }
-
-    default:
-      throw new Error('differenceDate - cannot support TimeComponent < Days');
-  }
 }
 
 export function arraySign(values: Array<i32>): i32 {
@@ -714,7 +431,8 @@ export function addDateTime(
   nanosecond = addedTime.nanosecond;
   days += addedTime.deltaDays; // Delegate the date part addition to the calendar
 
-  const addedDate = addDate(year, month, day, years, months, weeks, days,overflow);
+  const addedDate = new PlainDate(year, month, day)
+    .add(new Duration(years, months, weeks, days), overflow);
 
   return {
     year: addedDate.year,
