@@ -851,30 +851,6 @@ function balanceTime(
   };
 }
 
-export function getPartsFromEpoch(epochNanoseconds: i64): DT {
-  const quotient = epochNanoseconds / 1_000_000;
-  const remainder = epochNanoseconds % 1_000_000;
-  let epochMilliseconds = +quotient;
-  let nanos = +remainder;
-  if (nanos < 0) {
-    nanos += 1_000_000;
-    epochMilliseconds -= 1;
-  }
-  const microsecond = i32((nanos / 1_000) % 1_000);
-  const nanosecond = i32(nanos % 1_000);
-
-  const item = new Date(epochMilliseconds);
-  const year = item.getUTCFullYear();
-  const month = item.getUTCMonth() + 1;
-  const day = item.getUTCDate();
-  const hour = item.getUTCHours();
-  const minute = item.getUTCMinutes();
-  const second = item.getUTCSeconds();
-  const millisecond = item.getUTCMilliseconds();
-
-  return { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
-}
-
 // @ts-ignore: decorator
 @inline
 export function toPaddedString(number: i32, length: i32 = 2): string {
@@ -960,12 +936,6 @@ export function formatISOString(year: i32, month: i32, day: i32, hour: i32, minu
       : "")
   );
 }
-
-function addInstant(epochNanoseconds: i64, h: i32, min: i32, s: i32, ms: i32, µs: i32, ns: i32): i64 {
-  return epochNanoseconds + ns + µs * 1_000 + ms * 1_000_000 + s * 1_000_000_000 * min * 60_000_000_000 + h * 3_600_000_000_000;
-}
-
-
 
 export function largerTimeComponent(t1: TimeComponent, t2: TimeComponent): TimeComponent {
   return min(t1, t2) as TimeComponent
