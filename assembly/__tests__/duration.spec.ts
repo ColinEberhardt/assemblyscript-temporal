@@ -1,5 +1,4 @@
 import { Duration, DurationLike } from "../duration";
-import { TimeComponent } from "../enums";
 import { PlainDateTime } from "../plaindatetime";
 
 describe("Construction", () => {

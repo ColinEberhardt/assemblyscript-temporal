@@ -8,13 +8,13 @@ import {
   daysInMonth,
   daysInYear,
   coalesce,
-  compareTemporalDateTime,
   addDateTime,
   parseISOString,
   leapYear,
   epochFromParts,
   differenceDateTime,
   formatISOString,
+  compare,
 } from "./utils";
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
@@ -282,8 +282,8 @@ export class PlainDateTime {
 
   static compare(a: PlainDateTime, b: PlainDateTime): i32 {
     if (a === b) return 0;
-    return compareTemporalDateTime(
-      a.year,
+    return compare(
+      [a.year,
       a.month,
       a.day,
       a.hour,
@@ -291,8 +291,8 @@ export class PlainDateTime {
       a.second,
       a.millisecond,
       a.microsecond,
-      a.nanosecond,
-      b.year,
+      a.nanosecond],
+      [b.year,
       b.month,
       b.day,
       b.hour,
@@ -300,7 +300,7 @@ export class PlainDateTime {
       b.second,
       b.millisecond,
       b.microsecond,
-      b.nanosecond
+      b.nanosecond]
     );
   }
 

@@ -6,13 +6,14 @@ import { PlainDateTime } from "./plaindatetime";
 import {
   checkDateTimeRange,
   coalesce,
-  compareTemporalDate,
   daysInMonth,
   isoYearString,
   leapYear,
   toPaddedString,
   daysInYear,
   arraySign,
+  floorDiv,
+  compare,
 } from "./utils";
 
 export class YearMonthLike {
@@ -37,6 +38,14 @@ export class PlainYearMonth {
       }
       throw new TypeError("invalid yearMonth type");
     }
+  }
+
+  static balanced(year: i32, month: i32): PlainYearMonth {
+    month -= 1;
+    year  += floorDiv(month, 12);
+    month %= 12;
+    month += month < 0 ? 13 : 1;
+    return new PlainYearMonth(year, month);
   }
 
   @inline
@@ -264,13 +273,13 @@ export class PlainYearMonth {
 
   static compare(a: PlainYearMonth, b: PlainYearMonth): i32 {
     if (a === b) return 0;
-    return compareTemporalDate(
-      a.year,
+    return compare(
+      [a.year,
       a.month,
-      a.referenceISODay,
-      b.year,
+      a.referenceISODay],
+      [b.year,
       b.month,
-      b.referenceISODay
+      b.referenceISODay]
     );
   }
 }
