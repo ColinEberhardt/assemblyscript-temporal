@@ -77,8 +77,7 @@ export function toPaddedString(number: i32, length: i32 = 2): string {
 
 // @ts-ignore: decorator
 @inline
-// @ts-ignore: default value
-export function coalesce<T extends number>(a: T, b: T, nill: T = -1):T {
+export function coalesce<T extends number>(a: T, b: T, nill: T = -1 as T):T {
   return a == nill ? b : a;
 }
 

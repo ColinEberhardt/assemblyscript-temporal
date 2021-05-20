@@ -4,11 +4,7 @@ import { PlainTime } from "./plaintime";
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
 import { PlainMonthDay } from "./plainmonthday";
-import {
-  coalesce,
-  larger,
-  compare
-} from "./util";
+import { coalesce, larger, compare } from "./util";
 import {
   dayOfWeek,
   leapYear,
@@ -17,11 +13,8 @@ import {
   daysInMonth,
   daysInYear,
   epochFromParts
-} from "./util/calendar"
-import {
-  formatISOString,
-  parseISOString
-} from "./util/format"
+} from "./util/calendar";
+import { formatISOString, parseISOString } from "./util/format";
 
 // @ts-ignore
 @lazy
@@ -249,7 +242,8 @@ export class PlainDateTime {
   }
 
   toString(): string {
-    return formatISOString(this.year,
+    return formatISOString(
+      this.year,
       this.month,
       this.day,
       this.hour,
@@ -257,7 +251,8 @@ export class PlainDateTime {
       this.second,
       this.millisecond,
       this.microsecond,
-      this.nanosecond);
+      this.nanosecond
+    );
   }
 
   toPlainTime(): PlainTime {
@@ -286,24 +281,28 @@ export class PlainDateTime {
   static compare(a: PlainDateTime, b: PlainDateTime): i32 {
     if (a === b) return 0;
     return compare(
-      [a.year,
-      a.month,
-      a.day,
-      a.hour,
-      a.minute,
-      a.second,
-      a.millisecond,
-      a.microsecond,
-      a.nanosecond],
-      [b.year,
-      b.month,
-      b.day,
-      b.hour,
-      b.minute,
-      b.second,
-      b.millisecond,
-      b.microsecond,
-      b.nanosecond]
+      [
+        a.year,
+        a.month,
+        a.day,
+        a.hour,
+        a.minute,
+        a.second,
+        a.millisecond,
+        a.microsecond,
+        a.nanosecond
+      ],
+      [
+        b.year,
+        b.month,
+        b.day,
+        b.hour,
+        b.minute,
+        b.second,
+        b.millisecond,
+        b.microsecond,
+        b.nanosecond
+      ]
     );
   }
 
@@ -380,7 +379,7 @@ export class PlainDateTime {
       -duration.microseconds,
       -duration.nanoseconds,
       overflow
-    )
+    );
   }
 }
 
@@ -406,7 +405,6 @@ export function addDateTime(
   nanoseconds: i64,
   overflow: Overflow
 ): PlainDateTime {
-
   hours += hour;
   minutes += minute;
   seconds += second;
@@ -414,8 +412,14 @@ export function addDateTime(
   microseconds += microsecond;
   nanoseconds += nanosecond;
 
-  const addedTime = PlainTime.balanced(hours, minutes, seconds, milliseconds,
-    microseconds, nanoseconds);
+  const addedTime = PlainTime.balanced(
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  );
 
   hour = addedTime.hour;
   minute = addedTime.minute;
@@ -425,8 +429,10 @@ export function addDateTime(
   nanosecond = addedTime.nanosecond;
   days += addedTime.deltaDays; // Delegate the date part addition to the calendar
 
-  const addedDate = new PlainDate(year, month, day)
-    .add(new Duration(years, months, weeks, days), overflow);
+  const addedDate = new PlainDate(year, month, day).add(
+    new Duration(years, months, weeks, days),
+    overflow
+  );
 
   return new PlainDateTime(
     addedDate.year,
@@ -441,15 +447,36 @@ export function addDateTime(
   );
 }
 
-export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
-  y2: i32, mon2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32, largestUnit: TimeComponent = TimeComponent.Days): Duration  {
-  
-  const diffTime = new PlainTime(h1, min1, s1, ms1, µs1, ns1)
-    .until(new PlainTime(h2, min2, s2, ms2, µs2, ns2));
+export function differenceDateTime(
+  y1: i32,
+  mon1: i32,
+  d1: i32,
+  h1: i32,
+  min1: i32,
+  s1: i32,
+  ms1: i32,
+  µs1: i32,
+  ns1: i32,
+  y2: i32,
+  mon2: i32,
+  d2: i32,
+  h2: i32,
+  min2: i32,
+  s2: i32,
+  ms2: i32,
+  µs2: i32,
+  ns2: i32,
+  largestUnit: TimeComponent = TimeComponent.Days
+): Duration {
+  const diffTime = new PlainTime(h1, min1, s1, ms1, µs1, ns1).until(
+    new PlainTime(h2, min2, s2, ms2, µs2, ns2)
+  );
 
   const balancedDate = PlainDate.balanced(y1, mon1, d1 + diffTime.days);
-  const diffDate = balancedDate.until(new PlainDate(y2, mon2, d2),
-  larger(largestUnit, TimeComponent.Days));
+  const diffDate = balancedDate.until(
+    new PlainDate(y2, mon2, d2),
+    larger(largestUnit, TimeComponent.Days)
+  );
 
   // Signs of date part and time part may not agree; balance them together
   const balancedBoth = Duration.balanced(
