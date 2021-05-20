@@ -1,7 +1,7 @@
 import { RegExp } from "assemblyscript-regex";
 
-import { arraySign, coalesce, largerTimeComponent, sign } from "./utils";
-import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
+import { arraySign, coalesce, larger, sign } from "./util";
+import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./util/constants";
 import { PlainDateTime } from "./plaindatetime";
 import { TimeComponent } from "./enums";
 
@@ -445,7 +445,7 @@ function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1: i32, s
 ): Duration  {
   const largestUnit1 = largestDurationUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
   const largestUnit2 = largestDurationUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
-  const largestUnit = largerTimeComponent(largestUnit1, largestUnit2);
+  const largestUnit = larger(largestUnit1, largestUnit2);
 
   if (!relativeTo) {
     if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {

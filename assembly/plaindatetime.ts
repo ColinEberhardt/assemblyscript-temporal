@@ -1,23 +1,27 @@
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainTime } from "./plaintime";
+import { PlainDate } from "./plaindate";
+import { PlainYearMonth } from "./plainyearmonth";
+import { PlainMonthDay } from "./plainmonthday";
+import {
+  coalesce,
+  larger,
+  compare
+} from "./util";
 import {
   dayOfWeek,
+  leapYear,
   dayOfYear,
   weekOfYear,
   daysInMonth,
   daysInYear,
-  coalesce,
-  parseISOString,
-  leapYear,
-  epochFromParts,
-  largerTimeComponent,
+  epochFromParts
+} from "./util/calendar"
+import {
   formatISOString,
-  compare
-} from "./utils";
-import { PlainDate } from "./plaindate";
-import { PlainYearMonth } from "./plainyearmonth";
-import { PlainMonthDay } from "./plainmonthday";
+  parseISOString
+} from "./util/format"
 
 // @ts-ignore
 @lazy
@@ -445,7 +449,7 @@ export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: 
 
   const balancedDate = PlainDate.balanced(y1, mon1, d1 + diffTime.days);
   const diffDate = balancedDate.until(new PlainDate(y2, mon2, d2),
-    largerTimeComponent(largestUnit, TimeComponent.Days));
+  larger(largestUnit, TimeComponent.Days));
 
   // Signs of date part and time part may not agree; balance them together
   const balancedBoth = Duration.balanced(

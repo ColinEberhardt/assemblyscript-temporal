@@ -3,9 +3,9 @@ import { PlainDateTime } from "./plaindatetime";
 import { PlainDate } from "./plaindate";
 import {
   coalesce,
-  toPaddedString,
-  checkDateTimeRange
-} from "./utils";
+  toPaddedString
+} from "./util";
+import { checkDateTimeRange } from "./util/calendar";
 
 export class MonthDayLike {
   month: i32 = -1;
