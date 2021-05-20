@@ -4,17 +4,19 @@ import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
 import {
-  checkDateTimeRange,
   coalesce,
-  daysInMonth,
-  isoYearString,
-  leapYear,
   toPaddedString,
-  daysInYear,
   arraySign,
   floorDiv,
-  compare,
-} from "./utils";
+  compare
+} from "./util";
+import {
+  leapYear,
+  daysInMonth,
+  daysInYear,
+  checkDateTimeRange
+} from "./util/calendar"
+import { isoYearString } from "./util/format";
 
 export class YearMonthLike {
   year: i32 = -1;

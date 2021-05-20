@@ -12,7 +12,7 @@ import {
   arraySign,
   floorDiv,
   checkRange
-} from "./utils";
+} from "./util";
 
 export class TimeLike {
   hour: i32 = -1;

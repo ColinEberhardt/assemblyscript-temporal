@@ -1,10 +1,8 @@
 import { Duration, DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
-import {
-  formatISOString,
-  ord,
-} from "./utils";
+import { ord } from "./util";
+import { formatISOString } from "./util/format";
 
 export class Instant {
   @inline
@@ -92,7 +90,7 @@ export class Instant {
     largestUnit: TimeComponent = TimeComponent.Seconds
   ): Duration {
     if (largestUnit <= TimeComponent.Days) {
-      throw new RangeError("Largest unit must be smaller than days")
+      throw new RangeError("Largest unit must be smaller than days");
     }
     const diffNanos = this.epochNanoseconds - instant.epochNanoseconds;
     return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
@@ -103,7 +101,7 @@ export class Instant {
     largestUnit: TimeComponent = TimeComponent.Seconds
   ): Duration {
     if (largestUnit <= TimeComponent.Days) {
-      throw new RangeError("Largest unit must be smaller than days")
+      throw new RangeError("Largest unit must be smaller than days");
     }
     const diffNanos = instant.epochNanoseconds - this.epochNanoseconds;
     return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
