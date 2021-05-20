@@ -1,9 +1,9 @@
 import "./env";
 
-export * from "./plaintime";
-export * from "./plaindate";
-export * from "./plaindatetime";
-export * from "./duration";
+export { PlainTime } from "./plaintime";
+export { PlainDate } from "./plaindate";
+export { PlainDateTime } from "./plaindatetime";
+export { Duration } from "./duration";
 export * from "./enums";
-export * from "./now";
-export * from "./instant";
+export { now } from "./now";
+export { Instant } from "./instant";
