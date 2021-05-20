@@ -1,4 +1,4 @@
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
@@ -51,49 +51,6 @@ export class PlainTime {
       }
       throw new TypeError("invalid time type");
     }
-  }
-
-  static balanced(
-    hour: i64,
-    minute: i64,
-    second: i64,
-    millisecond: i64,
-    microsecond: i64,
-    nanosecond: i64
-  ): BalancedTime {
-  
-    let quotient = floorDiv(nanosecond, 1000);
-    microsecond += quotient;
-    nanosecond  -= quotient * 1000;
-  
-    quotient = floorDiv(microsecond, 1000);
-    millisecond += quotient;
-    microsecond -= quotient * 1000;
-  
-    quotient = floorDiv(millisecond, 1000);
-    second      += quotient;
-    millisecond -= quotient * 1000;
-  
-    quotient = floorDiv(second, 60);
-    minute += quotient;
-    second -= quotient * 60;
-  
-    quotient = floorDiv(minute, 60);
-    hour   += quotient;
-    minute -= quotient * 60;
-  
-    let deltaDays = floorDiv(hour, 24);
-    hour -= deltaDays * 24;
-  
-    return {
-      deltaDays: i32(deltaDays),
-      hour: i32(hour),
-      minute: i32(minute),
-      second: i32(second),
-      millisecond: i32(millisecond),
-      microsecond: i32(microsecond),
-      nanosecond: i32(nanosecond)
-    };
   }
 
   @inline
@@ -279,7 +236,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return Duration.balanced(
+    return balancedDuration(
       // diffTime.days,
       0,
       diffTime.hours,
@@ -316,7 +273,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return Duration.balanced(
+    return balancedDuration(
       // diffTime.days,
       0,
       -diffTime.hours,
@@ -442,7 +399,7 @@ export function differenceTime(
     nanoseconds
   ]);
 
-  const balancedTime = PlainTime.balanced(
+  const balanced = balancedTime(
     hours * sign,
     minutes * sign,
     seconds * sign,
@@ -455,13 +412,13 @@ export function differenceTime(
     0,
     0,
     0,
-    balancedTime.deltaDays * sign,
-    balancedTime.hour * sign,
-    balancedTime.minute * sign,
-    balancedTime.second * sign,
-    balancedTime.millisecond * sign,
-    balancedTime.microsecond * sign,
-    balancedTime.nanosecond * sign
+    balanced.deltaDays * sign,
+    balanced.hour * sign,
+    balanced.minute * sign,
+    balanced.second * sign,
+    balanced.millisecond * sign,
+    balanced.microsecond * sign,
+    balanced.nanosecond * sign
   );
 }
 
@@ -487,7 +444,7 @@ function addTime(
   microseconds += microsecond;
   nanoseconds += nanosecond;
 
-  return PlainTime.balanced(hours, minutes, seconds, milliseconds,
+  return balancedTime(hours, minutes, seconds, milliseconds,
     microseconds, nanoseconds);
 }
 
@@ -561,4 +518,47 @@ function rejectTime(
     checkRange(microsecond, 0, 999) &&
     checkRange(nanosecond, 0, 999)
   )) throw new RangeError("time out of range");
+}
+
+export function balancedTime(
+  hour: i64,
+  minute: i64,
+  second: i64,
+  millisecond: i64,
+  microsecond: i64,
+  nanosecond: i64
+): BalancedTime {
+
+  let quotient = floorDiv(nanosecond, 1000);
+  microsecond += quotient;
+  nanosecond  -= quotient * 1000;
+
+  quotient = floorDiv(microsecond, 1000);
+  millisecond += quotient;
+  microsecond -= quotient * 1000;
+
+  quotient = floorDiv(millisecond, 1000);
+  second      += quotient;
+  millisecond -= quotient * 1000;
+
+  quotient = floorDiv(second, 60);
+  minute += quotient;
+  second -= quotient * 60;
+
+  quotient = floorDiv(minute, 60);
+  hour   += quotient;
+  minute -= quotient * 60;
+
+  let deltaDays = floorDiv(hour, 24);
+  hour -= deltaDays * 24;
+
+  return {
+    deltaDays: i32(deltaDays),
+    hour: i32(hour),
+    minute: i32(minute),
+    second: i32(second),
+    millisecond: i32(millisecond),
+    microsecond: i32(microsecond),
+    nanosecond: i32(nanosecond)
+  };
 }

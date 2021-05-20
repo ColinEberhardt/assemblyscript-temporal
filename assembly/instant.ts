@@ -1,4 +1,4 @@
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
 import { ord } from "./util";
@@ -93,7 +93,7 @@ export class Instant {
       throw new RangeError("Largest unit must be smaller than days");
     }
     const diffNanos = this.epochNanoseconds - instant.epochNanoseconds;
-    return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
+    return balancedDuration(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
   }
 
   until(
@@ -104,7 +104,7 @@ export class Instant {
       throw new RangeError("Largest unit must be smaller than days");
     }
     const diffNanos = instant.epochNanoseconds - this.epochNanoseconds;
-    return Duration.balanced(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
+    return balancedDuration(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
   }
 
   equals(other: Instant): boolean {

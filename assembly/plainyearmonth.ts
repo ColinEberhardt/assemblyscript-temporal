@@ -1,5 +1,5 @@
 import { RegExp } from "assemblyscript-regex";
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
@@ -40,14 +40,6 @@ export class PlainYearMonth {
       }
       throw new TypeError("invalid yearMonth type");
     }
-  }
-
-  static balanced(year: i32, month: i32): PlainYearMonth {
-    month -= 1;
-    year  += floorDiv(month, 12);
-    month %= 12;
-    month += month < 0 ? 13 : 1;
-    return new PlainYearMonth(year, month);
   }
 
   @inline
@@ -206,7 +198,7 @@ export class PlainYearMonth {
   ): PlainYearMonth {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = Duration.balanced(
+    const balancedDur = balancedDuration(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -221,7 +213,7 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days
+      balancedDur.days
     ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
@@ -249,7 +241,7 @@ export class PlainYearMonth {
       -duration.nanoseconds
     );
 
-    const balancedDuration = Duration.balanced(
+    const balancedDur = balancedDuration(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -264,7 +256,7 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days
+      balancedDur.days
     ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
@@ -284,4 +276,12 @@ export class PlainYearMonth {
       b.referenceISODay]
     );
   }
+}
+
+export function balancedYearMonth(year: i32, month: i32): PlainYearMonth {
+  month -= 1;
+  year  += floorDiv(month, 12);
+  month %= 12;
+  month += month < 0 ? 13 : 1;
+  return new PlainYearMonth(year, month);
 }
