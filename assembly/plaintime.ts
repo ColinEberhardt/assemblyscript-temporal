@@ -1,4 +1,4 @@
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
@@ -279,7 +279,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return Duration.balanced(
+    return balancedDuration(
       // diffTime.days,
       0,
       diffTime.hours,
@@ -316,7 +316,7 @@ export class PlainTime {
       other.microsecond,
       other.nanosecond,
     )
-    return Duration.balanced(
+    return balancedDuration(
       // diffTime.days,
       0,
       -diffTime.hours,

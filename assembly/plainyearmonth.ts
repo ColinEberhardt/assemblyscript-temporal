@@ -1,5 +1,5 @@
 import { RegExp } from "assemblyscript-regex";
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
@@ -206,7 +206,7 @@ export class PlainYearMonth {
   ): PlainYearMonth {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = Duration.balanced(
+    const balancedDur = balancedDuration(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -221,7 +221,7 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days
+      balancedDur.days
     ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
@@ -249,7 +249,7 @@ export class PlainYearMonth {
       -duration.nanoseconds
     );
 
-    const balancedDuration = Duration.balanced(
+    const balancedDur = balancedDuration(
       duration.days,
       duration.hours,
       duration.minutes,
@@ -264,7 +264,7 @@ export class PlainYearMonth {
       duration.years,
       duration.months,
       duration.weeks,
-      balancedDuration.days
+      balancedDur.days
     ]);
 
     const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
