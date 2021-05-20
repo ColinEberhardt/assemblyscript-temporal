@@ -50,129 +50,7 @@ export class Duration {
     throw new TypeError("invalid duration type");
   }
 
-  static balanced(
-    days: i32,
-    hours: i32,
-    minutes: i32,
-    seconds: i32,
-    milliseconds: i64,
-    microseconds: i64,
-    nanoseconds: i64,
-    largestUnit: TimeComponent
-  ): Duration {
-    const durationNs = totalDurationNanoseconds(
-      days as i64,
-      hours as i64,
-      minutes as i64,
-      seconds as i64,
-      milliseconds,
-      microseconds, 
-      nanoseconds
-    );
   
-    let
-      nanosecondsI64: i64 = 0,
-      microsecondsI64: i64 = 0,
-      millisecondsI64: i64 = 0,
-      secondsI64: i64 = 0,
-      minutesI64: i64 = 0,
-      hoursI64: i64 = 0,
-      daysI64: i64 = 0;
-  
-    if (
-      largestUnit >= TimeComponent.Years &&
-      largestUnit <= TimeComponent.Days
-    ) {
-      // inlined nanosecondsToDays
-      const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
-      if (durationNs != 0) {
-        daysI64        = durationNs / oneDayNs;
-        nanosecondsI64 = durationNs % oneDayNs;
-      }
-    } else {
-      nanosecondsI64 = durationNs;
-    }
-  
-    const sig = i32(sign(nanosecondsI64));
-    nanosecondsI64 = abs(nanosecondsI64);
-  
-    switch (largestUnit) {
-      case TimeComponent.Years:
-      case TimeComponent.Months:
-      case TimeComponent.Weeks:
-      case TimeComponent.Days:
-      case TimeComponent.Hours:
-        microsecondsI64 = nanosecondsI64 / 1000;
-        nanosecondsI64  = nanosecondsI64 % 1000;
-  
-        millisecondsI64 = microsecondsI64 / 1000;
-        microsecondsI64 = microsecondsI64 % 1000;
-  
-        secondsI64      = millisecondsI64 / 1000;
-        millisecondsI64 = millisecondsI64 % 1000;
-  
-        minutesI64 = secondsI64 / 60;
-        secondsI64 = secondsI64 % 60;
-  
-        hoursI64   = minutesI64 / 60;
-        minutesI64 = minutesI64 % 60;
-        break;
-  
-      case TimeComponent.Minutes:
-        microsecondsI64 = nanosecondsI64 / 1000;
-        nanosecondsI64  = nanosecondsI64 % 1000;
-  
-        millisecondsI64 = microsecondsI64 / 1000;
-        microsecondsI64 = microsecondsI64 % 1000;
-  
-        secondsI64      = millisecondsI64 / 1000;
-        millisecondsI64 = millisecondsI64 % 1000;
-  
-        minutesI64 = secondsI64 / 60;
-        secondsI64 = secondsI64 % 60;
-        break;
-  
-      case TimeComponent.Seconds:
-        microsecondsI64 = nanosecondsI64 / 1000;
-        nanosecondsI64  = nanosecondsI64 % 1000;
-  
-        millisecondsI64 = microsecondsI64 / 1000;
-        microsecondsI64 = microsecondsI64 % 1000;
-  
-        secondsI64      = millisecondsI64 / 1000;
-        millisecondsI64 = millisecondsI64 % 1000;
-        break;
-  
-      case TimeComponent.Milliseconds:
-        microsecondsI64 = nanosecondsI64 / 1000;
-        nanosecondsI64  = nanosecondsI64 % 1000;
-  
-        millisecondsI64 = microsecondsI64 / 1000;
-        microsecondsI64 = microsecondsI64 % 1000;
-        break;
-  
-      case TimeComponent.Microseconds:
-        microsecondsI64 = nanosecondsI64 / 1000;
-        nanosecondsI64  = nanosecondsI64 % 1000;
-        break;
-  
-      case TimeComponent.Nanoseconds:
-        break;
-    }
-  
-    return new Duration(
-      0,
-      0,
-      0,
-      i32(daysI64),
-      i32(hoursI64) * sig,
-      i32(minutesI64) * sig,
-      i32(secondsI64) * sig,
-      i32(millisecondsI64) * sig,
-      i32(microsecondsI64) * sig,
-      i32(nanosecondsI64) * sig
-    );
-  }
 
   private static fromDuration(duration: Duration): Duration {
     return new Duration(
@@ -332,7 +210,7 @@ export class Duration {
       if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
         throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
       }
-      const balanced = Duration.balanced(
+      const balanced = balancedDuration(
         this.days + duration.days,
         this.hours + duration.hours,
         this.minutes + duration.minutes,
@@ -355,7 +233,7 @@ export class Duration {
       const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
       const dateDiff = datePart.until(end, dateLargestUnit);
   
-      const dur =  Duration.balanced(
+      const dur = balancedDuration(
         dateDiff.days,
         this.hours + duration.hours,
         this.minutes + duration.minutes,
@@ -404,19 +282,6 @@ export class Duration {
       abs(this.nanoseconds)
     );
   }
-
-  balanced(largestUnit: TimeComponent): Duration {
-    return Duration.balanced(
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds,
-      this.microseconds,
-      this.nanoseconds,
-      largestUnit
-    )
-  }
 }
 
 function toString<T extends number>(value: T, suffix: string): string {
@@ -447,3 +312,129 @@ function totalDurationNanoseconds(
   microseconds += milliseconds * 1000;
   return nanoseconds + microseconds * 1000;
 }
+
+export function balancedDuration(
+  days: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64,
+  largestUnit: TimeComponent
+): Duration {
+  const durationNs = totalDurationNanoseconds(
+    days as i64,
+    hours as i64,
+    minutes as i64,
+    seconds as i64,
+    milliseconds,
+    microseconds, 
+    nanoseconds
+  );
+
+  let
+    nanosecondsI64: i64 = 0,
+    microsecondsI64: i64 = 0,
+    millisecondsI64: i64 = 0,
+    secondsI64: i64 = 0,
+    minutesI64: i64 = 0,
+    hoursI64: i64 = 0,
+    daysI64: i64 = 0;
+
+  if (
+    largestUnit >= TimeComponent.Years &&
+    largestUnit <= TimeComponent.Days
+  ) {
+    // inlined nanosecondsToDays
+    const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
+    if (durationNs != 0) {
+      daysI64        = durationNs / oneDayNs;
+      nanosecondsI64 = durationNs % oneDayNs;
+    }
+  } else {
+    nanosecondsI64 = durationNs;
+  }
+
+  const sig = i32(sign(nanosecondsI64));
+  nanosecondsI64 = abs(nanosecondsI64);
+
+  switch (largestUnit) {
+    case TimeComponent.Years:
+    case TimeComponent.Months:
+    case TimeComponent.Weeks:
+    case TimeComponent.Days:
+    case TimeComponent.Hours:
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
+
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
+
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
+
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
+
+      hoursI64   = minutesI64 / 60;
+      minutesI64 = minutesI64 % 60;
+      break;
+
+    case TimeComponent.Minutes:
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
+
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
+
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
+
+      minutesI64 = secondsI64 / 60;
+      secondsI64 = secondsI64 % 60;
+      break;
+
+    case TimeComponent.Seconds:
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
+
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
+
+      secondsI64      = millisecondsI64 / 1000;
+      millisecondsI64 = millisecondsI64 % 1000;
+      break;
+
+    case TimeComponent.Milliseconds:
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
+
+      millisecondsI64 = microsecondsI64 / 1000;
+      microsecondsI64 = microsecondsI64 % 1000;
+      break;
+
+    case TimeComponent.Microseconds:
+      microsecondsI64 = nanosecondsI64 / 1000;
+      nanosecondsI64  = nanosecondsI64 % 1000;
+      break;
+
+    case TimeComponent.Nanoseconds:
+      break;
+  }
+
+  return new Duration(
+    0,
+    0,
+    0,
+    i32(daysI64),
+    i32(hoursI64) * sig,
+    i32(minutesI64) * sig,
+    i32(secondsI64) * sig,
+    i32(millisecondsI64) * sig,
+    i32(microsecondsI64) * sig,
+    i32(nanosecondsI64) * sig
+  );
+}
+
+

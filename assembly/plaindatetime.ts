@@ -1,7 +1,7 @@
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
-import { PlainTime } from "./plaintime";
-import { PlainDate } from "./plaindate";
+import { balancedTime, PlainTime } from "./plaintime";
+import { balancedDate, PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
 import { PlainMonthDay } from "./plainmonthday";
 import { coalesce, larger, compare } from "./util";
@@ -189,18 +189,20 @@ export class PlainDateTime {
   ): Duration {
     const other = PlainDateTime.from(otherLike);
 
-    const diffTime = this.toPlainTime().until(
-      other.toPlainTime()
+    const diffTime = this.toPlainTime().until(other.toPlainTime());
+
+    const balanced = balancedDate(
+      this.year,
+      this.month,
+      this.day + diffTime.days
     );
-  
-    const balancedDate = PlainDate.balanced(this.year, this.month, this.day + diffTime.days);
-    const diffDate = balancedDate.until(
+    const diffDate = balanced.until(
       other.toPlainDate(),
       larger(largestUnit, TimeComponent.Days)
     );
-  
+
     // Signs of date part and time part may not agree; balance them together
-    const balancedBoth = Duration.balanced(
+    const balancedBoth = balancedDuration(
       diffDate.days,
       diffTime.hours,
       diffTime.minutes,
@@ -318,20 +320,25 @@ export class PlainDateTime {
   ): PlainDateTime {
     const duration = Duration.from(durationToAdd);
 
-    const addedTime = PlainTime.balanced(
+    const addedTime = balancedTime(
       duration.hours + this.hour,
       duration.minutes + this.minute,
       duration.seconds + this.second,
-      duration.milliseconds + this.millisecond as i64,
-      duration.microseconds + this.microsecond as i64,
-      duration.nanoseconds + this.nanosecond as i64
+      (duration.milliseconds + this.millisecond) as i64,
+      (duration.microseconds + this.microsecond) as i64,
+      (duration.nanoseconds + this.nanosecond) as i64
     );
 
     const addedDate = new PlainDate(this.year, this.month, this.day).add(
-      new Duration(duration.years, duration.months, duration.weeks, duration.days + addedTime.deltaDays),
+      new Duration(
+        duration.years,
+        duration.months,
+        duration.weeks,
+        duration.days + addedTime.deltaDays
+      ),
       overflow
     );
-  
+
     return new PlainDateTime(
       addedDate.year,
       addedDate.month,

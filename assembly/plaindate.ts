@@ -1,9 +1,9 @@
-import { Duration, DurationLike } from "./duration";
+import { balancedDuration, balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
 import { PlainMonthDay } from "./plainmonthday";
 import { PlainTime } from "./plaintime";
-import { PlainYearMonth } from "./plainyearmonth";
+import { PlainYearMonth, balancedYearMonth } from "./plainyearmonth";
 import {
   clamp,
   toPaddedString,
@@ -47,47 +47,6 @@ export class PlainDate {
       }
       throw new TypeError("invalid date type");
     }
-  }
-
-  static balanced(year: i32, month: i32, day: i32): PlainDate {
-    const yearMonth = PlainYearMonth.balanced(year, month);
-
-    year  = yearMonth.year;
-    month = yearMonth.month;
-
-    let daysPerYear = 0;
-    let testYear = month > 2 ? year : year - 1;
-
-    while (((daysPerYear = daysInYear(testYear)), day < -daysPerYear)) {
-      year -= 1;
-      testYear -= 1;
-      day += daysPerYear;
-    }
-
-    testYear += 1;
-
-    while (((daysPerYear = daysInYear(testYear)), day > daysPerYear)) {
-      year += 1;
-      testYear += 1;
-      day -= daysPerYear;
-    }
-
-    while (day < 1) {
-      const yearMonth = PlainYearMonth.balanced(year, month - 1);
-      year  = yearMonth.year;
-      month = yearMonth.month;
-      day  += daysInMonth(year, month);
-    }
-
-    let monthDays = 0;
-    while (monthDays = daysInMonth(year, month), day > monthDays) {
-      const yearMonth = PlainYearMonth.balanced(year, month + 1);
-      year  = yearMonth.year;
-      month = yearMonth.month;
-      day  -= monthDays;
-    }
-
-    return new PlainDate(year, month, day);
   }
 
   @inline
@@ -331,15 +290,24 @@ export class PlainDate {
   ): PlainDate {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = duration.balanced(TimeComponent.Days);
+    const balancedDur = balancedDuration(
+      duration.days,
+      duration.hours,
+      duration.minutes,
+      duration.seconds,
+      duration.milliseconds,
+      duration.microseconds,
+      duration.nanoseconds,
+      TimeComponent.Days
+    );
   
-    const yearMonth = PlainYearMonth.balanced(this.year + duration.years,
+    const yearMonth = balancedYearMonth(this.year + duration.years,
       this.month + duration.months);
 
     const regulatedDate = regulateDate(yearMonth.year, yearMonth.month, this.day, overflow);
   
-    return PlainDate.balanced(regulatedDate.year, regulatedDate.month,
-      regulatedDate.day + balancedDuration.days + duration.weeks * 7);
+    return balancedDate(regulatedDate.year, regulatedDate.month,
+      regulatedDate.day + balancedDur.days + duration.weeks * 7);
   }
 
   subtract<T = DurationLike>(
@@ -419,6 +387,48 @@ function regulateDate(
       month = date.month;
       day   = date.day;
       break;
+  }
+
+  return new PlainDate(year, month, day);
+}
+
+
+export function balancedDate(year: i32, month: i32, day: i32): PlainDate {
+  const yearMonth = balancedYearMonth(year, month);
+
+  year  = yearMonth.year;
+  month = yearMonth.month;
+
+  let daysPerYear = 0;
+  let testYear = month > 2 ? year : year - 1;
+
+  while (((daysPerYear = daysInYear(testYear)), day < -daysPerYear)) {
+    year -= 1;
+    testYear -= 1;
+    day += daysPerYear;
+  }
+
+  testYear += 1;
+
+  while (((daysPerYear = daysInYear(testYear)), day > daysPerYear)) {
+    year += 1;
+    testYear += 1;
+    day -= daysPerYear;
+  }
+
+  while (day < 1) {
+    const yearMonth = balancedYearMonth(year, month - 1);
+    year  = yearMonth.year;
+    month = yearMonth.month;
+    day  += daysInMonth(year, month);
+  }
+
+  let monthDays = 0;
+  while (monthDays = daysInMonth(year, month), day > monthDays) {
+    const yearMonth = balancedYearMonth(year, month + 1);
+    year  = yearMonth.year;
+    month = yearMonth.month;
+    day  -= monthDays;
   }
 
   return new PlainDate(year, month, day);
