@@ -11,9 +11,8 @@ import { RegExp } from "assemblyscript-regex";
 import { Duration } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
-import { PlainDateTime } from "./plaindatetime";
-import { PlainYearMonth } from "./plainyearmonth";
 import { PlainDate } from "./plaindate";
+import { PlainTime } from "./plaintime";
 
 // @ts-ignore
 @lazy
@@ -68,16 +67,6 @@ export class NanoDays {
   days: i32;
   nanoseconds: i64;
   dayLengthNs: i64;
-}
-
-export class BalancedTime {
-  deltaDays: i32;
-  hour: i32;
-  minute: i32;
-  second: i32;
-  millisecond: i32;
-  microsecond: i32;
-  nanosecond: i32;
 }
 
 // @ts-ignore: decorator
@@ -177,7 +166,7 @@ export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
   microsecond: i32,
   nanosecond: i64): DT {
 
-  const balancedTime = balanceTime(hour, minute, second, millisecond, microsecond, nanosecond);
+  const balancedTime = PlainTime.balanced(hour, minute, second, millisecond, microsecond, nanosecond);
   const balancedDate = PlainDate.balanced(year, month, day + balancedTime.deltaDays);
 
   return {
@@ -235,25 +224,6 @@ export function checkDateTimeRange(
 
   return true;
 }
-
-export function rejectTime(
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32
-): void {
-  if (!(
-    checkRange(hour, 0, 23) &&
-    checkRange(minute, 0, 59) &&
-    checkRange(second, 0, 59) &&
-    checkRange(millisecond, 0, 999) &&
-    checkRange(microsecond, 0, 999) &&
-    checkRange(nanosecond, 0, 999)
-  )) throw new RangeError("time out of range");
-}
-
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2135
 export function weekOfYear(year: i32, month: i32, day: i32): i32 {
@@ -358,7 +328,7 @@ export function differenceTime(
     nanoseconds
   ]);
 
-  const balancedTime = balanceTime(
+  const balancedTime = PlainTime.balanced(
     hours * sign,
     minutes * sign,
     seconds * sign,
@@ -418,10 +388,16 @@ export function addDateTime(
   nanoseconds: i64,
   overflow: Overflow
 ): DT {
-  const addedTime = addTime(
-    hour, minute, second, millisecond, microsecond, nanosecond,
-    hours, minutes, seconds, milliseconds, microseconds, nanoseconds
-  );
+
+  hours += hour;
+  minutes += minute;
+  seconds += second;
+  milliseconds += millisecond;
+  microseconds += microsecond;
+  nanoseconds += nanosecond;
+
+  const addedTime = PlainTime.balanced(hours, minutes, seconds, milliseconds,
+    microseconds, nanoseconds);
 
   hour = addedTime.hour;
   minute = addedTime.minute;
@@ -444,128 +420,6 @@ export function addDateTime(
     millisecond,
     microsecond,
     nanosecond
-  };
-}
-
-// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2676-L2684
-export function constrainTime(
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32,
-): PT {
-  hour = clamp(hour, 0, 23);
-  minute = clamp(minute, 0, 59);
-  second = clamp(second, 0, 59);
-  millisecond = clamp(millisecond, 0, 999);
-  microsecond = clamp(microsecond, 0, 999);
-  nanosecond = clamp(nanosecond, 0, 999);
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
-}
-
-// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L407-L422
-export function regulateTime(
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32,
-  overflow: Overflow
-): PT {
-  switch (overflow) {
-    case Overflow.Reject:
-      rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
-      break;
-
-    case Overflow.Constrain:
-      const time = constrainTime(
-        hour,
-        minute,
-        second,
-        millisecond,
-        microsecond,
-        nanosecond
-      );
-      hour = time.hour;
-      minute = time.minute;
-      second = time.second;
-      millisecond = time.millisecond;
-      microsecond = time.microsecond;
-      nanosecond = time.nanosecond;
-      break;
-  }
-
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
-}
-
-export function addTime(
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i64,
-  microseconds: i64,
-  nanoseconds: i64
-): BalancedTime {
-
-  hours += hour;
-  minutes += minute;
-  seconds += second;
-  milliseconds += millisecond;
-  microseconds += microsecond;
-  nanoseconds += nanosecond;
-
-  return balanceTime(hours, minutes, seconds, milliseconds, microseconds, nanoseconds);
-}
-
-function balanceTime(
-  hour: i64,
-  minute: i64,
-  second: i64,
-  millisecond: i64,
-  microsecond: i64,
-  nanosecond: i64
-): BalancedTime {
-
-  let quotient = floorDiv(nanosecond, 1000);
-  microsecond += quotient;
-  nanosecond  -= quotient * 1000;
-
-  quotient = floorDiv(microsecond, 1000);
-  millisecond += quotient;
-  microsecond -= quotient * 1000;
-
-  quotient = floorDiv(millisecond, 1000);
-  second      += quotient;
-  millisecond -= quotient * 1000;
-
-  quotient = floorDiv(second, 60);
-  minute += quotient;
-  second -= quotient * 60;
-
-  quotient = floorDiv(minute, 60);
-  hour   += quotient;
-  minute -= quotient * 60;
-
-  let deltaDays = floorDiv(hour, 24);
-  hour -= deltaDays * 24;
-
-  return {
-    deltaDays: i32(deltaDays),
-    hour: i32(hour),
-    minute: i32(minute),
-    second: i32(second),
-    millisecond: i32(millisecond),
-    microsecond: i32(microsecond),
-    nanosecond: i32(nanosecond)
   };
 }
 
@@ -593,7 +447,7 @@ export function isoYearString(year: i32): string {
 
 export function formatTimeZoneOffsetString(offsetNanoseconds: i64): string {
   const sign = offsetNanoseconds < 0 ? '-' : '+';
-  const balanced = balanceTime(0, 0, 0, 0, 0, abs(offsetNanoseconds));
+  const balanced = PlainTime.balanced(0, 0, 0, 0, 0, abs(offsetNanoseconds));
   return sign + toPaddedString(balanced.hour) + ":" + toPaddedString(balanced.minute);
 }
 
