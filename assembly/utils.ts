@@ -254,101 +254,11 @@ export function compare<T extends number>(a: Array<T>, b: Array<T>): i32 {
   return 0;
 }
 
-export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
-  y2: i32, mon2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32, largestUnit: TimeComponent = TimeComponent.Days): Duration  {
-  
-  const diffTime = differenceTime(
-    h1,
-    min1,
-    s1,
-    ms1,
-    µs1,
-    ns1,
-    h2,
-    min2,
-    s2,
-    ms2,
-    µs2,
-    ns2
-  );
-  const balancedDate = PlainDate.balanced(y1, mon1, d1 + diffTime.days);
-  const diffDate = balancedDate.until(new PlainDate(y2, mon2, d2),
-    largerTimeComponent(largestUnit, TimeComponent.Days));
-
-  // Signs of date part and time part may not agree; balance them together
-  const balancedBoth = Duration.balanced(
-    diffDate.days,
-    diffTime.hours,
-    diffTime.minutes,
-    diffTime.seconds,
-    diffTime.milliseconds,
-    diffTime.microseconds,
-    diffTime.nanoseconds,
-    largestUnit
-  );
-  return new Duration(
-    diffDate.years,
-    diffDate.months,
-    diffDate.weeks,
-    balancedBoth.days,
-    balancedBoth.hours,
-    balancedBoth.minutes,
-    balancedBoth.seconds,
-    balancedBoth.milliseconds,
-    balancedBoth.microseconds,
-    balancedBoth.nanoseconds
-  );
-}
-
 export function arraySign(values: Array<i32>): i32 {
   for (let i = 0; i < values.length; i++) {
     if (values[i]) return sign(values[i]);
   }
   return 0;
-}
-
-// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
-export function differenceTime(
-  h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
-  h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
-): Duration {
-  let hours = h2 - h1;
-  let minutes = m2 - m1;
-  let seconds = s2 - s1;
-  let milliseconds = ms2 - ms1;
-  let microseconds = µs2 - µs1;
-  let nanoseconds = ns2 - ns1;
-
-  const sign = arraySign([
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  ]);
-
-  const balancedTime = PlainTime.balanced(
-    hours * sign,
-    minutes * sign,
-    seconds * sign,
-    milliseconds * sign,
-    microseconds * sign,
-    nanoseconds * sign
-  );
-
-  return new Duration(
-    0,
-    0,
-    0,
-    balancedTime.deltaDays * sign,
-    balancedTime.hour * sign,
-    balancedTime.minute * sign,
-    balancedTime.second * sign,
-    balancedTime.millisecond * sign,
-    balancedTime.microsecond * sign,
-    balancedTime.nanosecond * sign
-  );
 }
 
 export function epochFromParts(
@@ -364,63 +274,6 @@ export function epochFromParts(
 ): i64 {
   const millis = Date.UTC(year, month - 1, day, hour, minute, second, millisecond);
   return millis * 1_000_000 + microsecond * 1_000 + nanosecond;
-}
-
-export function addDateTime(
-  year: i32,
-  month: i32,
-  day: i32,
-  hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i32,
-  years: i32,
-  months: i32,
-  weeks: i32,
-  days: i32,
-  hours: i32,
-  minutes: i32,
-  seconds: i32,
-  milliseconds: i64,
-  microseconds: i64,
-  nanoseconds: i64,
-  overflow: Overflow
-): DT {
-
-  hours += hour;
-  minutes += minute;
-  seconds += second;
-  milliseconds += millisecond;
-  microseconds += microsecond;
-  nanoseconds += nanosecond;
-
-  const addedTime = PlainTime.balanced(hours, minutes, seconds, milliseconds,
-    microseconds, nanoseconds);
-
-  hour = addedTime.hour;
-  minute = addedTime.minute;
-  second = addedTime.second;
-  millisecond = addedTime.millisecond;
-  microsecond = addedTime.microsecond;
-  nanosecond = addedTime.nanosecond;
-  days += addedTime.deltaDays; // Delegate the date part addition to the calendar
-
-  const addedDate = new PlainDate(year, month, day)
-    .add(new Duration(years, months, weeks, days), overflow);
-
-  return {
-    year: addedDate.year,
-    month: addedDate.month,
-    day: addedDate.day,
-    hour,
-    minute,
-    second,
-    millisecond,
-    microsecond,
-    nanosecond
-  };
 }
 
 // @ts-ignore: decorator
