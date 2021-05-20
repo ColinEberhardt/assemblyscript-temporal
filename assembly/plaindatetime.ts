@@ -13,8 +13,7 @@ import {
   epochFromParts,
   largerTimeComponent,
   formatISOString,
-  compare,
-  DT,
+  compare
 } from "./utils";
 import { PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
@@ -326,7 +325,7 @@ export class PlainDateTime {
   ): PlainDateTime {
     const duration = Duration.from(durationToAdd);
 
-    const newDate = addDateTime(
+    return addDateTime(
       this.year,
       this.month,
       this.day,
@@ -348,17 +347,6 @@ export class PlainDateTime {
       duration.nanoseconds,
       overflow
     );
-    return new PlainDateTime(
-      newDate.year,
-      newDate.month,
-      newDate.day,
-      newDate.hour,
-      newDate.minute,
-      newDate.second,
-      newDate.millisecond,
-      newDate.microsecond,
-      newDate.nanosecond
-    );
   }
 
   subtract<T = DurationLike>(
@@ -367,7 +355,7 @@ export class PlainDateTime {
   ): PlainDateTime {
     const duration = Duration.from(durationToSubtract);
 
-    const newDate = addDateTime(
+    return addDateTime(
       this.year,
       this.month,
       this.day,
@@ -388,18 +376,7 @@ export class PlainDateTime {
       -duration.microseconds,
       -duration.nanoseconds,
       overflow
-    );
-    return new PlainDateTime(
-      newDate.year,
-      newDate.month,
-      newDate.day,
-      newDate.hour,
-      newDate.minute,
-      newDate.second,
-      newDate.millisecond,
-      newDate.microsecond,
-      newDate.nanosecond
-    );
+    )
   }
 }
 
@@ -424,7 +401,7 @@ export function addDateTime(
   microseconds: i64,
   nanoseconds: i64,
   overflow: Overflow
-): DT {
+): PlainDateTime {
 
   hours += hour;
   minutes += minute;
@@ -447,17 +424,17 @@ export function addDateTime(
   const addedDate = new PlainDate(year, month, day)
     .add(new Duration(years, months, weeks, days), overflow);
 
-  return {
-    year: addedDate.year,
-    month: addedDate.month,
-    day: addedDate.day,
+  return new PlainDateTime(
+    addedDate.year,
+    addedDate.month,
+    addedDate.day,
     hour,
     minute,
     second,
     millisecond,
     microsecond,
     nanosecond
-  };
+  );
 }
 
 export function differenceDateTime (y1: i32, mon1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,

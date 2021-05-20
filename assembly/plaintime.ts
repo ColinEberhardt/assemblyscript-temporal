@@ -11,8 +11,7 @@ import {
   clamp,
   arraySign,
   floorDiv,
-  checkRange,
-  PT
+  checkRange
 } from "./utils";
 
 export class TimeLike {
@@ -381,7 +380,7 @@ export class PlainTime {
       duration.nanoseconds
     );
 
-    const regulatedTime = regulateTime(
+    return regulateTime(
       newTime.hour,
       newTime.minute,
       newTime.second,
@@ -390,14 +389,6 @@ export class PlainTime {
       newTime.nanosecond,
       Overflow.Reject
     )
-    return new PlainTime(
-      regulatedTime.hour,
-      regulatedTime.minute,
-      regulatedTime.second,
-      regulatedTime.millisecond,
-      regulatedTime.microsecond,
-      regulatedTime.nanosecond
-    );
   }
 
   subtract<T = DurationLike>(durationToSubtract: T): PlainTime {
@@ -418,7 +409,7 @@ export class PlainTime {
       -duration.nanoseconds
     );
 
-    const regulatedTime = regulateTime(
+    return regulateTime(
       newTime.hour,
       newTime.minute,
       newTime.second,
@@ -426,14 +417,6 @@ export class PlainTime {
       newTime.microsecond,
       newTime.nanosecond,
       Overflow.Reject
-    )
-    return new PlainTime(
-      regulatedTime.hour,
-      regulatedTime.minute,
-      regulatedTime.second,
-      regulatedTime.millisecond,
-      regulatedTime.microsecond,
-      regulatedTime.nanosecond
     );
   }
 }
@@ -516,14 +499,14 @@ function constrainTime(
   millisecond: i32,
   microsecond: i32,
   nanosecond: i32,
-): PT {
+): PlainTime {
   hour = clamp(hour, 0, 23);
   minute = clamp(minute, 0, 59);
   second = clamp(second, 0, 59);
   millisecond = clamp(millisecond, 0, 999);
   microsecond = clamp(microsecond, 0, 999);
   nanosecond = clamp(nanosecond, 0, 999);
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
+  return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L407-L422
@@ -535,7 +518,7 @@ function regulateTime(
   microsecond: i32,
   nanosecond: i32,
   overflow: Overflow
-): PT {
+): PlainTime {
   switch (overflow) {
     case Overflow.Reject:
       rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
@@ -559,7 +542,7 @@ function regulateTime(
       break;
   }
 
-  return { hour, minute, second, millisecond, microsecond, nanosecond };
+  return new PlainTime(hour, minute, second, millisecond, microsecond, nanosecond);
 }
 
 function rejectTime(
