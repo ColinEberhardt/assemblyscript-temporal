@@ -187,31 +187,134 @@ export class PlainDate {
     largestUnit: TimeComponent = TimeComponent.Days
   ): Duration {
     const date = PlainDate.from(dateLike);
-    return differenceDate(
-      this.year,
-      this.month,
-      this.day,
-      date.year,
-      date.month,
-      date.day,
-      largestUnit
-    );
+    
+    switch (largestUnit) {
+      case TimeComponent.Years:
+      case TimeComponent.Months: {
+        let sign = -PlainDate.compare(this, date);
+        if (sign == 0) return new Duration();
+  
+        let startYear  = this.year;
+        let startMonth = this.month;
+  
+        let endYear  = date.year;
+        let endMonth = date.month;
+        let endDay   = date.day;
+  
+        let years = endYear - startYear;
+        let mid = new PlainDate(this.year, this.month, this.day)
+          .add(new Duration(years), Overflow.Constrain);
+        let midSign = -PlainDate.compare(mid, date);
+  
+        if (midSign === 0) {
+          return largestUnit === TimeComponent.Years
+            ? new Duration(years)
+            : new Duration(0, years * 12);
+        }
+  
+        let months = endMonth - startMonth;
+  
+        if (midSign !== sign) {
+          years  -= sign;
+          months += sign * 12;
+        }
+  
+        mid = new PlainDate(this.year, this.month, this.day)
+          .add(new Duration(years, months), Overflow.Constrain);
+        midSign = -PlainDate.compare(mid, date);
+  
+        if (midSign === 0) {
+          return largestUnit === TimeComponent.Years
+            ? new Duration(years, months)
+            : new Duration(0, months + years * 12);
+        }
+  
+        if (midSign !== sign) {
+          // The end date is later in the month than mid date (or earlier for
+          // negative durations). Back up one month.
+          months -= sign;
+  
+          if (months === -sign) {
+            years -= sign;
+            months = sign * 11;
+          }
+  
+          mid = new PlainDate(this.year, this.month, this.day)
+            .add(new Duration(years, months), Overflow.Constrain);
+        }
+  
+        let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
+        // is within the range from `start` to `end`. To count the days between
+        // `mid` and `end`, there are 3 cases:
+        // 1) same month: use simple subtraction
+        // 2) end is previous month from intermediate (negative duration)
+        // 3) end is next month from intermediate (positive duration)
+  
+        if (mid.month === endMonth && mid.year === endYear) {
+          // 1) same month: use simple subtraction
+        } else if (sign < 0) {
+          // 2) end is previous month from intermediate (negative duration)
+          // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
+          days -= daysInMonth(endYear, endMonth);
+        } else {
+          // 3) end is next month from intermediate (positive duration)
+          // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
+          days += daysInMonth(mid.year, mid.month);
+        }
+  
+        if (largestUnit === TimeComponent.Months) {
+          months += years * 12;
+          years = 0;
+        }
+  
+        return new Duration(years, months, 0, days);
+      }
+  
+      case TimeComponent.Weeks:
+      case TimeComponent.Days: {
+        let neg = PlainDate.compare(this, date) < 0;
+  
+        let smallerYear  = neg ? this.year : date.year;
+        let smallerMonth = neg ? this.month : date.month;
+        let smallerDay   = neg ? this.day : date.day;
+  
+        let largerYear  = neg ? date.year : this.year;
+        let largerMonth = neg ? date.month : this.month;
+        let largerDay   = neg ? date.day : this.day;
+  
+        let sign = neg ? 1 : -1;
+  
+        let years = largerYear - smallerYear;
+  
+        let days = (
+          dayOfYear(largerYear,  largerMonth,  largerDay) -
+          dayOfYear(smallerYear, smallerMonth, smallerDay)
+        );
+  
+        while (years > 0) {
+          days  += daysInYear(smallerYear + years - 1);
+          years -= 1;
+        }
+  
+        let weeks = 0;
+        if (largestUnit === TimeComponent.Weeks) {
+          weeks = floorDiv(days, 7);
+          days -= weeks * 7;
+        }
+  
+        return new Duration(0, 0, weeks * sign, days * sign);
+      }
+  
+      default:
+        throw new Error('differenceDate - cannot support TimeComponent < Days');
+    }
   }
 
   since<T = DateLike>(
     dateLike: T,
     largestUnit: TimeComponent = TimeComponent.Days
   ): Duration {
-    const date = PlainDate.from(dateLike);
-    return differenceDate(
-      date.year,
-      date.month,
-      date.day,
-      this.year,
-      this.month,
-      this.day,
-      largestUnit
-    );
+    return PlainDate.from(dateLike).until(this, largestUnit);
   }
 
   with(dateLike: DateLike): PlainDate {
@@ -228,26 +331,15 @@ export class PlainDate {
   ): PlainDate {
     const duration = Duration.from(durationToAdd);
 
-    const balancedDuration = Duration.balanced(
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-      duration.milliseconds,
-      duration.microseconds,
-      duration.nanoseconds,
-      TimeComponent.Days
-    );
-    return addDate(
-      this.year,
-      this.month,
-      this.day,
-      duration.years,
-      duration.months,
-      duration.weeks,
-      balancedDuration.days,
-      overflow
-    );
+    const balancedDuration = duration.balanced(TimeComponent.Days);
+  
+    const yearMonth = PlainYearMonth.balanced(this.year + duration.years,
+      this.month + duration.months);
+
+    const regulatedDate = regulateDate(yearMonth.year, yearMonth.month, this.day, overflow);
+  
+    return PlainDate.balanced(regulatedDate.year, regulatedDate.month,
+      regulatedDate.day + balancedDuration.days + duration.weeks * 7);
   }
 
   subtract<T = DurationLike>(
@@ -255,28 +347,7 @@ export class PlainDate {
     overflow: Overflow = Overflow.Constrain
   ): PlainDate {
     const duration = Duration.from(durationToSubtract);
-
-    const balancedDuration = Duration.balanced(
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-      duration.milliseconds,
-      duration.microseconds,
-      duration.nanoseconds,
-      TimeComponent.Days
-    );
-
-    return addDate(
-      this.year,
-      this.month,
-      this.day,
-      -duration.years,
-      -duration.months,
-      -duration.weeks,
-      -balancedDuration.days,
-      overflow
-    );
+    return this.add(duration.negated(), overflow);
   }
 
   toPlainDateTime(time: PlainTime | null = null): PlainDateTime {
@@ -312,38 +383,6 @@ export class PlainDate {
       [b.year, b.month, b.day]
     );
   }
-}
-
-// https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2984
-function addDate(
-  year: i32,
-  month: i32,
-  day: i32,
-  years: i32,
-  months: i32,
-  weeks: i32,
-  days: i32,
-  overflow: Overflow
-): PlainDate {
-  year  += years;
-  month += months;
-
-  const yearMonth = PlainYearMonth.balanced(year, month);
-  year  = yearMonth.year;
-  month = yearMonth.month;
-
-  const regulatedDate = regulateDate(year, month, day, overflow);
-  year  = regulatedDate.year;
-  month = regulatedDate.month;
-  day   = regulatedDate.day;
-  day  += days + weeks * 7;
-
-  const balancedDate = PlainDate.balanced(year, month, day);
-  year  = balancedDate.year;
-  month = balancedDate.month;
-  day   = balancedDate.day;
-
-  return new PlainDate(year, month, day);
 }
 
 function rejectDate(year: i32, month: i32, day: i32): void {
@@ -383,144 +422,4 @@ function regulateDate(
   }
 
   return new PlainDate(year, month, day);
-}
-
-
-function differenceDate(
-  yr1: i32, mo1: i32, d1: i32,
-  yr2: i32, mo2: i32, d2: i32,
-  largestUnit: TimeComponent = TimeComponent.Days
-): Duration {
-  switch (largestUnit) {
-    case TimeComponent.Years:
-    case TimeComponent.Months: {
-      let sign = -compare(
-        [yr1, mo1, d1],
-        [yr2, mo2, d2]
-      );
-      if (sign == 0) return new Duration();
-
-      let startYear  = yr1;
-      let startMonth = mo1;
-
-      let endYear  = yr2;
-      let endMonth = mo2;
-      let endDay   = d2;
-
-      let years = endYear - startYear;
-      let mid = new PlainDate(yr1, mo1, d1)
-        .add(new Duration(years), Overflow.Constrain);
-      let midSign = -compare(
-        [mid.year, mid.month, mid.day],
-        [yr2, mo2, d2]
-      );
-
-      if (midSign === 0) {
-        return largestUnit === TimeComponent.Years
-          ? new Duration(years)
-          : new Duration(0, years * 12);
-      }
-
-      let months = endMonth - startMonth;
-
-      if (midSign !== sign) {
-        years  -= sign;
-        months += sign * 12;
-      }
-
-      mid = new PlainDate(yr1, mo1, d1)
-        .add(new Duration(years, months), Overflow.Constrain);
-      midSign = -compare(
-        [mid.year, mid.month, mid.day], 
-        [yr2, mo2, d2]
-      );
-
-      if (midSign === 0) {
-        return largestUnit === TimeComponent.Years
-          ? new Duration(years, months)
-          : new Duration(0, months + years * 12);
-      }
-
-      if (midSign !== sign) {
-        // The end date is later in the month than mid date (or earlier for
-        // negative durations). Back up one month.
-        months -= sign;
-
-        if (months === -sign) {
-          years -= sign;
-          months = sign * 11;
-        }
-
-        mid = new PlainDate(yr1, mo1, d1)
-          .add(new Duration(years, months), Overflow.Constrain);
-      }
-
-      let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
-      // is within the range from `start` to `end`. To count the days between
-      // `mid` and `end`, there are 3 cases:
-      // 1) same month: use simple subtraction
-      // 2) end is previous month from intermediate (negative duration)
-      // 3) end is next month from intermediate (positive duration)
-
-      if (mid.month === endMonth && mid.year === endYear) {
-        // 1) same month: use simple subtraction
-      } else if (sign < 0) {
-        // 2) end is previous month from intermediate (negative duration)
-        // Example: intermediate: Feb 1, end: Jan 30, DaysInMonth = 31, days = -2
-        days -= daysInMonth(endYear, endMonth);
-      } else {
-        // 3) end is next month from intermediate (positive duration)
-        // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
-        days += daysInMonth(mid.year, mid.month);
-      }
-
-      if (largestUnit === TimeComponent.Months) {
-        months += years * 12;
-        years = 0;
-      }
-
-      return new Duration(years, months, 0, days);
-    }
-
-    case TimeComponent.Weeks:
-    case TimeComponent.Days: {
-      let neg = compare(
-        [yr1, mo1, d1],
-        [yr2, mo2, d2]
-      ) < 0;
-
-      let smallerYear  = neg ? yr1 : yr2;
-      let smallerMonth = neg ? mo1 : mo2;
-      let smallerDay   = neg ? d1 : d2;
-
-      let largerYear  = neg ? yr2 : yr1;
-      let largerMonth = neg ? mo2 : mo1;
-      let largerDay   = neg ? d2 : d1;
-
-      let sign = neg ? 1 : -1;
-
-      let years = largerYear - smallerYear;
-
-      let days = (
-        dayOfYear(largerYear,  largerMonth,  largerDay) -
-        dayOfYear(smallerYear, smallerMonth, smallerDay)
-      );
-
-      while (years > 0) {
-        days  += daysInYear(smallerYear + years - 1);
-        years -= 1;
-      }
-
-      let weeks = 0;
-      if (largestUnit === TimeComponent.Weeks) {
-        weeks = floorDiv(days, 7);
-        days -= weeks * 7;
-      }
-
-      return new Duration(0, 0, weeks * sign, days * sign);
-    }
-
-    default:
-      throw new Error('differenceDate - cannot support TimeComponent < Days');
-  }
 }

@@ -394,6 +394,19 @@ export class Duration {
       abs(this.nanoseconds)
     );
   }
+
+  balanced(largestUnit: TimeComponent): Duration {
+    return Duration.balanced(
+      this.days,
+      this.hours,
+      this.minutes,
+      this.seconds,
+      this.milliseconds,
+      this.microseconds,
+      this.nanoseconds,
+      largestUnit
+    )
+  }
 }
 
 function toString<T extends number>(value: T, suffix: string): string {
