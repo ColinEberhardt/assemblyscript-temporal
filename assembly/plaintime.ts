@@ -6,12 +6,13 @@ import { DateLike } from "./plaindate";
 import {
   sign,
   ord,
-  rejectTime,
-  addTime,
   toPaddedString,
   coalesce,
-  differenceTime,
-  regulateTime,
+  clamp,
+  arraySign,
+  floorDiv,
+  checkRange,
+  PT
 } from "./utils";
 
 export class TimeLike {
@@ -21,6 +22,16 @@ export class TimeLike {
   millisecond: i32 = -1;
   microsecond: i32 = -1;
   nanosecond: i32 = -1;
+}
+
+export class BalancedTime {
+  deltaDays: i32;
+  hour: i32;
+  minute: i32;
+  second: i32;
+  millisecond: i32;
+  microsecond: i32;
+  nanosecond: i32;
 }
 
 export class PlainTime {
@@ -41,6 +52,49 @@ export class PlainTime {
       }
       throw new TypeError("invalid time type");
     }
+  }
+
+  static balanced(
+    hour: i64,
+    minute: i64,
+    second: i64,
+    millisecond: i64,
+    microsecond: i64,
+    nanosecond: i64
+  ): BalancedTime {
+  
+    let quotient = floorDiv(nanosecond, 1000);
+    microsecond += quotient;
+    nanosecond  -= quotient * 1000;
+  
+    quotient = floorDiv(microsecond, 1000);
+    millisecond += quotient;
+    microsecond -= quotient * 1000;
+  
+    quotient = floorDiv(millisecond, 1000);
+    second      += quotient;
+    millisecond -= quotient * 1000;
+  
+    quotient = floorDiv(second, 60);
+    minute += quotient;
+    second -= quotient * 60;
+  
+    quotient = floorDiv(minute, 60);
+    hour   += quotient;
+    minute -= quotient * 60;
+  
+    let deltaDays = floorDiv(hour, 24);
+    hour -= deltaDays * 24;
+  
+    return {
+      deltaDays: i32(deltaDays),
+      hour: i32(hour),
+      minute: i32(minute),
+      second: i32(second),
+      millisecond: i32(millisecond),
+      microsecond: i32(microsecond),
+      nanosecond: i32(nanosecond)
+    };
   }
 
   @inline
@@ -382,4 +436,146 @@ export class PlainTime {
       regulatedTime.nanosecond
     );
   }
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2874-L2910
+export function differenceTime(
+  h1: i32, m1: i32, s1: i32, ms1: i32, µs1: i32, ns1: i32,
+  h2: i32, m2: i32, s2: i32, ms2: i32, µs2: i32, ns2: i32
+): Duration {
+  let hours = h2 - h1;
+  let minutes = m2 - m1;
+  let seconds = s2 - s1;
+  let milliseconds = ms2 - ms1;
+  let microseconds = µs2 - µs1;
+  let nanoseconds = ns2 - ns1;
+
+  const sign = arraySign([
+    hours,
+    minutes,
+    seconds,
+    milliseconds,
+    microseconds,
+    nanoseconds
+  ]);
+
+  const balancedTime = PlainTime.balanced(
+    hours * sign,
+    minutes * sign,
+    seconds * sign,
+    milliseconds * sign,
+    microseconds * sign,
+    nanoseconds * sign
+  );
+
+  return new Duration(
+    0,
+    0,
+    0,
+    balancedTime.deltaDays * sign,
+    balancedTime.hour * sign,
+    balancedTime.minute * sign,
+    balancedTime.second * sign,
+    balancedTime.millisecond * sign,
+    balancedTime.microsecond * sign,
+    balancedTime.nanosecond * sign
+  );
+}
+
+function addTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  hours: i32,
+  minutes: i32,
+  seconds: i32,
+  milliseconds: i64,
+  microseconds: i64,
+  nanoseconds: i64
+): BalancedTime {
+
+  hours += hour;
+  minutes += minute;
+  seconds += second;
+  milliseconds += millisecond;
+  microseconds += microsecond;
+  nanoseconds += nanosecond;
+
+  return PlainTime.balanced(hours, minutes, seconds, milliseconds,
+    microseconds, nanoseconds);
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2676-L2684
+function constrainTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+): PT {
+  hour = clamp(hour, 0, 23);
+  minute = clamp(minute, 0, 59);
+  second = clamp(second, 0, 59);
+  millisecond = clamp(millisecond, 0, 999);
+  microsecond = clamp(microsecond, 0, 999);
+  nanosecond = clamp(nanosecond, 0, 999);
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
+}
+
+// https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L407-L422
+function regulateTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32,
+  overflow: Overflow
+): PT {
+  switch (overflow) {
+    case Overflow.Reject:
+      rejectTime(hour, minute, second, millisecond, microsecond, nanosecond);
+      break;
+
+    case Overflow.Constrain:
+      const time = constrainTime(
+        hour,
+        minute,
+        second,
+        millisecond,
+        microsecond,
+        nanosecond
+      );
+      hour = time.hour;
+      minute = time.minute;
+      second = time.second;
+      millisecond = time.millisecond;
+      microsecond = time.microsecond;
+      nanosecond = time.nanosecond;
+      break;
+  }
+
+  return { hour, minute, second, millisecond, microsecond, nanosecond };
+}
+
+function rejectTime(
+  hour: i32,
+  minute: i32,
+  second: i32,
+  millisecond: i32,
+  microsecond: i32,
+  nanosecond: i32
+): void {
+  if (!(
+    checkRange(hour, 0, 23) &&
+    checkRange(minute, 0, 59) &&
+    checkRange(second, 0, 59) &&
+    checkRange(millisecond, 0, 999) &&
+    checkRange(microsecond, 0, 999) &&
+    checkRange(nanosecond, 0, 999)
+  )) throw new RangeError("time out of range");
 }
