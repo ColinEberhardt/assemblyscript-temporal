@@ -1,5 +1,3 @@
-import { RegExp } from "assemblyscript-regex";
-
 import { Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
@@ -18,7 +16,6 @@ import {
   checkDateTimeRange,
   coalesce,
   parseISOString,
-  YMD,
   checkRange,
   compare,
   floorDiv,
@@ -237,7 +234,7 @@ export class PlainDate {
       duration.nanoseconds,
       TimeComponent.Days
     );
-    const newDate = addDate(
+    return addDate(
       this.year,
       this.month,
       this.day,
@@ -247,7 +244,6 @@ export class PlainDate {
       balancedDuration.days,
       overflow
     );
-    return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
   subtract<T = DurationLike>(
@@ -267,7 +263,7 @@ export class PlainDate {
       TimeComponent.Days
     );
 
-    const newDate = addDate(
+    return addDate(
       this.year,
       this.month,
       this.day,
@@ -277,8 +273,6 @@ export class PlainDate {
       -balancedDuration.days,
       overflow
     );
-
-    return new PlainDate(newDate.year, newDate.month, newDate.day);
   }
 
   toPlainDateTime(time: PlainTime | null = null): PlainDateTime {
@@ -326,7 +320,7 @@ function addDate(
   weeks: i32,
   days: i32,
   overflow: Overflow
-): YMD {
+): PlainDate {
   year  += years;
   month += months;
 
@@ -345,7 +339,7 @@ function addDate(
   month = balancedDate.month;
   day   = balancedDate.day;
 
-  return { year, month, day };
+  return new PlainDate(year, month, day);
 }
 
 function rejectDate(year: i32, month: i32, day: i32): void {
@@ -358,10 +352,10 @@ function rejectDate(year: i32, month: i32, day: i32): void {
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
-function constrainDate(year: i32, month: i32, day: i32): YMD {
+function constrainDate(year: i32, month: i32, day: i32): PlainDate {
   month = clamp(month, 1, 12);
   day   = clamp(day, 1, daysInMonth(year, month));
-  return { year, month, day };
+  return new PlainDate(year, month, day);
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2617
@@ -370,7 +364,7 @@ function regulateDate(
   month: i32,
   day: i32,
   overflow: Overflow
-): YMD {
+): PlainDate {
   switch (overflow) {
     case Overflow.Reject:
       rejectDate(year, month, day);
@@ -384,7 +378,7 @@ function regulateDate(
       break;
   }
 
-  return { year, month, day };
+  return new PlainDate(year, month, day);
 }
 
 

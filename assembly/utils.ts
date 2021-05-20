@@ -8,10 +8,8 @@
 
 import { RegExp } from "assemblyscript-regex";
 
-import { Duration } from "./duration";
-import { Overflow, TimeComponent } from "./enums";
+import { TimeComponent } from "./enums";
 import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./constants";
-import { PlainDate } from "./plaindate";
 import { PlainTime } from "./plaintime";
 
 // @ts-ignore
@@ -27,25 +25,6 @@ const YEAR_MAX =  275760;
 let __null = false;
 
 // value objects - used in place of object literals
-export class YMD {
-  year: i32;
-  month: i32;
-  day: i32;
-}
-
-export class YM {
-  year: i32;
-  month: i32;
-}
-
-export class PT {
-  hour: i32;
-  minute: i32;
-  second: i32;
-  millisecond: i32;
-  microsecond: i32;
-  nanosecond: i32;
-}
 
 export class DT {
   year: i32;
@@ -157,29 +136,6 @@ export function dayOfWeek(year: i32, month: i32, day: i32): i32 {
   const w = (year + month + day) % 7;
   // Use ISO 8601 which has [1, 7] range to represent Monday-Sunday
   return w + (w <= 0 ? 7 : 0);
-}
-
-export function balanceDateTime(year: i32, month: i32, day: i32, hour: i32,
-  minute: i32,
-  second: i32,
-  millisecond: i32,
-  microsecond: i32,
-  nanosecond: i64): DT {
-
-  const balancedTime = PlainTime.balanced(hour, minute, second, millisecond, microsecond, nanosecond);
-  const balancedDate = PlainDate.balanced(year, month, day + balancedTime.deltaDays);
-
-  return {
-    year: balancedDate.year,
-    month: balancedDate.month,
-    day: balancedDate.day,
-    hour: balancedTime.hour,
-    minute: balancedTime.minute,
-    second: balancedTime.second,
-    millisecond: balancedTime.millisecond,
-    microsecond: balancedTime.microsecond,
-    nanosecond: balancedTime.nanosecond
-  };
 }
 
 // https://github.com/tc39/proposal-temporal/blob/49629f785eee61e9f6641452e01e995f846da3a1/polyfill/lib/ecmascript.mjs#L2616
