@@ -284,6 +284,19 @@ export class Duration {
     return this.sign == 0;
   }
 
+  private get largestDurationUnit(): TimeComponent {
+    if (this.years != 0) return TimeComponent.Years;
+    if (this.months != 0) return TimeComponent.Months;
+    if (this.weeks != 0) return TimeComponent.Weeks;
+    if (this.days != 0) return TimeComponent.Days;
+    if (this.hours != 0) return TimeComponent.Hours;
+    if (this.minutes != 0) return TimeComponent.Minutes;
+    if (this.seconds != 0) return TimeComponent.Seconds;
+    if (this.milliseconds != 0) return TimeComponent.Milliseconds;
+    if (this.microseconds != 0) return TimeComponent.Microseconds;
+    return TimeComponent.Nanoseconds;
+  }
+
   // P1Y1M1DT1H1M1.1S
   toString(): string {
     const date =
@@ -313,56 +326,53 @@ export class Duration {
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
     const duration = Duration.from(durationToAdd);
-
-    return addDuration(this.years,
-      this.months,
-      this.weeks,
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds,
-      this.microseconds,
-      this.nanoseconds,
-      duration.years,
-      duration.months,
-      duration.weeks,
-      duration.days,
-      duration.hours,
-      duration.minutes,
-      duration.seconds,
-      duration.milliseconds,
-      duration.microseconds,
-      duration.nanoseconds,
-      relativeTo
-    );
+    const largestUnit = larger(this.largestDurationUnit, duration.largestDurationUnit);
+  
+    if (!relativeTo) {
+      if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
+        throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
+      }
+      const balanced = Duration.balanced(
+        this.days + duration.days,
+        this.hours + duration.hours,
+        this.minutes + duration.minutes,
+        this.seconds + duration.seconds,
+        this.milliseconds + duration.milliseconds,
+        this.microseconds + duration.microseconds,
+        this.nanoseconds + duration.nanoseconds,
+        largestUnit
+      );
+      return balanced;
+    } else {
+      const datePart = relativeTo.toPlainDate();
+  
+      const dateDuration1 = new Duration(this.years, this.months, this.weeks, this.days);
+      const dateDuration2 = new Duration(duration.years, duration.months, duration.weeks, duration.days);
+  
+      const intermediate = datePart.add(dateDuration1);
+      const end = intermediate.add(dateDuration2);
+  
+      const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
+      const dateDiff = datePart.until(end, dateLargestUnit);
+  
+      const dur =  Duration.balanced(
+        dateDiff.days,
+        this.hours + duration.hours,
+        this.minutes + duration.minutes,
+        this.seconds + duration.seconds,
+        this.milliseconds + duration.milliseconds,
+        this.microseconds + duration.microseconds,
+        this.nanoseconds + duration.nanoseconds,
+        largestUnit
+      );
+  
+      return new Duration(dateDiff.years, dateDiff.months, dateDiff.weeks, dur.days, dur.hours, dur.minutes,
+        dur.seconds, dur.milliseconds, dur.microseconds, dur.nanoseconds);
+    }
   }
 
   subtract<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
-    const duration = Duration.from(durationToAdd);
-
-    return addDuration(this.years,
-      this.months,
-      this.weeks,
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds,
-      this.microseconds,
-      this.nanoseconds,
-      -duration.years,
-      -duration.months,
-      -duration.weeks,
-      -duration.days,
-      -duration.hours,
-      -duration.minutes,
-      -duration.seconds,
-      -duration.milliseconds,
-      -duration.microseconds,
-      -duration.nanoseconds,
-      relativeTo
-    );
+    return this.add(Duration.from(durationToAdd).negated(), relativeTo);
   }
 
   negated(): Duration {
@@ -421,19 +431,6 @@ function stringify(value: f64): string {
   return F64.isSafeInteger(value) ? i64(value).toString() : value.toString();
 }
 
-function largestDurationUnit(y: i32, mon: i32, w: i32, d: i32, h: i32, min: i32, s: i32, ms: i64, µs: i64, ns: i64): TimeComponent {
-  if (y != 0) return TimeComponent.Years;
-  if (mon != 0) return TimeComponent.Months;
-  if (w != 0) return TimeComponent.Weeks;
-  if (d != 0) return TimeComponent.Days;
-  if (h != 0) return TimeComponent.Hours;
-  if (min != 0) return TimeComponent.Minutes;
-  if (s != 0) return TimeComponent.Seconds;
-  if (ms != 0) return TimeComponent.Milliseconds;
-  if (µs != 0) return TimeComponent.Microseconds;
-  return TimeComponent.Nanoseconds;
-}
-
 function totalDurationNanoseconds(
   days: i64,
   hours: i64,
@@ -449,56 +446,4 @@ function totalDurationNanoseconds(
   milliseconds += seconds * MILLIS_PER_SECOND;
   microseconds += milliseconds * 1000;
   return nanoseconds + microseconds * 1000;
-}
-
-
-function addDuration(y1: i32, mon1: i32, w1: i32, d1: i32, h1: i32, min1: i32, s1: i32, ms1: i64, µs1: i64, ns1: i64,
-  y2: i32, mon2: i32, w2: i32, d2: i32, h2: i32, min2: i32, s2: i32, ms2: i64, µs2: i64, ns2: i64,
-  relativeTo: PlainDateTime | null
-): Duration  {
-  const largestUnit1 = largestDurationUnit(y1, mon1, w1, d1, h1, min1, s1, ms1, µs1, ns1);
-  const largestUnit2 = largestDurationUnit(y2, mon2, w2, d2, h2, min2, s2, ms2, µs2, ns2);
-  const largestUnit = larger(largestUnit1, largestUnit2);
-
-  if (!relativeTo) {
-    if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
-      throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
-    }
-    const balanced = Duration.balanced(
-      d1 + d2,
-      h1 + h2,
-      min1 + min2,
-      s1 + s2,
-      ms1 + ms2,
-      µs1 + µs2,
-      ns1 + ns2,
-      largestUnit
-    );
-    return balanced;
-  } else {
-    const datePart = relativeTo.toPlainDate();
-
-    const dateDuration1 = new Duration(y1, mon1, w1, d1, 0, 0, 0, 0, 0, 0);
-    const dateDuration2 = new Duration(y2, mon2, w2, d2, 0, 0, 0, 0, 0, 0);
-
-    const intermediate = datePart.add(dateDuration1);
-    const end = intermediate.add(dateDuration2);
-
-    const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
-    const dateDiff = datePart.until(end, dateLargestUnit);
-
-    const dur =  Duration.balanced(
-      dateDiff.days,
-      h1 + h2,
-      min1 + min2,
-      s1 + s2,
-      ms1 + ms2,
-      µs1 + µs2,
-      ns1 + ns2,
-      largestUnit
-    );
-
-    return new Duration(dateDiff.years, dateDiff.months, dateDiff.weeks, dur.days, dur.hours, dur.minutes,
-      dur.seconds, dur.milliseconds, dur.microseconds, dur.nanoseconds);
-  }
 }
