@@ -27,18 +27,22 @@ export class Instant {
     return ord(i1.epochNanoseconds, i2.epochNanoseconds);
   }
 
+  @inline
   public static fromEpochSeconds(seconds: i64): Instant {
     return new Instant(seconds * NANOS_PER_SECOND);
   }
 
+  @inline
   public static fromEpochMilliseconds(millis: i64): Instant {
     return new Instant(millis * 1_000_000);
   }
 
+  @inline
   public static fromEpochMicroseconds(micros: i64): Instant {
     return new Instant(micros * 1_000);
   }
 
+  @inline
   public static fromEpochNanoseconds(nanos: i64): Instant {
     return new Instant(nanos);
   }

@@ -1,11 +1,8 @@
 import { RegExp } from "assemblyscript-regex";
 import { PlainDateTime } from "./plaindatetime";
 import { PlainDate } from "./plaindate";
-import {
-  coalesce,
-  toPaddedString
-} from "./util";
 import { checkDateTimeRange } from "./util/calendar";
+import { coalesce, toPaddedString } from "./util";
 
 export class MonthDayLike {
   month: i32 = -1;
@@ -94,8 +91,8 @@ export class PlainMonthDay {
   equals(other: PlainMonthDay): bool {
     if (this === other) return true;
     return (
-      this.month == other.month &&
       this.day == other.day &&
+      this.month == other.month &&
       this.referenceISOYear == other.referenceISOYear
     );
   }

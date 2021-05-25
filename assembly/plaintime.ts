@@ -9,7 +9,6 @@ import {
   toPaddedString,
   coalesce,
   clamp,
-  arraySign,
   floorDiv,
   checkRange
 } from "./util";
@@ -390,35 +389,34 @@ export function differenceTime(
   let microseconds = µs2 - µs1;
   let nanoseconds = ns2 - ns1;
 
-  const sign = arraySign([
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
-    microseconds,
-    nanoseconds
-  ]);
+  let sig = 0;
+  if (hours) sig = sign(hours);
+  else if (minutes) sig = sign(minutes);
+  else if (seconds) sig = sign(seconds);
+  else if (milliseconds) sig = sign(milliseconds);
+  else if (microseconds) sig = sign(microseconds);
+  else if (nanoseconds) sig = sign(nanoseconds);
 
   const balanced = balancedTime(
-    hours * sign,
-    minutes * sign,
-    seconds * sign,
-    milliseconds * sign,
-    microseconds * sign,
-    nanoseconds * sign
+    hours * sig,
+    minutes * sig,
+    seconds * sig,
+    milliseconds * sig,
+    microseconds * sig,
+    nanoseconds * sig
   );
 
   return new Duration(
     0,
     0,
     0,
-    balanced.deltaDays * sign,
-    balanced.hour * sign,
-    balanced.minute * sign,
-    balanced.second * sign,
-    balanced.millisecond * sign,
-    balanced.microsecond * sign,
-    balanced.nanosecond * sign
+    balanced.deltaDays * sig,
+    balanced.hour * sig,
+    balanced.minute * sig,
+    balanced.second * sig,
+    balanced.millisecond * sig,
+    balanced.microsecond * sig,
+    balanced.nanosecond * sig
   );
 }
 
@@ -444,8 +442,10 @@ function addTime(
   microseconds += microsecond;
   nanoseconds += nanosecond;
 
-  return balancedTime(hours, minutes, seconds, milliseconds,
-    microseconds, nanoseconds);
+  return balancedTime(
+    hours, minutes, seconds,
+    milliseconds, microseconds, nanoseconds
+  );
 }
 
 // https://github.com/tc39/proposal-temporal/blob/515ee6e339bb4a1d3d6b5a42158f4de49f9ed953/polyfill/lib/ecmascript.mjs#L2676-L2684

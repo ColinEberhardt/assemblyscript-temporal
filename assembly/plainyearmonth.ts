@@ -3,20 +3,20 @@ import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDate } from "./plaindate";
 import { PlainDateTime } from "./plaindatetime";
-import {
-  coalesce,
-  toPaddedString,
-  arraySign,
-  floorDiv,
-  compare
-} from "./util";
+import { isoYearString } from "./util/format";
 import {
   leapYear,
   daysInMonth,
   daysInYear,
   checkDateTimeRange
 } from "./util/calendar"
-import { isoYearString } from "./util/format";
+import {
+  coalesce,
+  toPaddedString,
+  floorDiv,
+  sign,
+  ord
+} from "./util";
 
 export class YearMonthLike {
   year: i32 = -1;
@@ -209,14 +209,13 @@ export class PlainYearMonth {
       TimeComponent.Days
     );
 
-    const sign = arraySign([
-      duration.years,
-      duration.months,
-      duration.weeks,
-      balancedDur.days
-    ]);
+    let sig = 0;
+    if (duration.years) sig = sign(duration.years);
+    else if (duration.months) sig = sign(duration.months);
+    else if (duration.weeks) sig = sign(duration.weeks);
+    else if (balancedDur.days) sig = sign(balancedDur.days);
 
-    const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
+    const day = sig < 0 ? daysInMonth(this.year, this.month) : 1;
     const startDate = new PlainDate(this.year, this.month, day);
     const addedDate = startDate.add(duration, overflow);
     return new PlainYearMonth(addedDate.year, addedDate.month);
@@ -252,14 +251,13 @@ export class PlainYearMonth {
       TimeComponent.Days
     );
 
-    const sign = arraySign([
-      duration.years,
-      duration.months,
-      duration.weeks,
-      balancedDur.days
-    ]);
+    let sig = 0;
+    if (duration.years) sig = sign(duration.years);
+    else if (duration.months) sig = sign(duration.months);
+    else if (duration.weeks) sig = sign(duration.weeks);
+    else if (balancedDur.days) sig = sign(balancedDur.days);
 
-    const day = sign < 0 ? daysInMonth(this.year, this.month) : 1;
+    const day = sig < 0 ? daysInMonth(this.year, this.month) : 1;
     const startdate = new PlainDate(this.year, this.month, day);
     const subtractedDate = startdate.add(duration, overflow);
     return new PlainYearMonth(subtractedDate.year, subtractedDate.month);
@@ -267,14 +265,14 @@ export class PlainYearMonth {
 
   static compare(a: PlainYearMonth, b: PlainYearMonth): i32 {
     if (a === b) return 0;
-    return compare(
-      [a.year,
-      a.month,
-      a.referenceISODay],
-      [b.year,
-      b.month,
-      b.referenceISODay]
-    );
+
+    let res = a.year - b.year;
+    if (res) return sign(res);
+
+    res = a.month - b.month;
+    if (res) return sign(res);
+
+    return ord(a.referenceISODay, b.referenceISODay);
   }
 }
 
