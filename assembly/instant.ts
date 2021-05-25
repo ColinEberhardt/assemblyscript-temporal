@@ -1,3 +1,4 @@
+import { NANOS_PER_SECOND } from "./util/constants";
 import { balancedDuration, Duration, DurationLike } from "./duration";
 import { TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
@@ -27,7 +28,7 @@ export class Instant {
   }
 
   public static fromEpochSeconds(seconds: i64): Instant {
-    return new Instant(seconds * 1_000_000_000);
+    return new Instant(seconds * NANOS_PER_SECOND);
   }
 
   public static fromEpochMilliseconds(millis: i64): Instant {
@@ -56,7 +57,7 @@ export class Instant {
 
   @inline
   get epochSeconds(): i64 {
-    return this.epochNanoseconds / 1_000_000_000;
+    return this.epochNanoseconds / NANOS_PER_SECOND;
   }
 
   add<T = DurationLike>(durationToAdd: T): Instant {
@@ -154,8 +155,8 @@ function durationToNanos(duration: Duration): i64 {
     i64(duration.nanoseconds) +
     i64(duration.microseconds) * 1_000 +
     i64(duration.milliseconds) * 1_000_000 +
-    i64(duration.seconds) * 1_000_000_000 +
-    i64(duration.minutes) * 60 * 1_000_000_000 +
-    i64(duration.hours) * 60 * 60 * 1_000_000_000
+    i64(duration.seconds) * NANOS_PER_SECOND +
+    i64(duration.minutes) * 60 * NANOS_PER_SECOND +
+    i64(duration.hours) * 60 * 60 * NANOS_PER_SECOND
   );
 }
