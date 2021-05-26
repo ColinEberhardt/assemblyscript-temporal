@@ -160,8 +160,7 @@ export class PlainDate {
         let endDay   = date.day;
 
         let years = endYear - startYear;
-        let mid = new PlainDate(this.year, this.month, this.day)
-          .add(new Duration(years), Overflow.Constrain);
+        let mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years));
         let midSign = -PlainDate.compare(mid, date);
 
         if (midSign === 0) {
@@ -177,8 +176,7 @@ export class PlainDate {
           months += sign * 12;
         }
 
-        mid = new PlainDate(this.year, this.month, this.day)
-          .add(new Duration(years, months), Overflow.Constrain);
+        mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years, months));
         midSign = -PlainDate.compare(mid, date);
 
         if (midSign === 0) {
@@ -197,8 +195,7 @@ export class PlainDate {
             months = sign * 11;
           }
 
-          mid = new PlainDate(this.year, this.month, this.day)
-            .add(new Duration(years, months), Overflow.Constrain);
+          mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years, months));
         }
 
         let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
@@ -232,13 +229,13 @@ export class PlainDate {
       case TimeComponent.Days: {
         let neg = PlainDate.compare(this, date) < 0;
 
-        let smallerYear  = neg ? this.year : date.year;
+        let smallerYear  = neg ? this.year  : date.year;
         let smallerMonth = neg ? this.month : date.month;
-        let smallerDay   = neg ? this.day : date.day;
+        let smallerDay   = neg ? this.day   : date.day;
 
-        let largerYear  = neg ? date.year : this.year;
+        let largerYear  = neg ? date.year  : this.year;
         let largerMonth = neg ? date.month : this.month;
-        let largerDay   = neg ? date.day : this.day;
+        let largerDay   = neg ? date.day   : this.day;
 
         let years = largerYear - smallerYear;
 
@@ -258,8 +255,11 @@ export class PlainDate {
           days -= weeks * 7;
         }
 
-        let sign = neg ? 1 : -1;
-        return new Duration(0, 0, weeks * sign, days * sign);
+        return new Duration(
+          0, 0,
+          neg ? weeks : -weeks,
+          neg ? days  : -days
+        );
       }
 
       default:
