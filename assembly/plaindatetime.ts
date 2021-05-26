@@ -198,7 +198,7 @@ export class PlainDateTime {
     );
     const diffDate = balanced.until(
       other.toPlainDate(),
-      min<i32>(largestUnit, TimeComponent.Days)
+      min(largestUnit, TimeComponent.Days)
     );
 
     // Signs of date part and time part may not agree; balance them together

@@ -211,7 +211,7 @@ export class Duration {
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
     const duration = Duration.from(durationToAdd);
-    const largestUnit = min<i32>(this.largestDurationUnit, duration.largestDurationUnit);
+    const largestUnit = min(this.largestDurationUnit, duration.largestDurationUnit);
 
     if (!relativeTo) {
       if (
