@@ -1,17 +1,10 @@
-import { balancedDuration, balancedDuration, Duration, DurationLike } from "./duration";
+import { balancedDuration, Duration, DurationLike } from "./duration";
 import { Overflow, TimeComponent } from "./enums";
 import { PlainDateTime } from "./plaindatetime";
 import { PlainMonthDay } from "./plainmonthday";
 import { PlainTime } from "./plaintime";
 import { PlainYearMonth, balancedYearMonth } from "./plainyearmonth";
-import {
-  clamp,
-  toPaddedString,
-  coalesce,
-  checkRange,
-  compare,
-  floorDiv,
-} from "./util";
+import { parseISOString } from "./util/format";
 import {
   dayOfWeek,
   leapYear,
@@ -20,10 +13,16 @@ import {
   daysInMonth,
   daysInYear,
   checkDateTimeRange
-} from "./util/calendar"
+} from "./util/calendar";
 import {
-  parseISOString
-} from "./util/format"
+  ord,
+  sign,
+  clamp,
+  toPaddedString,
+  coalesce,
+  checkRange,
+  floorDiv,
+} from "./util";
 
 export class DateLike {
   year: i32 = -1;
@@ -146,69 +145,66 @@ export class PlainDate {
     largestUnit: TimeComponent = TimeComponent.Days
   ): Duration {
     const date = PlainDate.from(dateLike);
-    
+
     switch (largestUnit) {
       case TimeComponent.Years:
       case TimeComponent.Months: {
         let sign = -PlainDate.compare(this, date);
         if (sign == 0) return new Duration();
-  
+
         let startYear  = this.year;
         let startMonth = this.month;
-  
+
         let endYear  = date.year;
         let endMonth = date.month;
         let endDay   = date.day;
-  
+
         let years = endYear - startYear;
-        let mid = new PlainDate(this.year, this.month, this.day)
-          .add(new Duration(years), Overflow.Constrain);
+        let mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years));
         let midSign = -PlainDate.compare(mid, date);
-  
+
         if (midSign === 0) {
           return largestUnit === TimeComponent.Years
             ? new Duration(years)
             : new Duration(0, years * 12);
         }
-  
+
         let months = endMonth - startMonth;
-  
+
         if (midSign !== sign) {
           years  -= sign;
           months += sign * 12;
         }
-  
-        mid = new PlainDate(this.year, this.month, this.day)
-          .add(new Duration(years, months), Overflow.Constrain);
+
+        mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years, months));
         midSign = -PlainDate.compare(mid, date);
-  
+
         if (midSign === 0) {
           return largestUnit === TimeComponent.Years
             ? new Duration(years, months)
             : new Duration(0, months + years * 12);
         }
-  
+
         if (midSign !== sign) {
           // The end date is later in the month than mid date (or earlier for
           // negative durations). Back up one month.
           months -= sign;
-  
+
           if (months === -sign) {
             years -= sign;
             months = sign * 11;
           }
-  
-          mid = new PlainDate(this.year, this.month, this.day)
-            .add(new Duration(years, months), Overflow.Constrain);
+
+          mid = new PlainDate(this.year, this.month, this.day).add(new Duration(years, months));
         }
-  
+
         let days = endDay - mid.day; // If we get here, months and years are correct (no overflow), and `mid`
         // is within the range from `start` to `end`. To count the days between
         // `mid` and `end`, there are 3 cases:
         // 1) same month: use simple subtraction
         // 2) end is previous month from intermediate (negative duration)
         // 3) end is next month from intermediate (positive duration)
-  
+
         if (mid.month === endMonth && mid.year === endYear) {
           // 1) same month: use simple subtraction
         } else if (sign < 0) {
@@ -220,50 +216,52 @@ export class PlainDate {
           // Example: intermediate: Jan 29, end: Feb 1, DaysInMonth = 31, days = 3
           days += daysInMonth(mid.year, mid.month);
         }
-  
+
         if (largestUnit === TimeComponent.Months) {
           months += years * 12;
           years = 0;
         }
-  
+
         return new Duration(years, months, 0, days);
       }
-  
+
       case TimeComponent.Weeks:
       case TimeComponent.Days: {
         let neg = PlainDate.compare(this, date) < 0;
-  
-        let smallerYear  = neg ? this.year : date.year;
+
+        let smallerYear  = neg ? this.year  : date.year;
         let smallerMonth = neg ? this.month : date.month;
-        let smallerDay   = neg ? this.day : date.day;
-  
-        let largerYear  = neg ? date.year : this.year;
+        let smallerDay   = neg ? this.day   : date.day;
+
+        let largerYear  = neg ? date.year  : this.year;
         let largerMonth = neg ? date.month : this.month;
-        let largerDay   = neg ? date.day : this.day;
-  
-        let sign = neg ? 1 : -1;
-  
+        let largerDay   = neg ? date.day   : this.day;
+
         let years = largerYear - smallerYear;
-  
+
         let days = (
           dayOfYear(largerYear,  largerMonth,  largerDay) -
           dayOfYear(smallerYear, smallerMonth, smallerDay)
         );
-  
+
         while (years > 0) {
           days  += daysInYear(smallerYear + years - 1);
           years -= 1;
         }
-  
+
         let weeks = 0;
         if (largestUnit === TimeComponent.Weeks) {
           weeks = floorDiv(days, 7);
           days -= weeks * 7;
         }
-  
-        return new Duration(0, 0, weeks * sign, days * sign);
+
+        return new Duration(
+          0, 0,
+          neg ? weeks : -weeks,
+          neg ? days  : -days
+        );
       }
-  
+
       default:
         throw new Error('differenceDate - cannot support TimeComponent < Days');
     }
@@ -300,14 +298,23 @@ export class PlainDate {
       duration.nanoseconds,
       TimeComponent.Days
     );
-  
-    const yearMonth = balancedYearMonth(this.year + duration.years,
-      this.month + duration.months);
 
-    const regulatedDate = regulateDate(yearMonth.year, yearMonth.month, this.day, overflow);
-  
-    return balancedDate(regulatedDate.year, regulatedDate.month,
-      regulatedDate.day + balancedDur.days + duration.weeks * 7);
+    const yearMonth = balancedYearMonth(
+      this.year + duration.years,
+      this.month + duration.months
+    );
+
+    const regulatedDate = regulateDate(
+      yearMonth.year,
+      yearMonth.month,
+      this.day,
+      overflow
+    );
+
+    return balancedDate(
+      regulatedDate.year, regulatedDate.month,
+      regulatedDate.day + balancedDur.days + duration.weeks * 7
+    );
   }
 
   subtract<T = DurationLike>(
@@ -346,10 +353,14 @@ export class PlainDate {
 
   static compare(a: PlainDate, b: PlainDate): i32 {
     if (a === b) return 0;
-    return compare(
-      [a.year, a.month, a.day],
-      [b.year, b.month, b.day]
-    );
+
+    let res = a.year - b.year;
+    if (res) return sign(res);
+
+    res = a.month - b.month;
+    if (res) return sign(res);
+
+    return ord(a.day, b.day);
   }
 }
 

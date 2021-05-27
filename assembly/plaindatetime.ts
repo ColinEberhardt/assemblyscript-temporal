@@ -4,7 +4,8 @@ import { balancedTime, PlainTime } from "./plaintime";
 import { balancedDate, PlainDate } from "./plaindate";
 import { PlainYearMonth } from "./plainyearmonth";
 import { PlainMonthDay } from "./plainmonthday";
-import { coalesce, larger, compare } from "./util";
+import { ord, sign, coalesce } from "./util";
+import { formatISOString, parseISOString } from "./util/format";
 import {
   dayOfWeek,
   leapYear,
@@ -14,7 +15,6 @@ import {
   daysInYear,
   epochFromParts
 } from "./util/calendar";
-import { formatISOString, parseISOString } from "./util/format";
 
 // @ts-ignore
 @lazy
@@ -198,7 +198,7 @@ export class PlainDateTime {
     );
     const diffDate = balanced.until(
       other.toPlainDate(),
-      larger(largestUnit, TimeComponent.Days)
+      min(largestUnit, TimeComponent.Days)
     );
 
     // Signs of date part and time part may not agree; balance them together
@@ -272,30 +272,32 @@ export class PlainDateTime {
 
   static compare(a: PlainDateTime, b: PlainDateTime): i32 {
     if (a === b) return 0;
-    return compare(
-      [
-        a.year,
-        a.month,
-        a.day,
-        a.hour,
-        a.minute,
-        a.second,
-        a.millisecond,
-        a.microsecond,
-        a.nanosecond
-      ],
-      [
-        b.year,
-        b.month,
-        b.day,
-        b.hour,
-        b.minute,
-        b.second,
-        b.millisecond,
-        b.microsecond,
-        b.nanosecond
-      ]
-    );
+
+    let res = a.year - b.year;
+    if (res) return sign(res);
+
+    res = a.month - b.month;
+    if (res) return sign(res);
+
+    res = a.day - b.day;
+    if (res) return sign(res);
+
+    res = a.hour - b.hour;
+    if (res) return sign(res);
+
+    res = a.minute - b.minute;
+    if (res) return sign(res);
+
+    res = a.second - b.second;
+    if (res) return sign(res);
+
+    res = a.millisecond - b.millisecond;
+    if (res) return sign(res);
+
+    res = a.microsecond - b.microsecond;
+    if (res) return sign(res);
+
+    return ord(a.nanosecond, b.nanosecond);
   }
 
   @inline

@@ -1,12 +1,16 @@
 import { RegExp } from "assemblyscript-regex";
 
-import { arraySign, coalesce, larger, sign } from "./util";
-import { MICROS_PER_SECOND, MILLIS_PER_SECOND, NANOS_PER_SECOND } from "./util/constants";
 import { PlainDateTime } from "./plaindatetime";
 import { TimeComponent } from "./enums";
+import { coalesce, sign } from "./util";
+import {
+  MICROS_PER_SECOND,
+  MILLIS_PER_SECOND,
+  NANOS_PER_SECOND
+} from "./util/constants";
 
 // @ts-ignore
-@lazy 
+@lazy
 const NULL = i32.MAX_VALUE;
 
 export class DurationLike {
@@ -40,8 +44,7 @@ export class DurationLike {
 export class Duration {
   static from<T = DurationLike>(duration: T): Duration {
     if (isString<T>()) {
-      // @ts-ignore: cast
-      return Duration.fromString(<string>duration);
+      return Duration.fromString(changetype<string>(duration));
     } else if (duration instanceof DurationLike) {
       return Duration.fromDurationLike(duration);
     } else if (duration instanceof Duration) {
@@ -49,8 +52,6 @@ export class Duration {
     }
     throw new TypeError("invalid duration type");
   }
-
-  
 
   private static fromDuration(duration: Duration): Duration {
     return new Duration(
@@ -91,8 +92,14 @@ export class Duration {
     const millisecond = I32.parseInt(fraction.substring(0, 3)) * sign;
     const microsecond = I32.parseInt(fraction.substring(3, 6)) * sign;
     const nanosecond = I32.parseInt(fraction.substring(6, 9)) * sign;
-    
-    return new Duration(years, months, weeks, days, hours, minutes, seconds, millisecond, microsecond, nanosecond);
+
+    return new Duration(
+      years, months, weeks, days,
+      hours, minutes, seconds,
+      millisecond,
+      microsecond,
+      nanosecond
+    );
   }
 
   private static fromDurationLike(d: DurationLike): Duration {
@@ -112,17 +119,18 @@ export class Duration {
     public nanoseconds: i64 = 0
   ) {
     // durationSign returns the sign of the first non-zero component
-    const s = this.sign;
-    if ((years && sign(years) != s) ||
-      (months && sign(months) != s) ||
-      (weeks && sign(weeks) != s) ||
-      (days && sign(days) != s) ||
-      (hours && sign(hours) != s) ||
-      (minutes && sign(minutes) != s) ||
-      (seconds && sign(seconds) != s) ||
-      (milliseconds && sign(milliseconds) != s) ||
-      (microseconds && sign(microseconds) != s) ||
-      (nanoseconds && sign(nanoseconds) != s)  
+    const sig = this.sign;
+    if (
+      (years && sign(years) != sig) ||
+      (months && sign(months) != sig) ||
+      (weeks && sign(weeks) != sig) ||
+      (days && sign(days) != sig) ||
+      (hours && sign(hours) != sig) ||
+      (minutes && sign(minutes) != sig) ||
+      (seconds && sign(seconds) != sig) ||
+      (milliseconds && sign(milliseconds) != sig) ||
+      (microseconds && sign(microseconds) != sig) ||
+      (nanoseconds && sign(nanoseconds) != sig)
     ) {
       throw new RangeError("mixed-sign values not allowed as duration fields");
     }
@@ -144,18 +152,17 @@ export class Duration {
   }
 
   get sign(): i32 {
-    return arraySign([
-      this.years,
-      this.months,
-      this.weeks,
-      this.days,
-      this.hours,
-      this.minutes,
-      this.seconds,
-      this.milliseconds as i32,
-      this.microseconds as i32,
-      this.nanoseconds as i32
-    ]);
+    if (this.years) return sign(this.years);
+    if (this.months) return sign(this.months);
+    if (this.weeks) return sign(this.weeks);
+    if (this.days) return sign(this.days);
+    if (this.hours) return sign(this.hours);
+    if (this.minutes) return sign(this.minutes);
+    if (this.seconds) return sign(this.seconds);
+    if (this.milliseconds) return sign(this.milliseconds as i32);
+    if (this.microseconds) return sign(this.microseconds as i32);
+    if (this.nanoseconds) return sign(this.nanoseconds as i32);
+    return 0;
   }
 
   get blank(): bool {
@@ -163,15 +170,15 @@ export class Duration {
   }
 
   private get largestDurationUnit(): TimeComponent {
-    if (this.years != 0) return TimeComponent.Years;
-    if (this.months != 0) return TimeComponent.Months;
-    if (this.weeks != 0) return TimeComponent.Weeks;
-    if (this.days != 0) return TimeComponent.Days;
-    if (this.hours != 0) return TimeComponent.Hours;
-    if (this.minutes != 0) return TimeComponent.Minutes;
-    if (this.seconds != 0) return TimeComponent.Seconds;
-    if (this.milliseconds != 0) return TimeComponent.Milliseconds;
-    if (this.microseconds != 0) return TimeComponent.Microseconds;
+    if (this.years) return TimeComponent.Years;
+    if (this.months) return TimeComponent.Months;
+    if (this.weeks) return TimeComponent.Weeks;
+    if (this.days) return TimeComponent.Days;
+    if (this.hours) return TimeComponent.Hours;
+    if (this.minutes) return TimeComponent.Minutes;
+    if (this.seconds) return TimeComponent.Seconds;
+    if (this.milliseconds) return TimeComponent.Milliseconds;
+    if (this.microseconds) return TimeComponent.Microseconds;
     return TimeComponent.Nanoseconds;
   }
 
@@ -204,12 +211,15 @@ export class Duration {
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
     const duration = Duration.from(durationToAdd);
-    const largestUnit = larger(this.largestDurationUnit, duration.largestDurationUnit);
-  
+    const largestUnit = min(this.largestDurationUnit, duration.largestDurationUnit);
+
     if (!relativeTo) {
-      if (largestUnit == TimeComponent.Years || largestUnit == TimeComponent.Months || largestUnit == TimeComponent.Weeks) {
-        throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
-      }
+      if (
+        largestUnit == TimeComponent.Years  ||
+        largestUnit == TimeComponent.Months ||
+        largestUnit == TimeComponent.Weeks
+      ) throw new RangeError("relativeTo is required for years, months, or weeks arithmetic");
+
       const balanced = balancedDuration(
         this.days + duration.days,
         this.hours + duration.hours,
@@ -223,16 +233,16 @@ export class Duration {
       return balanced;
     } else {
       const datePart = relativeTo.toPlainDate();
-  
+
       const dateDuration1 = new Duration(this.years, this.months, this.weeks, this.days);
       const dateDuration2 = new Duration(duration.years, duration.months, duration.weeks, duration.days);
-  
+
       const intermediate = datePart.add(dateDuration1);
       const end = intermediate.add(dateDuration2);
-  
+
       const dateLargestUnit = min(largestUnit, TimeComponent.Days) as TimeComponent;
       const dateDiff = datePart.until(end, dateLargestUnit);
-  
+
       const dur = balancedDuration(
         dateDiff.days,
         this.hours + duration.hours,
@@ -243,9 +253,12 @@ export class Duration {
         this.nanoseconds + duration.nanoseconds,
         largestUnit
       );
-  
-      return new Duration(dateDiff.years, dateDiff.months, dateDiff.weeks, dur.days, dur.hours, dur.minutes,
-        dur.seconds, dur.milliseconds, dur.microseconds, dur.nanoseconds);
+
+      return new Duration(
+        dateDiff.years, dateDiff.months, dateDiff.weeks,
+        dur.days, dur.hours, dur.minutes, dur.seconds,
+        dur.milliseconds, dur.microseconds, dur.nanoseconds
+      );
     }
   }
 
@@ -285,9 +298,8 @@ export class Duration {
 }
 
 function toString<T extends number>(value: T, suffix: string): string {
-  return value
-    ? (isFloat<T>() ? stringify(value) : value.toString()) + suffix
-    : "";
+  if (value) return (isFloat<T>() ? stringify(value) : value.toString()) + suffix;
+  return "";
 }
 
 // @ts-ignore: decorator
@@ -329,7 +341,7 @@ export function balancedDuration(
     minutes as i64,
     seconds as i64,
     milliseconds,
-    microseconds, 
+    microseconds,
     nanoseconds
   );
 
