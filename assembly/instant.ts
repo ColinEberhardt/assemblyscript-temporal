@@ -112,8 +112,9 @@ export class Instant {
     return balancedDuration(0, 0, 0, 0, 0, 0, diffNanos, largestUnit);
   }
 
-  equals(other: Instant): boolean {
-    return this.epochNanoseconds == other.epochNanoseconds;
+  equals<T>(other: T): boolean {
+    const otherInstant = other instanceof Instant ? other : Instant.from(other);
+    return this.epochNanoseconds == otherInstant.epochNanoseconds;
   }
 
   @inline
