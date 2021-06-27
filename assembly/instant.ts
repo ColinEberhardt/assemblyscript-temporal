@@ -47,7 +47,7 @@ export class Instant {
     return new Instant(nanos);
   }
 
-  constructor(public epochNanoseconds: i64) {}
+  constructor(public readonly epochNanoseconds: i64) {}
 
   @inline
   get epochMicroseconds(): i64 {
