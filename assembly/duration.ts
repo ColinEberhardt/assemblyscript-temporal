@@ -6,6 +6,7 @@ import { coalesce, sign } from "./util";
 import {
   MICROS_PER_SECOND,
   MILLIS_PER_SECOND,
+  NANOS_PER_DAY,
   NANOS_PER_SECOND
 } from "./util/constants";
 
@@ -358,11 +359,9 @@ export function balancedDuration(
     largestUnit >= TimeComponent.Years &&
     largestUnit <= TimeComponent.Days
   ) {
-    // inlined nanosecondsToDays
-    const oneDayNs: i64 = 24 * 60 * 60 * NANOS_PER_SECOND;
     if (durationNs != 0) {
-      daysI64        = durationNs / oneDayNs;
-      nanosecondsI64 = durationNs % oneDayNs;
+      daysI64 = durationNs / NANOS_PER_DAY;
+      nanosecondsI64 = durationNs % NANOS_PER_DAY;
     }
   } else {
     nanosecondsI64 = durationNs;
