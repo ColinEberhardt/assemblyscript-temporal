@@ -170,19 +170,6 @@ export class Duration {
     return this.sign == 0;
   }
 
-  private get largestDurationUnit(): TimeComponent {
-    if (this.years) return TimeComponent.Years;
-    if (this.months) return TimeComponent.Months;
-    if (this.weeks) return TimeComponent.Weeks;
-    if (this.days) return TimeComponent.Days;
-    if (this.hours) return TimeComponent.Hours;
-    if (this.minutes) return TimeComponent.Minutes;
-    if (this.seconds) return TimeComponent.Seconds;
-    if (this.milliseconds) return TimeComponent.Milliseconds;
-    if (this.microseconds) return TimeComponent.Microseconds;
-    return TimeComponent.Nanoseconds;
-  }
-
   // P1Y1M1DT1H1M1.1S
   toString(): string {
     const date =
@@ -212,7 +199,7 @@ export class Duration {
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
     const duration = Duration.from(durationToAdd);
-    const largestUnit = min(this.largestDurationUnit, duration.largestDurationUnit);
+    const largestUnit = min(largestUnitOf(this), largestUnitOf(duration));
 
     if (!relativeTo) {
       if (
@@ -448,4 +435,18 @@ export function balancedDuration(
   );
 }
 
-
+//@ts-ignore: decorator
+@inline
+function largestUnitOf(duration: Duration): TimeComponent {
+  if (duration.years) return TimeComponent.Years;
+  if (duration.months) return TimeComponent.Months;
+  if (duration.weeks) return TimeComponent.Weeks;
+  if (duration.days) return TimeComponent.Days;
+  if (duration.hours) return TimeComponent.Hours;
+  if (duration.minutes) return TimeComponent.Minutes;
+  if (duration.seconds) return TimeComponent.Seconds;
+  if (duration.milliseconds) return TimeComponent.Milliseconds;
+  if (duration.microseconds) return TimeComponent.Microseconds;
+  if (duration.nanoseconds) return TimeComponent.Nanoseconds;
+  return TimeComponent.Nanoseconds;
+}
