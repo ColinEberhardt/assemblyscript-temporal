@@ -242,7 +242,7 @@ describe("toString()", () => {
       "PT123.5S"
     );
   });
-  xit("supports nanosecond precision", () => {
+  it("supports nanosecond precision", () => {
     expect(`${Duration.from({ nanoseconds: -250 })}`).toBe("-PT0.00000025S");
     expect(`${Duration.from({ nanoseconds: -3500 })}`).toBe("-PT0.0000035S");
   });

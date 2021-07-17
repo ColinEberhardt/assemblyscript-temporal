@@ -172,29 +172,59 @@ export class Duration {
 
   // P1Y1M1DT1H1M1.1S
   toString(): string {
-    const date =
-      toString(abs(this.years), "Y") +
-      toString(abs(this.months), "M") +
-      toString(abs(this.weeks), "W") +
-      toString(abs(this.days), "D");
+    let nanoseconds: i64 =
+      this.nanoseconds +
+      this.microseconds * 1000 +
+      this.milliseconds * 1000_000;
+    const seconds: i64 = i64(this.seconds) + nanoseconds / NANOS_PER_SECOND;
+    const negative = this.sign < 0;
+    nanoseconds %= NANOS_PER_SECOND;
 
-    const time =
-      toString(abs(this.hours), "H") +
-      toString(abs(this.minutes), "M") +
-      toString(abs(
-          // sort in ascending order for better sum precision
-          f64(this.nanoseconds)  / NANOS_PER_SECOND +
-          f64(this.microseconds) / MICROS_PER_SECOND +
-          f64(this.milliseconds) / MILLIS_PER_SECOND +
-          f64(this.seconds)
-        ),
-        "S"
-      );
+    if (
+      this.years == 0 &&
+      this.months == 0 &&
+      this.weeks == 0 &&
+      this.days == 0 &&
+      this.hours == 0 &&
+      this.minutes == 0 &&
+      seconds == 0 &&
+      nanoseconds == 0
+    ) {
+      return "PT0S";
+    }
 
-    if (!date.length && !time.length) return "PT0S";
-    return (
-      (this.sign < 0 ? "-" : "") + "P" + date + (time.length ? "T" + time : "")
-    );
+    let isoString = negative ? "-P" : "P";
+    if (this.years) isoString += abs(this.years).toString() + "Y";
+    if (this.months) isoString += abs(this.months).toString() + "M";
+    if (this.weeks) isoString += abs(this.weeks).toString() + "W";
+    if (this.days) isoString += abs(this.days).toString() + "D";
+
+    if (!this.hours && !this.minutes && !seconds && !nanoseconds) {
+      return isoString;
+    }
+    isoString += "T";
+
+    if (this.hours) isoString += abs(this.hours).toString() + "H";
+    if (this.minutes) isoString += abs(this.minutes).toString() + "M";
+
+    if (seconds || nanoseconds) {
+      let decimalPart: string | null = null;
+      if (nanoseconds) {
+        const fraction = abs(nanoseconds);
+        decimalPart = fraction.toString().padStart(9, "0");
+        // precision would truncate this string here
+        while (decimalPart.endsWith("0")) {
+          decimalPart = decimalPart.slice(0, -1);
+        }
+      }
+      if (decimalPart != null) {
+        isoString += abs(seconds).toString() + "." + decimalPart! + "S";
+      } else {
+        isoString += abs(seconds).toString() + "S";
+      }
+    }
+
+    return isoString;
   }
 
   add<T = DurationLike>(durationToAdd: T, relativeTo: PlainDateTime | null = null): Duration {
