@@ -4,7 +4,6 @@ import { PlainDateTime } from "./plaindatetime";
 import { TimeComponent } from "./enums";
 import { coalesce, sign } from "./util";
 import {
-  MICROS_PER_SECOND,
   MILLIS_PER_SECOND,
   NANOS_PER_DAY,
   NANOS_PER_SECOND
