@@ -245,6 +245,7 @@ describe("toString()", () => {
   it("supports nanosecond precision", () => {
     expect(`${Duration.from({ nanoseconds: -250 })}`).toBe("-PT0.00000025S");
     expect(`${Duration.from({ nanoseconds: -3500 })}`).toBe("-PT0.0000035S");
+    expect(`${Duration.from("P366DT0.000000001S")}`).toBe("P366DT0.000000001S");
   });
   it("negative sub-second units are balanced correctly", () => {
     expect(`${Duration.from({ milliseconds: -250 })}`).toBe("-PT0.25S");
