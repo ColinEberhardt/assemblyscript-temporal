@@ -314,17 +314,6 @@ export class Duration {
   }
 }
 
-function toString<T extends number>(value: T, suffix: string): string {
-  if (value) return (isFloat<T>() ? stringify(value) : value.toString()) + suffix;
-  return "";
-}
-
-// @ts-ignore: decorator
-@inline
-function stringify(value: f64): string {
-  return F64.isSafeInteger(value) ? i64(value).toString() : value.toString();
-}
-
 function totalDurationNanoseconds(
   days: i64,
   hours: i64,
