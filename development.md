@@ -3,7 +3,7 @@
 This is a very large library, therefore a prioritised roadmap is important. The following is the rough priority order:
 
  1. Non-timezone aware classes, i.e. `PlainDate`, `PlainDateTime`, etc with a hard-coded Gregorian calendar.
- 2. Ancillary classes, i.e. `Instant`, `Duration` and `now`
+ 2. Ancillary classes, i.e. `Instant`, `Duration` and `Now`
  3. Time-zone aware classes, `TimeZone`, `ZonedDateTime`, etc
  4. Non gregorian calendar systems
 
@@ -338,7 +338,7 @@ General features
 
 - [ ] rounding and smallest unit behaviour
 
-#### now
+#### Now
 
 Methods
 - [ ] zonedDateTimeISO
