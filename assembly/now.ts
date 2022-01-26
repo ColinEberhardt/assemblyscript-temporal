@@ -3,7 +3,7 @@ import { PlainDate } from "./plaindate";
 import { PlainTime } from "./plaintime";
 import { Instant } from "./instant";
 
-export class now {
+export class Now {
   static plainDateTimeISO(): PlainDateTime {
     const epochMillis = Date.now();
     const date = new Date(epochMillis);

@@ -109,12 +109,12 @@ duration2.toString(); // "P3DT10M"
 ```
 
 
-#### `now`
+#### `Now`
 
-The `now` object has several methods which give information about the current time and date.
+The `Now` object has several methods which give information about the current time and date.
 
 ```javascript
-dateTime = now.plainDateTimeISO();
+dateTime = Now.plainDateTimeISO();
 dateTime.toString(); // 2021-04-01T12:05:47.357
 ```
 
